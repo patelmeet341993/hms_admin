@@ -1,3 +1,5 @@
+import 'package:admin/configs/app_theme.dart';
+import 'package:admin/providers/app_theme_provider.dart';
 import 'package:admin/utils/logger_service.dart';
 import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:flutter/material.dart';
@@ -13,9 +15,8 @@ class MyApp extends StatelessWidget {
     Log().d("MyApp Build Called");
 
     return MultiProvider(
-      providers: const [
-        // ChangeNotifierProvider(create: (_) => DataProvider()),
-
+      providers: [
+        ChangeNotifierProvider<AppThemeProvider>(create: (_) => AppThemeProvider(), lazy: false),
       ],
       child: MainApp(),
     );
@@ -30,17 +31,21 @@ class MainApp extends StatelessWidget {
   Widget build(BuildContext context) {
     Log().d("MainApp Build Called");
 
-    return MaterialApp(
-      debugShowCheckedModeBanner: false,
-      navigatorKey: NavigationController.mainScreenNavigator,
-      title: "Sportiwe",
-      theme: ThemeData(
-        visualDensity: VisualDensity.adaptivePlatformDensity,
-      ),
-      onGenerateRoute: NavigationController.onMainGeneratedRoutes,
-      navigatorObservers: [
-        FirebaseAnalyticsObserver(analytics: firebaseAnalytics),
-      ],
+    return Consumer<AppThemeProvider>(
+      builder: (BuildContext context, AppThemeProvider appThemeProvider, Widget? child) {
+        //Log().i("ThemeMode:${appThemeProvider.themeMode}");
+
+        return MaterialApp(
+          debugShowCheckedModeBanner: false,
+          navigatorKey: NavigationController.mainScreenNavigator,
+          title: "HMS",
+          theme: AppTheme.getThemeFromThemeMode(appThemeProvider.themeMode),
+          onGenerateRoute: NavigationController.onMainGeneratedRoutes,
+          navigatorObservers: [
+            FirebaseAnalyticsObserver(analytics: firebaseAnalytics),
+          ],
+        );
+      },
     );
   }
 }
