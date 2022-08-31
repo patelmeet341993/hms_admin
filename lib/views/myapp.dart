@@ -1,5 +1,6 @@
 import 'package:admin/configs/app_theme.dart';
 import 'package:admin/providers/app_theme_provider.dart';
+import 'package:admin/providers/connection_provider.dart';
 import 'package:admin/utils/logger_service.dart';
 import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:flutter/material.dart';
@@ -17,6 +18,7 @@ class MyApp extends StatelessWidget {
     return MultiProvider(
       providers: [
         ChangeNotifierProvider<AppThemeProvider>(create: (_) => AppThemeProvider(), lazy: false),
+        ChangeNotifierProvider<ConnectionProvider>(create: (_) => ConnectionProvider(), lazy: false),
       ],
       child: MainApp(),
     );
