@@ -1,3 +1,5 @@
+import 'package:admin/views/authentication/login_screen.dart';
+import 'package:admin/views/homescreen/homescreen.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
@@ -56,6 +58,14 @@ class NavigationController {
       }
       case SplashScreen.routeName: {
         page = const SplashScreen();
+        break;
+      }
+      case LoginScreen.routeName: {
+        page = const LoginScreen();
+        break;
+      }
+      case HomeScreen.routeName: {
+        page = const HomeScreen();
         break;
       }
     }
