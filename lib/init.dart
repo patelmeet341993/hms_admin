@@ -10,7 +10,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
 import 'configs/credentials.dart';
-import 'controllers/analytics_controller.dart';
 import 'utils/my_http_overrides.dart';
 
 /// Runs the app in [runZonedGuarded] to handle all types of errors, including [FlutterError]s.
@@ -23,7 +22,7 @@ Future<void>? runErrorSafeApp(VoidCallback appRunner, {bool isDev = false}) {
     },
     (e, stackTrace) {
       Log().e(e, stackTrace);
-      AnalyticsController().recordError(e, stackTrace);
+      // AnalyticsController().recordError(e, stackTrace);
     },
   );
 }
