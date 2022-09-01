@@ -32,19 +32,42 @@ Future<void> initApp({bool isDev = false}) async {
   WidgetsFlutterBinding.ensureInitialized();
   AppController().isDev = isDev;
 
-  List<Future> futures = [
-    Firebase.initializeApp(options: getFirebaseOptions(isDev: isDev),),
-  ];
+  Log().i("IsDev:$isDev");
 
-  if (!kIsWeb) {
-    HttpOverrides.global = MyHttpOverrides();
-    HttpClient httpClient = HttpClient();
-    httpClient.badCertificateCallback = ((X509Certificate cert, String host, int port) => true);
+  List<Future> futures = [];
+
+  if (kIsWeb) {
+    FirebaseOptions options = getFirebaseOptions(isDev: isDev);
+    Log().i(options);
 
     futures.addAll([
+      Firebase.initializeApp(
+        options: options,
+      ),
       SystemChrome.setPreferredOrientations(<DeviceOrientation>[
-        DeviceOrientation.portraitUp,
+        DeviceOrientation.landscapeLeft,
       ]),
+    ]);
+  }
+  else {
+    if(Platform.isAndroid || Platform.isIOS) {
+      HttpOverrides.global = MyHttpOverrides();
+      HttpClient httpClient = HttpClient();
+      httpClient.badCertificateCallback = ((X509Certificate cert, String host, int port) => true);
+
+      futures.addAll([
+        Firebase.initializeApp(),
+        SystemChrome.setPreferredOrientations(<DeviceOrientation>[
+          DeviceOrientation.portraitUp,
+        ]),
+      ]);
+    }
+  }
+
+  await Future.wait(futures);
+
+  if(!kIsWeb && (Platform.isAndroid || Platform.isIOS)) {
+    await Future.wait([
       FirebaseMessaging.instance.requestPermission(),
       FirebaseMessaging.instance.setForegroundNotificationPresentationOptions(
         alert: true,
@@ -53,15 +76,6 @@ Future<void> initApp({bool isDev = false}) async {
       ),
     ]);
   }
-  else {
-    futures.addAll([
-      SystemChrome.setPreferredOrientations(<DeviceOrientation>[
-        DeviceOrientation.landscapeLeft,
-      ]),
-    ]);
-  }
-
-  await Future.wait(futures);
   Log.tag = 'hms';
   Log().d('Running ${isDev ? 'dev' : 'prod'} version...');
 }
