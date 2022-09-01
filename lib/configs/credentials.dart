@@ -9,6 +9,6 @@ FirebaseOptions getFirebaseOptions({required bool isDev}) => isDev
     ? firebase_dev.DefaultFirebaseOptions.currentPlatform
     : firebase_prod.DefaultFirebaseOptions.currentPlatform;
 
-const String PROJECT_ID_SPORTIWE_DEV = "sportiwe-dev";
-const String PROJECT_ID_SPORTIWE = "sportiwe-4c13c";
-String getProjectId() => AppController().isDev ? PROJECT_ID_SPORTIWE_DEV : PROJECT_ID_SPORTIWE;
+const String PROJECT_ID_DEV = "hospital-management-dev";
+const String PROJECT_ID_PROD = "hospital-management-bf6ef";
+String getProjectId() => AppController().isDev ? PROJECT_ID_DEV : PROJECT_ID_PROD;
