@@ -1,5 +1,6 @@
-import 'package:admin/utils/parsing_helper.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+
+import '../utils/parsing_helper.dart';
 
 class PatientModel {
   String id = "", name = "", profilePicture = "", mobile = "", bloodGroup = "", gender = "";

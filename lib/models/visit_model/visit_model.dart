@@ -1,8 +1,8 @@
-import 'package:admin/models/visit_model/pharma_billings/pharma_billing_model.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
 import '../../utils/parsing_helper.dart';
 import 'diagnosis and prescription/diagnosis_model.dart';
+import 'pharma_billings/pharma_billing_model.dart';
 import 'visit_billings/visit_billing_model.dart';
 
 class VisitModel {

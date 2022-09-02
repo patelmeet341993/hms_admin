@@ -1,4 +1,4 @@
-import 'package:admin/utils/parsing_helper.dart';
+import '../utils/parsing_helper.dart';
 
 class AdminUserModel {
   String id = "", name = "", username = "", password = "", role = "";
