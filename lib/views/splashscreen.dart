@@ -1,6 +1,7 @@
 import 'package:admin/controllers/admin_user_controller.dart';
 import 'package:admin/controllers/navigation_controller.dart';
 import 'package:admin/models/admin_user_model.dart';
+import 'package:admin/utils/logger_service.dart';
 import 'package:admin/views/authentication/login_screen.dart';
 import 'package:admin/views/homescreen/homescreen.dart';
 import 'package:flutter/material.dart';
@@ -19,9 +20,10 @@ class _SplashScreenState extends State<SplashScreen> {
   late ThemeData themeData;
 
   Future<void> checkLogin() async {
-    await Future.delayed(Duration(seconds: 3));
+    // await Future.delayed(Duration(seconds: 3));
 
     AdminUserModel? user = await AdminUserController().isUserLoggedIn();
+    Log().i("User From isUserLoggedIn:$user");
 
     NavigationController.isFirst = false;
     if(user != null) {
