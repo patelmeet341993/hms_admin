@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/services.dart';
+import 'package:uuid/uuid.dart';
 
 
 class MyUtils {
@@ -17,6 +18,10 @@ class MyUtils {
       url = url.replaceFirst("http:", "https:");
     }
     return url;
+  }
+
+  static String getUniqueIdFromUuid() {
+    return const Uuid().v1().replaceAll("-", "");
   }
 }
 
