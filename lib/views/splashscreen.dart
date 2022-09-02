@@ -1,5 +1,6 @@
 import 'dart:math';
 
+import 'package:admin/controllers/navigation_controller.dart';
 import 'package:admin/views/authentication/login_screen.dart';
 import 'package:admin/views/homescreen/homescreen.dart';
 import 'package:flutter/material.dart';
@@ -21,9 +22,11 @@ class _SplashScreenState extends State<SplashScreen> {
     await Future.delayed(Duration(seconds: 3));
 
     if(Random().nextBool()) {
+      NavigationController.isFirst = false;
       Navigator.pushNamedAndRemoveUntil(context, HomeScreen.routeName, (route) => false);
     }
     else {
+      NavigationController.isFirst = false;
       Navigator.pushNamedAndRemoveUntil(context, LoginScreen.routeName, (route) => false);
     }
   }
