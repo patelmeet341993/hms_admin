@@ -1,6 +1,6 @@
-import 'dart:math';
-
+import 'package:admin/controllers/admin_user_controller.dart';
 import 'package:admin/controllers/navigation_controller.dart';
+import 'package:admin/models/admin_user_model.dart';
 import 'package:admin/views/authentication/login_screen.dart';
 import 'package:admin/views/homescreen/homescreen.dart';
 import 'package:flutter/material.dart';
@@ -21,13 +21,14 @@ class _SplashScreenState extends State<SplashScreen> {
   Future<void> checkLogin() async {
     await Future.delayed(Duration(seconds: 3));
 
-    if(Random().nextBool()) {
-      NavigationController.isFirst = false;
-      Navigator.pushNamedAndRemoveUntil(context, HomeScreen.routeName, (route) => false);
+    AdminUserModel? user = await AdminUserController().isUserLoggedIn();
+
+    NavigationController.isFirst = false;
+    if(user != null) {
+      Navigator.pushNamedAndRemoveUntil(NavigationController.mainScreenNavigator.currentContext!, HomeScreen.routeName, (route) => false);
     }
     else {
-      NavigationController.isFirst = false;
-      Navigator.pushNamedAndRemoveUntil(context, LoginScreen.routeName, (route) => false);
+      Navigator.pushNamedAndRemoveUntil(NavigationController.mainScreenNavigator.currentContext!, LoginScreen.routeName, (route) => false);
     }
   }
 
