@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 
+import '../../controllers/visit_controller.dart';
+
 class LoginScreen extends StatefulWidget {
   static const String routeName = "/LoginScreen";
   const LoginScreen({Key? key}) : super(key: key);
@@ -17,7 +19,21 @@ class _LoginScreenState extends State<LoginScreen> {
           title: Text("Login Screen"),
         ),
         body: Center(
-          child: Text("Login Body"),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              Text("Home Body"),
+              SizedBox(height: 20,),
+              FlatButton(
+                onPressed: () {
+                  VisitController().createDummyVisitDataInFirestore();
+                  // PatientController().createDummyPatientDataInFirestore();
+                },
+                child: Text("Create Visit"),
+              ),
+            ],
+          ),
         ),
       ),
     );
