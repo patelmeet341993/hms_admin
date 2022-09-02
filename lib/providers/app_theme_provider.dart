@@ -17,7 +17,7 @@ class AppThemeProvider extends ChangeNotifier {
   }
 
   init() async {
-    int? data =  await SharedPrefManager().getInt(appThemeMode);
+    int? data =  await SharedPrefManager().getInt(SharePrefrenceKeys.appThemeMode);
     if(data==null) {
       _themeMode = 1;
     }
