@@ -74,6 +74,7 @@ dependencies:
   intl: ^0.17.0
   connectivity_plus: ^2.3.6+1
   uuid: ^3.0.6
+  equatable: ^2.0.5
 
 dev_dependencies:
   flutter_test:
