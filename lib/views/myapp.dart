@@ -1,4 +1,5 @@
 import 'package:admin/configs/app_theme.dart';
+import 'package:admin/providers/admin_user_provider.dart';
 import 'package:admin/providers/app_theme_provider.dart';
 import 'package:admin/providers/connection_provider.dart';
 import 'package:admin/utils/logger_service.dart';
@@ -19,6 +20,7 @@ class MyApp extends StatelessWidget {
       providers: [
         ChangeNotifierProvider<AppThemeProvider>(create: (_) => AppThemeProvider(), lazy: false),
         ChangeNotifierProvider<ConnectionProvider>(create: (_) => ConnectionProvider(), lazy: false),
+        ChangeNotifierProvider<AdminUserProvider>(create: (_) => AdminUserProvider(), lazy: false),
       ],
       child: MainApp(),
     );
