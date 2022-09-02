@@ -1,6 +1,8 @@
+import 'package:equatable/equatable.dart';
+
 import '../utils/parsing_helper.dart';
 
-class AdminUserModel {
+class AdminUserModel extends Equatable {
   String id = "", name = "", username = "", password = "", role = "";
 
   AdminUserModel({
@@ -41,4 +43,7 @@ class AdminUserModel {
   String toString() {
     return toMap().toString();
   }
+
+  @override
+  List<Object?> get props => [id, name, username, password, role];
 }
