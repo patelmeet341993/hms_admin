@@ -7,7 +7,6 @@ import 'package:admin/models/admin_user_model.dart';
 import 'package:admin/providers/admin_user_provider.dart';
 import 'package:admin/utils/logger_service.dart';
 import 'package:admin/utils/my_toast.dart';
-import 'package:admin/utils/my_utils.dart';
 import 'package:admin/utils/parsing_helper.dart';
 import 'package:admin/views/authentication/login_screen.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -63,57 +62,6 @@ class AuthenticationController {
     else {
       adminUserProvider.setAdminUserModel(null);
       SharedPrefManager().setString(SharePrefrenceKeys.loggedInUser, "");
-      return null;
-    }
-  }
-
-  Future<AdminUserModel?> createAdminUserWithUsernameAndPassword({required BuildContext context, required String name, required String userName, required String password, String userType = AdminUserType.admin,}) async {
-    if(userName.isEmpty || password.isEmpty) {
-      MyToast.showError("UserName is empty or password is empty", context);
-      return null;
-    }
-    
-    AdminUserModel? adminUserModel;
-
-    QuerySnapshot<Map<String, dynamic>> querySnapshot = await FirestoreController().firestore.collection(FirebaseNodes.adminUsersCollection).where("role", isEqualTo: userType).where("username", isEqualTo: userName).get();
-    if(querySnapshot.docs.isNotEmpty) {
-      DocumentSnapshot<Map<String, dynamic>> docSnapshot = querySnapshot.docs.first;
-      if((docSnapshot.data() ?? {}).isNotEmpty) {
-        AdminUserModel model = AdminUserModel.fromMap(docSnapshot.data()!);
-        if(model.username == userName && model.role == userType) {
-          adminUserModel = model;
-        }
-      }
-    }
-
-    if(adminUserModel == null) {
-      adminUserModel = AdminUserModel(
-        id: MyUtils.getUniqueIdFromUuid(),
-        name: name,
-        username: userName,
-        password: password,
-        role: userType,
-      );
-
-      bool isCreationSuccess = await FirestoreController().firestore.collection(FirebaseNodes.adminUsersCollection).doc(adminUserModel.id).set(adminUserModel.toMap()).then((value) {
-        Log().i("Admin User with Id:${adminUserModel!.id} Created Successfully");
-        return true;
-      })
-      .catchError((e, s) {
-        Log().e("Error in Creating Admin User:$e", s);
-        return false;
-      });
-      Log().i("isCreationSuccess:$isCreationSuccess");
-
-      if(isCreationSuccess) {
-        return adminUserModel;
-      }
-      else {
-        return null;
-      }
-    }
-    else {
-      MyToast.showError("User with given UserName and Role already exist", context);
       return null;
     }
   }
