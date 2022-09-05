@@ -41,7 +41,7 @@ class AuthenticationController {
 
       if(documentSnapshot.exists && (documentSnapshot.data() ?? {}).isNotEmpty) {
         AdminUserModel newModel = AdminUserModel.fromMap(documentSnapshot.data()!);
-        if(adminUserModel.username == newModel.username && newModel.password == newModel.password) {
+        if(adminUserModel.username == newModel.username && adminUserModel.password == newModel.password) {
           adminUserProvider.setAdminUserModel(newModel);
           if(adminUserModel != newModel) {
             SharedPrefManager().setString(SharePrefrenceKeys.loggedInUser, jsonEncode(newModel.toMap()));
