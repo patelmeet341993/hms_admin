@@ -7,6 +7,10 @@ class SharePrefrenceKeys {
   static const String loggedInUser = "loggedInUser";
 }
 
+class AppConstants {
+  static const List<String> userTypesForLogin = [AdminUserType.admin, AdminUserType.reception];
+}
+
 class PatientGender {
   static const String male = "Male";
   static const String female = "Female";
