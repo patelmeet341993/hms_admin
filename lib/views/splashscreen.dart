@@ -1,4 +1,3 @@
-import 'package:admin/controllers/admin_user_controller.dart';
 import 'package:admin/controllers/navigation_controller.dart';
 import 'package:admin/models/admin_user_model.dart';
 import 'package:admin/utils/logger_service.dart';
@@ -6,6 +5,8 @@ import 'package:admin/views/authentication/login_screen.dart';
 import 'package:admin/views/homescreen/homescreen.dart';
 import 'package:flutter/material.dart';
 import 'package:loading_animation_widget/loading_animation_widget.dart';
+
+import '../controllers/authentication_controller.dart';
 
 class SplashScreen extends StatefulWidget {
   static const String routeName = "/SplashScreen";
@@ -20,9 +21,9 @@ class _SplashScreenState extends State<SplashScreen> {
   late ThemeData themeData;
 
   Future<void> checkLogin() async {
-    // await Future.delayed(Duration(seconds: 3));
+    // await Future.delayed(Duration(seconds: 2));
 
-    AdminUserModel? user = await AdminUserController().isUserLoggedIn();
+    AdminUserModel? user = await AuthenticationController().isUserLoggedIn();
     Log().i("User From isUserLoggedIn:$user");
 
     NavigationController.isFirst = false;
