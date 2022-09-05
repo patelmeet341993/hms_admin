@@ -1,7 +1,7 @@
-import 'package:admin/configs/app_strings.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 
+import '../configs/app_strings.dart';
 import '../configs/constants.dart';
 import '../models/admin_user_model.dart';
 import '../utils/logger_service.dart';

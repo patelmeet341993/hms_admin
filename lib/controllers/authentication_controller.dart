@@ -1,20 +1,21 @@
 import 'dart:convert';
 
-import 'package:admin/configs/constants.dart';
-import 'package:admin/controllers/firestore_controller.dart';
-import 'package:admin/controllers/navigation_controller.dart';
-import 'package:admin/models/admin_user_model.dart';
-import 'package:admin/providers/admin_user_provider.dart';
-import 'package:admin/utils/logger_service.dart';
-import 'package:admin/utils/my_toast.dart';
-import 'package:admin/utils/parsing_helper.dart';
-import 'package:admin/views/authentication/login_screen.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
+import '../configs/app_strings.dart';
+import '../configs/constants.dart';
+import '../models/admin_user_model.dart';
+import '../providers/admin_user_provider.dart';
+import '../utils/logger_service.dart';
+import '../utils/my_toast.dart';
+import '../utils/parsing_helper.dart';
 import '../utils/shared_pref_manager.dart';
+import '../views/authentication/login_screen.dart';
 import '../views/homescreen/homescreen.dart';
+import 'firestore_controller.dart';
+import 'navigation_controller.dart';
 
 class AuthenticationController {
   Future<AdminUserModel?> isUserLoggedIn() async {
@@ -66,22 +67,30 @@ class AuthenticationController {
     }
   }
   
-  Future<bool> loginAdminUserWithUsernameAndPassword({required BuildContext context, required String userName, required String password, String userType = AdminUserType.admin,}) async {
+  Future<bool> loginAdminUserWithUsernameAndPassword({required BuildContext context, required String userName, required String password, List<String> userTypes = AppConstants.userTypesForLogin,}) async {
     bool isLoginSuccess = false;
 
     if(userName.isEmpty || password.isEmpty) {
-      MyToast.showError("UserName is empty or password is empty", context);
+      MyToast.showError(AppStrings.usernameOrPasswordIsEmpty, context);
       return isLoginSuccess;
     }
-    
+
+    if(userTypes.isEmpty) {
+      userTypes.addAll(AppConstants.userTypesForLogin);
+    }
+
     AdminUserModel? adminUserModel;
 
-    QuerySnapshot<Map<String, dynamic>> querySnapshot = await FirestoreController().firestore.collection(FirebaseNodes.adminUsersCollection).where("role", isEqualTo: userType).where("username", isEqualTo: userName).get();
+    Query<Map<String, dynamic>> query = FirestoreController().firestore.collection(FirebaseNodes.adminUsersCollection).where("username", isEqualTo: userName);
+    if(userTypes.isNotEmpty) {
+      query = query.where("role", whereIn: userTypes);
+    }
+    QuerySnapshot<Map<String, dynamic>> querySnapshot = await query.get();
     if(querySnapshot.docs.isNotEmpty) {
       DocumentSnapshot<Map<String, dynamic>> docSnapshot = querySnapshot.docs.first;
       if((docSnapshot.data() ?? {}).isNotEmpty) {
         AdminUserModel model = AdminUserModel.fromMap(docSnapshot.data()!);
-        isLoginSuccess = model.username == userName && model.password == password && model.role == userType;
+        isLoginSuccess = model.username == userName && model.password == password && (userTypes.isNotEmpty ? userTypes.contains(model.role) : true);
         if(isLoginSuccess) {
           adminUserModel = model;
         }

@@ -1,5 +1,4 @@
 import 'package:admin/configs/app_theme.dart';
-import 'package:admin/configs/constants.dart';
 import 'package:admin/utils/logger_service.dart';
 import 'package:admin/utils/my_safe_state.dart';
 import 'package:admin/utils/my_toast.dart';
@@ -7,6 +6,7 @@ import 'package:admin/views/common/components/loading_widget.dart';
 import 'package:admin/views/common/components/modal_progress_hud.dart';
 import 'package:flutter/material.dart';
 
+import '../../configs/app_strings.dart';
 import '../../controllers/authentication_controller.dart';
 
 class LoginScreen extends StatefulWidget {
@@ -30,7 +30,7 @@ class _LoginScreenState extends State<LoginScreen> with MySafeState {
     mySetState();
 
     // await Future.delayed(const Duration(seconds: 3));
-    bool isLoggedIn = await AuthenticationController().loginAdminUserWithUsernameAndPassword(context: context, userName: userName, password: password, userType: AdminUserType.admin);
+    bool isLoggedIn = await AuthenticationController().loginAdminUserWithUsernameAndPassword(context: context, userName: userName, password: password,);
     Log().i("isLoggedIn:$isLoggedIn");
 
     isLoading = false;
@@ -110,7 +110,7 @@ class _LoginScreenState extends State<LoginScreen> with MySafeState {
                     },
                     color: themeData.colorScheme.primary,
                     child: Text(
-                      "Create Visit",
+                      AppStrings.login,
                       style: AppTheme.getTextStyle(themeData.textTheme.caption!),
                     ),
                   ),
