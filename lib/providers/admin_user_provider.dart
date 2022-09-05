@@ -15,7 +15,7 @@ class AdminUserProvider extends ChangeNotifier {
 
   void setAdminUserModel(AdminUserModel? adminUserModel, {bool isNotify = true}) {
     if(adminUserModel != null) {
-      _adminUserModel = AdminUserModel.fromMap(adminUserModel.toMap());
+      _adminUserModel!.updateFromMap(adminUserModel.toMap());
     }
     else {
       _adminUserModel = null;
