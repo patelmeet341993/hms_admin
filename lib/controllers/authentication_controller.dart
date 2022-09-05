@@ -1,20 +1,20 @@
 import 'dart:convert';
 
-import 'package:admin/configs/constants.dart';
-import 'package:admin/controllers/firestore_controller.dart';
-import 'package:admin/controllers/navigation_controller.dart';
-import 'package:admin/models/admin_user_model.dart';
-import 'package:admin/providers/admin_user_provider.dart';
-import 'package:admin/utils/logger_service.dart';
-import 'package:admin/utils/my_toast.dart';
-import 'package:admin/utils/parsing_helper.dart';
-import 'package:admin/views/authentication/login_screen.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
+import '../configs/constants.dart';
+import '../models/admin_user_model.dart';
+import '../providers/admin_user_provider.dart';
+import '../utils/logger_service.dart';
+import '../utils/my_toast.dart';
+import '../utils/parsing_helper.dart';
 import '../utils/shared_pref_manager.dart';
+import '../views/authentication/login_screen.dart';
 import '../views/homescreen/homescreen.dart';
+import 'firestore_controller.dart';
+import 'navigation_controller.dart';
 
 class AuthenticationController {
   Future<AdminUserModel?> isUserLoggedIn() async {
