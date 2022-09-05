@@ -7,6 +7,7 @@ import 'package:admin/views/common/components/loading_widget.dart';
 import 'package:admin/views/common/components/modal_progress_hud.dart';
 import 'package:flutter/material.dart';
 
+import '../../configs/app_strings.dart';
 import '../../controllers/authentication_controller.dart';
 
 class LoginScreen extends StatefulWidget {
@@ -110,7 +111,7 @@ class _LoginScreenState extends State<LoginScreen> with MySafeState {
                     },
                     color: themeData.colorScheme.primary,
                     child: Text(
-                      "Create Visit",
+                      AppStrings.login,
                       style: AppTheme.getTextStyle(themeData.textTheme.caption!),
                     ),
                   ),
