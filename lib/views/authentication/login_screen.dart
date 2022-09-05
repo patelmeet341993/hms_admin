@@ -1,5 +1,4 @@
 import 'package:admin/configs/app_theme.dart';
-import 'package:admin/configs/constants.dart';
 import 'package:admin/utils/logger_service.dart';
 import 'package:admin/utils/my_safe_state.dart';
 import 'package:admin/utils/my_toast.dart';
@@ -31,7 +30,7 @@ class _LoginScreenState extends State<LoginScreen> with MySafeState {
     mySetState();
 
     // await Future.delayed(const Duration(seconds: 3));
-    bool isLoggedIn = await AuthenticationController().loginAdminUserWithUsernameAndPassword(context: context, userName: userName, password: password, userTypes: [AdminUserType.admin]);
+    bool isLoggedIn = await AuthenticationController().loginAdminUserWithUsernameAndPassword(context: context, userName: userName, password: password,);
     Log().i("isLoggedIn:$isLoggedIn");
 
     isLoading = false;
