@@ -66,7 +66,7 @@ class AuthenticationController {
     }
   }
   
-  Future<bool> loginAdminUserWithUsernameAndPassword({required BuildContext context, required String userName, required String password, String userType = AdminUserType.admin,}) async {
+  Future<bool> loginAdminUserWithUsernameAndPassword({required BuildContext context, required String userName, required String password, List<String> userTypes = const [AdminUserType.admin, AdminUserType.reception],}) async {
     bool isLoginSuccess = false;
 
     if(userName.isEmpty || password.isEmpty) {
@@ -76,12 +76,12 @@ class AuthenticationController {
     
     AdminUserModel? adminUserModel;
 
-    QuerySnapshot<Map<String, dynamic>> querySnapshot = await FirestoreController().firestore.collection(FirebaseNodes.adminUsersCollection).where("role", isEqualTo: userType).where("username", isEqualTo: userName).get();
+    QuerySnapshot<Map<String, dynamic>> querySnapshot = await FirestoreController().firestore.collection(FirebaseNodes.adminUsersCollection).where("role", whereIn: userTypes).where("username", isEqualTo: userName).get();
     if(querySnapshot.docs.isNotEmpty) {
       DocumentSnapshot<Map<String, dynamic>> docSnapshot = querySnapshot.docs.first;
       if((docSnapshot.data() ?? {}).isNotEmpty) {
         AdminUserModel model = AdminUserModel.fromMap(docSnapshot.data()!);
-        isLoginSuccess = model.username == userName && model.password == password && model.role == userType;
+        isLoginSuccess = model.username == userName && model.password == password && userTypes.contains(model.role);
         if(isLoginSuccess) {
           adminUserModel = model;
         }

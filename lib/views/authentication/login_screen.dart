@@ -31,7 +31,7 @@ class _LoginScreenState extends State<LoginScreen> with MySafeState {
     mySetState();
 
     // await Future.delayed(const Duration(seconds: 3));
-    bool isLoggedIn = await AuthenticationController().loginAdminUserWithUsernameAndPassword(context: context, userName: userName, password: password, userType: AdminUserType.admin);
+    bool isLoggedIn = await AuthenticationController().loginAdminUserWithUsernameAndPassword(context: context, userName: userName, password: password, userTypes: [AdminUserType.admin]);
     Log().i("isLoggedIn:$isLoggedIn");
 
     isLoading = false;
