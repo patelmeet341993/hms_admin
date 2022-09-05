@@ -70,7 +70,7 @@ class AuthenticationController {
     bool isLoginSuccess = false;
 
     if(userName.isEmpty || password.isEmpty) {
-      MyToast.showError("UserName is empty or password is empty", context);
+      MyToast.showError(AppStrings.usernameOrPasswordIsEmpty, context);
       return isLoginSuccess;
     }
     
