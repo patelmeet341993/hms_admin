@@ -37,7 +37,7 @@ class VisitBillingModel {
     createdTime = ParsingHelper.parseTimestampMethod(map['createdTime']);
   }
 
-  Map<String, dynamic> toMap() {
+  Map<String, dynamic> toMap({bool json = false}) {
     return <String, dynamic>{
       "doctorId" : doctorId,
       "paymentId" : paymentId,
@@ -45,12 +45,12 @@ class VisitBillingModel {
       "fee" : fee,
       "discount" : discount,
       "totalFees" : totalFees,
-      "createdTime" : createdTime,
+      "createdTime" : json ? createdTime?.toDate().toIso8601String() : createdTime,
     };
   }
 
   @override
-  String toString() {
-    return toMap().toString();
+  String toString({bool json = false}) {
+    return toMap(json: json).toString();
   }
 }

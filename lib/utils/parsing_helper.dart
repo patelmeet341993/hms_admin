@@ -1,6 +1,9 @@
 // For Parsing Dynamic Values To Specific Type
 
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:intl/intl.dart';
+
+import 'logger_service.dart';
 
 class ParsingHelper {
   static String parseStringMethod(dynamic value, {String defaultValue = ""}) {
@@ -112,24 +115,63 @@ class ParsingHelper {
     }
   }
 
-  static Timestamp? parseTimestampMethod(dynamic value, {Timestamp? defaultValue}) {
-    if(value is Timestamp) {
-      return value;
-    }
-    else if(value is DateTime) {
-      return Timestamp.fromDate(value);
+  static Timestamp? parseTimestampMethod(dynamic value, {DateTime? defaultValue, String dateFormat = ""}) {
+    DateTime? dateTime = parseDateTimeMethod(value, defaultValue: defaultValue, dateFormat: dateFormat);
+
+    if(dateTime != null) {
+      return Timestamp.fromDate(dateTime);
     }
     else {
-      return defaultValue;
+      return null;
     }
   }
 
-  static DateTime? parseDateTimeMethod(dynamic value, {DateTime? defaultValue}) {
+  static DateTime? parseDateTimeMethod(dynamic value, {DateTime? defaultValue, String dateFormat = ""}) {
     if(value is DateTime) {
       return value;
     }
     else if(value is Timestamp) {
       return value.toDate();
+    }
+    else if(value is String) {
+      DateTime? dateTime;
+      Log().i("DateTime Value:$value");
+      if(dateFormat.isNotEmpty) {
+        try {
+          dateTime = DateFormat(dateFormat).parse(value);
+        }
+        catch(e, s) {
+          Log().e("Error in Converting from String to DateTime with Format '$dateFormat':$e", s);
+        }
+      }
+
+      if(dateTime == null) {
+        int? intValue = int.tryParse(value);
+        if(intValue != null) {
+          try {
+            dateTime = DateTime.fromMillisecondsSinceEpoch(intValue);
+          }
+          catch(e, s) {
+            Log().e("Error in Converting from String(int) to DateTime:$e", s);
+          }
+        }
+      }
+
+      dateTime ??= DateTime.tryParse(value);
+
+      return dateTime ?? defaultValue;
+    }
+    else if(value is int) {
+      DateTime? dateTime;
+
+      try {
+        dateTime = DateTime.fromMillisecondsSinceEpoch(value);
+      }
+      catch(e, s) {
+        Log().e("Error in Converting from int to DateTime:$e", s);
+      }
+
+      return dateTime ?? defaultValue;
     }
     else {
       return defaultValue;

@@ -1,8 +1,9 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:equatable/equatable.dart';
 
 import '../utils/parsing_helper.dart';
 
-class PatientModel {
+class PatientModel extends Equatable {
   String id = "", name = "", profilePicture = "", mobile = "", bloodGroup = "", gender = "";
   Timestamp? dateOfBirth, createdTime;
   int totalVisits = 0;
@@ -47,7 +48,7 @@ class PatientModel {
     active = ParsingHelper.parseBoolMethod(map['active']);
   }
 
-  Map<String, dynamic> toMap() {
+  Map<String, dynamic> toMap({bool json = false}) {
     return <String, dynamic>{
       "id" : id,
       "name" : name,
@@ -56,14 +57,28 @@ class PatientModel {
       "bloodGroup" : bloodGroup,
       "gender" : gender,
       "dateOfBirth" : dateOfBirth,
-      "createdTime" : createdTime,
+      "createdTime" : json ? createdTime?.toDate().toIso8601String() : createdTime,
       "totalVisits" : totalVisits,
       "active" : active,
     };
   }
 
   @override
-  String toString() {
-    return toMap().toString();
+  String toString({bool json = false}) {
+    return toMap(json: json).toString();
   }
+
+  @override
+  List<Object?> get props => [
+    id,
+    name,
+    profilePicture,
+    mobile,
+    bloodGroup,
+    gender,
+    dateOfBirth?.millisecondsSinceEpoch ?? 0,
+    createdTime?.millisecondsSinceEpoch ?? 0,
+    totalVisits,
+    active,
+  ];
 }
