@@ -3,6 +3,7 @@ import 'package:admin/controllers/visit_controller.dart';
 import 'package:admin/models/admin_user_model.dart';
 import 'package:admin/providers/admin_user_provider.dart';
 import 'package:admin/views/homescreen/components/custom_bottom_navigation_bar.dart';
+import 'package:admin/views/homescreen/dashboard_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -84,7 +85,7 @@ class _HomeScreenState extends State<HomeScreen> {
         Icons.file_copy
       ],
       screens: [
-        Container(child: const Text("Dashboard"),),
+        DashboardScreen(),
         Container(child: const Text("History"),),
         Container(child: const Text("Treatment"),),
       ],
