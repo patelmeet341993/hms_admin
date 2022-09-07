@@ -2,7 +2,7 @@ import '../../../utils/parsing_helper.dart';
 import 'prescription_medicine_dose_model.dart';
 
 class PrescriptionModel {
-  String medicineName = "", totalDose = "";
+  String medicineName = "", totalDose = "", instructions = "";
   int repeatDurationDays = 1, totalDays = 0;
   bool isOneTimeBuyMedicine = false;      ///For Cream or Soap
   bool isLiquidMedicine = false;          ///For Syrup
@@ -11,6 +11,7 @@ class PrescriptionModel {
   PrescriptionModel({
     this.medicineName = "",
     this.totalDose = "",
+    this.instructions = "",
     this.repeatDurationDays = 1,
     this.totalDays = 0,
     this.isOneTimeBuyMedicine = false,
@@ -21,6 +22,7 @@ class PrescriptionModel {
   PrescriptionModel.fromMap(Map<String, dynamic> map) {
     medicineName = ParsingHelper.parseStringMethod(map['medicineName']);
     totalDose = ParsingHelper.parseStringMethod(map['totalDose']);
+    instructions = ParsingHelper.parseStringMethod(map['instructions']);
     repeatDurationDays = ParsingHelper.parseIntMethod(map['repeatDurationDays'], defaultValue: 1);
     totalDays = ParsingHelper.parseIntMethod(map['totalDays']);
     isOneTimeBuyMedicine = ParsingHelper.parseBoolMethod(map['isOneTimeBuyMedicine']);
@@ -41,6 +43,7 @@ class PrescriptionModel {
   void updateFromMap(Map<String, dynamic> map) {
     medicineName = ParsingHelper.parseStringMethod(map['medicineName']);
     totalDose = ParsingHelper.parseStringMethod(map['totalDose']);
+    instructions = ParsingHelper.parseStringMethod(map['instructions']);
     repeatDurationDays = ParsingHelper.parseIntMethod(map['repeatDurationDays'], defaultValue: 1);
     totalDays = ParsingHelper.parseIntMethod(map['totalDays']);
     isOneTimeBuyMedicine = ParsingHelper.parseBoolMethod(map['isOneTimeBuyMedicine']);
@@ -62,6 +65,7 @@ class PrescriptionModel {
     return <String, dynamic>{
       "medicineName" : medicineName,
       "totalDose" : totalDose,
+      "instructions" : instructions,
       "repeatDurationDays" : repeatDurationDays,
       "totalDays" : totalDays,
       "isOneTimeBuyMedicine" : isOneTimeBuyMedicine,
