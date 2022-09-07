@@ -3,12 +3,21 @@
 * Version : 1.0.0
 * */
 
+import 'dart:io';
+
 import 'package:admin/configs/constants.dart';
 import 'package:admin/utils/shared_pref_manager.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class AppThemeProvider extends ChangeNotifier {
+
+  static bool kIsWeb = kIsWeb;
+  static bool kIsWindow = Platform.isWindows;
+  static bool kIsLinux = Platform.isLinux;
+  static bool kIsMac = Platform.isMacOS;
+
+  static bool kIsFullScreen = kIsLinux || kIsWeb || kIsWindow || kIsMac;
 
   int _themeMode = 1;
 
