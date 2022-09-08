@@ -5,6 +5,7 @@ import '../utils/parsing_helper.dart';
 class AdminUserModel extends Equatable {
   String id = "", name = "", username = "", password = "", role = "", description = "", imageUrl = "";
   Map<String, dynamic> scannerData = <String, dynamic>{};
+  bool isActive = false;
 
   AdminUserModel({
     this.id = "",
@@ -15,6 +16,7 @@ class AdminUserModel extends Equatable {
     this.description = "",
     this.imageUrl = "",
     this.scannerData = const <String, dynamic>{},
+    this.isActive = false,
   });
 
   AdminUserModel.fromMap(Map<String, dynamic> map) {
@@ -26,6 +28,7 @@ class AdminUserModel extends Equatable {
     description = ParsingHelper.parseStringMethod(map['description']);
     imageUrl = ParsingHelper.parseStringMethod(map['imageUrl']);
     scannerData = ParsingHelper.parseMapMethod<dynamic, dynamic, String, dynamic>(map['scannerData']);
+    isActive = ParsingHelper.parseBoolMethod(map['isActive']);
   }
 
   void updateFromMap(Map<String, dynamic> map) {
@@ -37,6 +40,7 @@ class AdminUserModel extends Equatable {
     description = ParsingHelper.parseStringMethod(map['description']);
     imageUrl = ParsingHelper.parseStringMethod(map['imageUrl']);
     scannerData = ParsingHelper.parseMapMethod<dynamic, dynamic, String, dynamic>(map['scannerData']);
+    isActive = ParsingHelper.parseBoolMethod(map['isActive']);
   }
 
   Map<String, dynamic> toMap() {
@@ -49,6 +53,7 @@ class AdminUserModel extends Equatable {
       "description": description,
       "imageUrl": imageUrl,
       "scannerData": scannerData,
+      "isActive": isActive,
     };
   }
 
@@ -58,5 +63,5 @@ class AdminUserModel extends Equatable {
   }
 
   @override
-  List<Object?> get props => [id, name, username, password, role, description, imageUrl];
+  List<Object?> get props => [id, name, username, password, role, description, imageUrl, isActive];
 }
