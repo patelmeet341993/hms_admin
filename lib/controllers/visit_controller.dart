@@ -33,8 +33,7 @@ class VisitController {
           prescription: [
             PrescriptionModel(
               medicineName: "Calpol 650",
-              isLiquidMedicine: false,
-              isOneTimeBuyMedicine: false,
+              medicineType: MedicineType.tablet,
               doses: [
                 PrescriptionMedicineDoseModel(
                   doseTime: PrescriptionMedicineDoseTime.morning,
@@ -53,8 +52,7 @@ class VisitController {
             ),
             PrescriptionModel(
               medicineName: "Cloben G",
-              isLiquidMedicine: false,
-              isOneTimeBuyMedicine: true,
+              medicineType: MedicineType.other,
               doses: [
                 PrescriptionMedicineDoseModel(
                   doseTime: PrescriptionMedicineDoseTime.morning,
@@ -71,8 +69,7 @@ class VisitController {
             ),
             PrescriptionModel(
               medicineName: "Cough Syrup",
-              isLiquidMedicine: true,
-              isOneTimeBuyMedicine: true,
+              medicineType: MedicineType.syrup,
               doses: [
                 PrescriptionMedicineDoseModel(
                   doseTime: PrescriptionMedicineDoseTime.morning,
