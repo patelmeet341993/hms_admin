@@ -5,6 +5,8 @@ class AdminUserProvider extends ChangeNotifier {
   AdminUserModel? _adminUserModel;
   String _adminUserId = "";
 
+  List<AdminUserModel> _adminUsers = <AdminUserModel>[];
+
   AdminUserModel? getAdminUserModel() {
     if(_adminUserModel != null) {
       return AdminUserModel.fromMap(_adminUserModel!.toMap());
@@ -35,6 +37,18 @@ class AdminUserProvider extends ChangeNotifier {
 
   void setAdminUserId(String adminUserId, {bool isNotify = true}) {
     _adminUserId = adminUserId;
+    if(isNotify) {
+      notifyListeners();
+    }
+  }
+
+  int get adminUsersLength => _adminUsers.length;
+
+  List<AdminUserModel> get adminUsers => List.from(_adminUsers.map((e) => AdminUserModel.fromMap(e.toMap())));
+
+  void setAdminUsers(List<AdminUserModel> users, {bool isNotify = true}) {
+    _adminUsers.clear();
+    _adminUsers.addAll(List.from(users.map((e) => AdminUserModel.fromMap(e.toMap())).toList()));
     if(isNotify) {
       notifyListeners();
     }
