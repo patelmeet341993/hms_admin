@@ -71,6 +71,30 @@ class AdminUserController {
     }
   }
 
+  Future<bool> deleteAdminUser(String adminUserId) async {
+    Log().i("deleteAdminUser called with adminUserId: $adminUserId");
+
+    bool isDeleted = false;
+
+    if(adminUserId.isNotEmpty) {
+      isDeleted = await FirestoreController().firestore.collection(FirebaseNodes.adminUsersCollection).doc(adminUserId).delete().then((value) {
+        Log().i("Deleted Admin User with Id: $adminUserId");
+        return true;
+      })
+      .catchError((e, s) {
+        Log().e("Error in Deleting Admin User with Id '$adminUserId':$e", s);
+        return false;
+      });
+    }
+
+    if(isDeleted) {
+      AdminUserProvider adminUserProvider = Provider.of<AdminUserProvider>(NavigationController.mainScreenNavigator.currentContext!, listen: false);
+      adminUserProvider.setAdminUsers(adminUserProvider.adminUsers..removeWhere((element) => element.id == adminUserId));
+    }
+
+    return isDeleted;
+  }
+
   void startAdminUserSubscription() async {
     AdminUserProvider adminUserProvider = Provider.of<AdminUserProvider>(NavigationController.mainScreenNavigator.currentContext!, listen: false);
     String adminUserId = adminUserProvider.adminUserId;
