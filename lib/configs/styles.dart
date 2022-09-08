@@ -16,7 +16,7 @@ class Styles {
   static const Color lightTextColor = Color(0xff495057);
   static const Color darkTextColor = Color(0xffffffff);
 
-  static const Color lightBackgroundColor = Color(0xffffffff);
+  static Color lightBackgroundColor = Colors.grey.shade100;
   static const Color darkBackgroundColor = Color(0xffffffff);
 
   static const Color lightAppBarColor = Color(0xffffffff);
