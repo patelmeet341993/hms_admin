@@ -1,4 +1,11 @@
 //App Version
+import 'package:admin/models/home_screen_component_model.dart';
+import 'package:admin/views/admin_users/admin_users_list_screen.dart';
+import 'package:flutter/material.dart';
+
+import '../views/homescreen/dashboard_screen.dart';
+import '../views/profile/admin_user_profile_screen.dart';
+
 const String app_version = "1.0.0";
 
 //Shared Preference Keys
@@ -48,4 +55,40 @@ class PaymentModes {
 class PaymentStatus {
   static const String pending = "Pending";
   static const String paid = "Paid";
+}
+
+class HomeScreenComponentsList {
+  final List<HomeScreenComponentModel> _masterOptions = [
+    const HomeScreenComponentModel(icon: Icons.dashboard_outlined, activeIcon: Icons.dashboard, screen: DashboardScreen(), title: "Dashboard"),
+    const HomeScreenComponentModel(icon: Icons.history, activeIcon: Icons.history, screen: Text("History"), title: "History"),
+    const HomeScreenComponentModel(icon: Icons.file_copy_outlined, activeIcon: Icons.file_copy, screen: Text("Treatment"), title: "Treatment"),
+    const HomeScreenComponentModel(icon: Icons.people_alt_outlined, activeIcon: Icons.people, screen: AdminUsersListScreen(), title: "Admin Users"),
+    const HomeScreenComponentModel(icon: Icons.person_outline, activeIcon: Icons.person, screen: AdminUserProfileScreen(), title: "Profile"),
+  ];
+
+  final List<HomeScreenComponentModel> _adminOptions = [
+    const HomeScreenComponentModel(icon: Icons.dashboard_outlined, activeIcon: Icons.dashboard, screen: DashboardScreen(), title: "Dashboard"),
+    const HomeScreenComponentModel(icon: Icons.history, activeIcon: Icons.history, screen: Text("History"), title: "History"),
+    const HomeScreenComponentModel(icon: Icons.file_copy_outlined, activeIcon: Icons.file_copy, screen: Text("Treatment"), title: "Treatment"),
+    const HomeScreenComponentModel(icon: Icons.people_alt_outlined, activeIcon: Icons.people, screen: AdminUsersListScreen(), title: "Admin Users"),
+    const HomeScreenComponentModel(icon: Icons.person_outline, activeIcon: Icons.person, screen: AdminUserProfileScreen(), title: "Profile"),
+  ];
+
+  final List<HomeScreenComponentModel> _receptionOptions = [
+    const HomeScreenComponentModel(icon: Icons.dashboard_outlined, activeIcon: Icons.dashboard, screen: DashboardScreen(), title: "Dashboard"),
+    const HomeScreenComponentModel(icon: Icons.people_alt_outlined, activeIcon: Icons.people, screen: AdminUsersListScreen(), title: "Admin Users"),
+    const HomeScreenComponentModel(icon: Icons.person_outline, activeIcon: Icons.person, screen: AdminUserProfileScreen(), title: "Profile"),
+  ];
+
+  List<HomeScreenComponentModel> getHomeScreenComponentsRolewise(String role) {
+    if(role == AdminUserType.admin) {
+      return _adminOptions;
+    }
+    else if(role == AdminUserType.reception) {
+      return _receptionOptions;
+    }
+    else {
+      return [];
+    }
+  }
 }
