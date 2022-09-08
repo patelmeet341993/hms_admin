@@ -111,4 +111,29 @@ class AdminUserController {
     adminUserProvider.setAdminUserId("");
     adminUserProvider.setAdminUserModel(null);
   }
+
+  Future<List<AdminUserModel>> getAdminUsers({bool isRefresh = true, bool isFromCache = false}) async {
+    Log().i("getAdminUsers called with isRefresh:$isRefresh, isFromCache:$isFromCache");
+    AdminUserProvider adminUserProvider = Provider.of<AdminUserProvider>(NavigationController.mainScreenNavigator.currentContext!, listen: false);
+
+    if(!isRefresh && isFromCache && adminUserProvider.adminUsersLength > 0) {
+      Log().d("Returning Cached Data");
+      return adminUserProvider.adminUsers;
+    }
+
+    QuerySnapshot<Map<String, dynamic>> querySnapshot = await FirestoreController().firestore.collection(FirebaseNodes.adminUsersCollection).get();
+    Log().i("Documents Length in Firestore for Admin Users:${querySnapshot.docs.length}");
+
+    List<AdminUserModel> list = [];
+    for (DocumentSnapshot<Map<String, dynamic>> documentSnapshot in querySnapshot.docs) {
+      if((documentSnapshot.data() ?? {}).isNotEmpty) {
+        AdminUserModel adminUserModel = AdminUserModel.fromMap(documentSnapshot.data()!);
+        list.add(adminUserModel);
+      }
+    }
+    adminUserProvider.setAdminUsers(list);
+    Log().i("Final AdminUsers Length From Firestore:${list.length}");
+    Log().i("Final AdminUsers Length in Provider:${adminUserProvider.adminUsersLength}");
+    return list;
+  }
 }
