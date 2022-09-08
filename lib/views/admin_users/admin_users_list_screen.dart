@@ -1,8 +1,14 @@
 import 'package:admin/configs/app_strings.dart';
+import 'package:admin/configs/constants.dart';
 import 'package:admin/controllers/admin_user_controller.dart';
 import 'package:admin/models/admin_user_model.dart';
 import 'package:admin/providers/admin_user_provider.dart';
+import 'package:admin/utils/logger_service.dart';
+import 'package:admin/utils/my_safe_state.dart';
+import 'package:admin/utils/my_utils.dart';
+import 'package:admin/views/common/components/common_dialog.dart';
 import 'package:admin/views/common/components/loading_widget.dart';
+import 'package:admin/views/common/components/modal_progress_hud.dart';
 import 'package:admin/views/common/components/my_table/my_table_cell_model.dart';
 import 'package:admin/views/common/components/my_table/my_table_row_widget.dart';
 import 'package:flutter/material.dart';
@@ -17,11 +23,38 @@ class AdminUsersListScreen extends StatefulWidget {
   State<AdminUsersListScreen> createState() => _AdminUsersListScreenState();
 }
 
-class _AdminUsersListScreenState extends State<AdminUsersListScreen> with AutomaticKeepAliveClientMixin {
+class _AdminUsersListScreenState extends State<AdminUsersListScreen> with AutomaticKeepAliveClientMixin, MySafeState {
   late ThemeData themeData;
   Future<List<AdminUserModel>>? futureGetData;
 
+  bool isLoading = false;
+
   List<int> flexes = [1, 3, 3, 2];
+
+  Future<void> deleteAdminUser(AdminUserModel adminUserModel) async {
+    dynamic value = await showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return CommonDialog(
+          text: AppStrings.are_you_sure_want_to_delete_admin_user,
+          rightOnTap: () {
+            Navigator.pop(context, true);
+          },
+        );
+      },
+    );
+
+    if(value == true) {
+      isLoading = true;
+      mySetState();
+
+      bool isDeleted = await AdminUserController().deleteAdminUser(adminUserModel.id);
+      Log().i("isDeleted:$isDeleted");
+
+      isLoading = false;
+      mySetState();
+    }
+  }
 
   @override
   void initState() {
@@ -34,25 +67,31 @@ class _AdminUsersListScreenState extends State<AdminUsersListScreen> with Automa
 
   @override
   Widget build(BuildContext context) {
+    super.pageBuild();
+
     themeData = Theme.of(context);
     return Consumer<AdminUserProvider>(
       builder: (BuildContext context, AdminUserProvider adminUserProvider, Widget? child) {
         return Container(
-          child: Scaffold(
-            body: SizedBox(
-              height: double.maxFinite,
-              width: double.maxFinite,
-              child: futureGetData != null ? FutureBuilder<List<AdminUserModel>>(
-                future: futureGetData,
-                builder: (BuildContext context, AsyncSnapshot<List<AdminUserModel>> snapshot) {
-                  if(snapshot.connectionState == ConnectionState.done) {
-                    return getMainBody(adminUserProvider.adminUsers);
-                  }
-                  else {
-                    return const LoadingWidget();
-                  }
-                },
-              ) : getMainBody(adminUserProvider.adminUsers),
+          child: ModalProgressHUD(
+            inAsyncCall: isLoading,
+            progressIndicator: const LoadingWidget(),
+            child: Scaffold(
+              body: SizedBox(
+                height: double.maxFinite,
+                width: double.maxFinite,
+                child: futureGetData != null ? FutureBuilder<List<AdminUserModel>>(
+                  future: futureGetData,
+                  builder: (BuildContext context, AsyncSnapshot<List<AdminUserModel>> snapshot) {
+                    if(snapshot.connectionState == ConnectionState.done) {
+                      return getMainBody(adminUserProvider.adminUsers);
+                    }
+                    else {
+                      return const LoadingWidget();
+                    }
+                  },
+                ) : getMainBody(adminUserProvider.adminUsers),
+              ),
             ),
           ),
         );
@@ -61,7 +100,7 @@ class _AdminUsersListScreenState extends State<AdminUsersListScreen> with Automa
   }
 
   Widget getMainBody(List<AdminUserModel> users) {
-    flexes = [1, 3, 3, 3, 2, 1, 1];
+    flexes = [1, 2, 3, 2, 2, 1, 2];
     List<String> titles = ["Sr No.", "Id", "Name", "Role", "Username", "Active", "Edit"];
 
     Color textColor = themeData.colorScheme.onPrimary;
@@ -114,7 +153,7 @@ class _AdminUsersListScreenState extends State<AdminUsersListScreen> with Automa
     FontWeight? fontWeight = FontWeight.w600;
 
     return Container(
-      margin: EdgeInsets.symmetric(vertical: 5),
+      margin: const EdgeInsets.symmetric(vertical: 5),
       child: MyTableRowWidget(
         cells: [
           MyTableCellModel(
@@ -143,7 +182,7 @@ class _AdminUsersListScreenState extends State<AdminUsersListScreen> with Automa
           ),
           MyTableCellModel(
             flex: flexes[6],
-            child: getEditDeleUser(),
+            child: getEditDeleteUser(adminUserModel),
           ),
         ],
       ),
@@ -162,21 +201,30 @@ class _AdminUsersListScreenState extends State<AdminUsersListScreen> with Automa
     );
   }
 
-  Widget getEditDeleUser() {
+  Widget getEditDeleteUser(AdminUserModel adminUserModel) {
     return Row(
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
         getIconButton(
           iconData: Icons.edit,
-          onTap: () {
-
+          onTap: () async {
+            await AdminUserController().createAdminUserWithUsernameAndPassword(context: context, userModel: AdminUserModel(
+              id: MyUtils.getUniqueIdFromUuid(),
+              name: "Meet",
+              role: AdminUserType.laboratory,
+              isActive: true,
+              username: "Meet341993${MyUtils.getUniqueIdFromUuid()}",
+              password: "123456789",
+            ));
+            futureGetData = AdminUserController().getAdminUsers();
+            mySetState();
           },
         ),
-        SizedBox(width: 5,),
+        const SizedBox(width: 5,),
         getIconButton(
           iconData: Icons.delete,
-          onTap: () {
-
+          onTap: () async {
+            deleteAdminUser(adminUserModel);
           },
           backgroundColor: Colors.red,
         ),
