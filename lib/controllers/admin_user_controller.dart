@@ -189,7 +189,8 @@ class AdminUserController {
       Query<Map<String, dynamic>> query = FirestoreController()
         .firestore
         .collection(FirebaseNodes.adminUsersCollection)
-        .limit(AppConstants.adminUsersDocumentLimitForPagination);
+        .limit(AppConstants.adminUsersDocumentLimitForPagination)
+        .orderBy("createdTime", descending: false);
 
       //For Last Document
       DocumentSnapshot<Map<String, dynamic>>? snapshot = adminUserProvider.getLastDocument;
