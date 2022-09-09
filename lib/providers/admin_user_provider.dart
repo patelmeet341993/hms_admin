@@ -1,11 +1,14 @@
 import 'package:admin/models/admin_user_model.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/foundation.dart';
 
 class AdminUserProvider extends ChangeNotifier {
   AdminUserModel? _adminUserModel;
   String _adminUserId = "";
+  final List<AdminUserModel> _adminUsers = <AdminUserModel>[];
 
-  List<AdminUserModel> _adminUsers = <AdminUserModel>[];
+  DocumentSnapshot<Map<String, dynamic>>? _lastdocument;
+  bool _hasMoreUsers = false, _isUsersLoading = false;
 
   AdminUserModel? getAdminUserModel() {
     if(_adminUserModel != null) {
@@ -49,6 +52,27 @@ class AdminUserProvider extends ChangeNotifier {
   void setAdminUsers(List<AdminUserModel> users, {bool isNotify = true}) {
     _adminUsers.clear();
     _adminUsers.addAll(List.from(users.map((e) => AdminUserModel.fromMap(e.toMap())).toList()));
+    if(isNotify) {
+      notifyListeners();
+    }
+  }
+
+  void addAdminUsersInList(List<AdminUserModel> adminUserModels, {bool isNotify = true}) {
+    _adminUsers.addAll(adminUserModels.map((e) => AdminUserModel.fromMap(e.toMap())).toList());
+    if(isNotify) {
+      notifyListeners();
+    }
+  }
+
+  DocumentSnapshot<Map<String, dynamic>>? get getLastDocument => _lastdocument;
+  set setLastDocument(DocumentSnapshot<Map<String, dynamic>>? documentSnapshot) => _lastdocument = documentSnapshot;
+
+  bool get getHasMoreUsers => _hasMoreUsers;
+  set setHasMoreUsers(bool hasMoreUsers) => _hasMoreUsers = hasMoreUsers;
+
+  bool get getIsUsersLoading => _isUsersLoading;
+  void setIsUsersLoading(bool isUsersLoading, {bool isNotify = true}) {
+    _isUsersLoading = isUsersLoading;
     if(isNotify) {
       notifyListeners();
     }
