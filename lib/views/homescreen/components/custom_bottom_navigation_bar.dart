@@ -147,15 +147,13 @@ class _CustomBottomNavigationState extends State<CustomBottomNavigation>
       builder: (BuildContext context, AppThemeProvider value,_) {
         // customAppTheme = themeData;
         return  LayoutBuilder(
-              builder: (BuildContext context, BoxConstraints constraints) {
-                if (ScreenMedia.isMinimumSize(ScreenMediaType.XS,
-                    currentWidth: constraints.maxWidth)) {
-                  return mobileScreen();
-                }
-                return largeScreen(
-                    ScreenMedia.getScreenMediaType(constraints.maxWidth),true);
-              },
-            );
+          builder: (BuildContext context, BoxConstraints constraints) {
+            if (ScreenMedia.isMinimumSize(ScreenMediaType.XS, currentWidth: constraints.maxWidth)) {
+              return mobileScreen();
+            }
+            return largeScreen(ScreenMedia.getScreenMediaType(constraints.maxWidth),true);
+          },
+        );
       },
     );
   }
