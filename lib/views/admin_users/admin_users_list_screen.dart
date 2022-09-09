@@ -12,6 +12,7 @@ import 'package:admin/views/common/components/modal_progress_hud.dart';
 import 'package:admin/views/common/components/my_table/my_table_cell_model.dart';
 import 'package:admin/views/common/components/my_table/my_table_row_widget.dart';
 import 'package:flutter/material.dart';
+import 'package:loading_animation_widget/loading_animation_widget.dart';
 import 'package:provider/provider.dart';
 
 import '../../utils/SizeConfig.dart';
@@ -31,7 +32,9 @@ class _AdminUsersListScreenState extends State<AdminUsersListScreen> with Automa
 
   List<int> flexes = [1, 3, 3, 2];
 
-  Future<void> deleteAdminUser(AdminUserModel adminUserModel) async {
+  List<String> selectedUsersList = [];
+
+  Future<void> deleteAdminUser(List<String> adminUserIds) async {
     dynamic value = await showDialog(
       context: context,
       builder: (BuildContext context) {
@@ -48,7 +51,7 @@ class _AdminUsersListScreenState extends State<AdminUsersListScreen> with Automa
       isLoading = true;
       mySetState();
 
-      bool isDeleted = await AdminUserController().deleteAdminUser(adminUserModel.id);
+      bool isDeleted = await AdminUserController().deleteAdminUsers(adminUserIds);
       Log().i("isDeleted:$isDeleted");
 
       isLoading = false;
@@ -61,7 +64,7 @@ class _AdminUsersListScreenState extends State<AdminUsersListScreen> with Automa
     super.initState();
     AdminUserProvider adminUserProvider = Provider.of<AdminUserProvider>(context, listen: false);
     if(adminUserProvider.adminUsersLength <= 0) {
-      futureGetData = AdminUserController().getAdminUsers();
+      futureGetData = AdminUserController().getAdminUsers(isNotify: false);
     }
   }
 
@@ -84,13 +87,13 @@ class _AdminUsersListScreenState extends State<AdminUsersListScreen> with Automa
                   future: futureGetData,
                   builder: (BuildContext context, AsyncSnapshot<List<AdminUserModel>> snapshot) {
                     if(snapshot.connectionState == ConnectionState.done) {
-                      return getMainBody(adminUserProvider.adminUsers);
+                      return getMainBody(adminUserProvider);
                     }
                     else {
                       return const LoadingWidget();
                     }
                   },
-                ) : getMainBody(adminUserProvider.adminUsers),
+                ) : getMainBody(adminUserProvider),
               ),
             ),
           ),
@@ -99,8 +102,8 @@ class _AdminUsersListScreenState extends State<AdminUsersListScreen> with Automa
     );
   }
 
-  Widget getMainBody(List<AdminUserModel> users) {
-    flexes = [1, 2, 3, 2, 2, 1, 2];
+  Widget getMainBody(AdminUserProvider adminUserProvider) {
+    flexes = [1, 1, 2, 2, 1, 2, 2, 2];
     List<String> titles = ["Sr No.", "Id", "Name", "Role", "Username", "Active", "Edit"];
 
     Color textColor = themeData.colorScheme.onPrimary;
@@ -114,6 +117,22 @@ class _AdminUsersListScreenState extends State<AdminUsersListScreen> with Automa
           MyTableRowWidget(
             backgroundColor: themeData.colorScheme.primary,
             cells: [
+              MyTableCellModel(
+                  flex: flexes[0],
+                  child: getCheckBoxWidget(
+                    isSelected: adminUserProvider.adminUsersLength > 0 && selectedUsersList.length == adminUserProvider.adminUsersLength,
+                    activeColor: themeData.colorScheme.onPrimary,
+                    checkColor: themeData.colorScheme.primary,
+                    unselectedColor: themeData.colorScheme.onPrimary,
+                    onChanged: (bool? value) {
+                      selectedUsersList.clear();
+                      if(value ?? false) {
+                        selectedUsersList.addAll(adminUserProvider.adminUsers.map((e) => e.id));
+                      }
+                      mySetState();
+                    }
+                  ),
+                ),
               ...List.generate(titles.length, (index) {
                 return MyTableCellModel(
                   flex: flexes[index],
@@ -127,21 +146,51 @@ class _AdminUsersListScreenState extends State<AdminUsersListScreen> with Automa
               }),
             ],
           ),
-          Expanded(child: getAdminUsersListView(users))
+          Expanded(child: getAdminUsersListView(adminUserProvider))
         ],
       ),
     );
   }
 
-  Widget getAdminUsersListView(List<AdminUserModel> users) {
+  Widget getAdminUsersListView(AdminUserProvider adminUserProvider) {
+    List<AdminUserModel> users = adminUserProvider.adminUsers;
+
     if(users.isEmpty) {
       return const Center(
         child: Text(AppStrings.no_users),
       );
     }
+
     return ListView.builder(
-      itemCount: users.length,
+      itemCount: users.length + 1,
       itemBuilder: (BuildContext context, int index) {
+        if((index == 0 && adminUserProvider.adminUsersLength == 0) || (index == adminUserProvider.adminUsersLength)) {
+          if(adminUserProvider.getIsUsersLoading) {
+          // if(true) {
+            return Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Container(
+                  margin: EdgeInsets.symmetric(vertical: 10),
+                  child: LoadingAnimationWidget.staggeredDotsWave(
+                    color: themeData.colorScheme.primary,
+                    size: 40,
+                  ),
+                ),
+              ],
+            );
+          }
+          else {
+            return SizedBox();
+          }
+        }
+
+        if(adminUserProvider.getHasMoreUsers && index > (adminUserProvider.adminUsersLength - AppConstants.adminUsersRefreshIndexForPagination)) {
+          WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
+            AdminUserController().getAdminUsers(isRefresh: false, isFromCache: false, isNotify: false);
+          });
+        }
+
         AdminUserModel adminUserModel = users[index];
 
         return getAdminUserWidget(adminUserModel, index);
@@ -158,30 +207,45 @@ class _AdminUsersListScreenState extends State<AdminUsersListScreen> with Automa
         cells: [
           MyTableCellModel(
             flex: flexes[0],
-            child: getTableCellWidget((index + 1).toString(), fontWeight: fontWeight),
+            child: getCheckBoxWidget(
+              isSelected: selectedUsersList.contains(adminUserModel.id),
+              onChanged: (bool? value) {
+                if(value ?? false) {
+                  selectedUsersList.add(adminUserModel.id);
+                }
+                else {
+                  selectedUsersList.remove(adminUserModel.id);
+                }
+                mySetState();
+              }
+            ),
           ),
           MyTableCellModel(
             flex: flexes[1],
-            child: getTableCellWidget(adminUserModel.id, fontWeight: fontWeight),
+            child: getTableCellWidget((index + 1).toString(), fontWeight: fontWeight),
           ),
           MyTableCellModel(
             flex: flexes[2],
-            child: getTableCellWidget(adminUserModel.name, fontWeight: fontWeight),
+            child: getTableCellWidget(adminUserModel.id, fontWeight: fontWeight),
           ),
           MyTableCellModel(
             flex: flexes[3],
-            child: getTableCellWidget(adminUserModel.role, fontWeight: fontWeight),
+            child: getTableCellWidget(adminUserModel.name, fontWeight: fontWeight),
           ),
           MyTableCellModel(
             flex: flexes[4],
-            child: getTableCellWidget(adminUserModel.username, fontWeight: fontWeight),
+            child: getTableCellWidget(adminUserModel.role, fontWeight: fontWeight),
           ),
           MyTableCellModel(
             flex: flexes[5],
-            child: getTableCellWidget(adminUserModel.isActive ? "Activated" : "Deactivated", fontWeight: fontWeight),
+            child: getTableCellWidget(adminUserModel.username, fontWeight: fontWeight),
           ),
           MyTableCellModel(
             flex: flexes[6],
+            child: getTableCellWidget(adminUserModel.isActive ? "Activated" : "Deactivated", fontWeight: fontWeight),
+          ),
+          MyTableCellModel(
+            flex: flexes[7],
             child: getEditDeleteUser(adminUserModel),
           ),
         ],
@@ -201,6 +265,19 @@ class _AdminUsersListScreenState extends State<AdminUsersListScreen> with Automa
     );
   }
 
+  Widget getCheckBoxWidget({bool isSelected = false, void Function(bool?)? onChanged, Color? activeColor, Color? checkColor, Color? unselectedColor}) {
+    return Theme(
+      data: themeData.copyWith(
+        unselectedWidgetColor: unselectedColor,
+      ),
+      child: Checkbox(
+        value: isSelected, onChanged: onChanged,
+        activeColor: activeColor,
+        checkColor: checkColor,
+      ),
+    );
+  }
+
   Widget getEditDeleteUser(AdminUserModel adminUserModel) {
     return Row(
       mainAxisAlignment: MainAxisAlignment.center,
@@ -208,15 +285,20 @@ class _AdminUsersListScreenState extends State<AdminUsersListScreen> with Automa
         getIconButton(
           iconData: Icons.edit,
           onTap: () async {
-            await AdminUserController().createAdminUserWithUsernameAndPassword(context: context, userModel: AdminUserModel(
+            isLoading = true;
+            mySetState();
+
+            AdminUserModel adminUserModel = AdminUserModel(
               id: MyUtils.getUniqueIdFromUuid(),
               name: "Meet",
               role: AdminUserType.laboratory,
               isActive: true,
               username: "Meet341993${MyUtils.getUniqueIdFromUuid()}",
               password: "123456789",
-            ));
-            futureGetData = AdminUserController().getAdminUsers();
+            );
+            await AdminUserController().addAdminUserInFirestoreAndUpdateInProvider(context: context, adminUserModel: adminUserModel);
+
+            isLoading = false;
             mySetState();
           },
         ),
@@ -224,7 +306,7 @@ class _AdminUsersListScreenState extends State<AdminUsersListScreen> with Automa
         getIconButton(
           iconData: Icons.delete,
           onTap: () async {
-            deleteAdminUser(adminUserModel);
+            deleteAdminUser(selectedUsersList.isNotEmpty ? selectedUsersList : [adminUserModel.id]);
           },
           backgroundColor: Colors.red,
         ),
