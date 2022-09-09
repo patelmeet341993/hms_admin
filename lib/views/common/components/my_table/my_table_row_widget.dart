@@ -6,7 +6,7 @@ class MyTableRowWidget extends StatelessWidget {
   final List<MyTableCellModel> cells;
   final double borderRadius;
   final Color? backgroundColor;
-  final EdgeInsets? margin, padding;
+  final EdgeInsets? margin, padding, contentMargin, contentPadding;
 
   const MyTableRowWidget({
     Key? key,
@@ -15,6 +15,8 @@ class MyTableRowWidget extends StatelessWidget {
     this.backgroundColor,
     this.margin,
     this.padding,
+    this.contentMargin = const EdgeInsets.symmetric(horizontal: 5),
+    this.contentPadding,
   }) : super(key: key);
 
   @override
@@ -32,25 +34,16 @@ class MyTableRowWidget extends StatelessWidget {
         borderRadius: BorderRadius.circular(borderRadius),
       ),
       child: Row(
-        children: cells.map((e) => Expanded(flex: e.flex, child: e.child,)).toList(),
-        /*children: [
-          Expanded(
-            flex: flexes[0],
-            child: getTableColumnTitleWidget(values[0]),
-          ),
-          Expanded(
-            flex: flexes[1],
-            child: getTableColumnTitleWidget(values[1]),
-          ),
-          Expanded(
-            flex: flexes[2],
-            child: getTableColumnTitleWidget(values[2]),
-          ),
-          Expanded(
-            flex: flexes[3],
-            child: getTableColumnTitleWidget(values[3]),
-          ),
-        ],*/
+        children: cells.map((e) {
+          return Expanded(
+            flex: e.flex,
+            child: Container(
+              margin: contentMargin,
+              padding: contentPadding,
+              child: e.child,
+            ),
+          );
+        }).toList(),
       ),
     );
   }
