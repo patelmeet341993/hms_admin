@@ -16,6 +16,9 @@ class SharePrefrenceKeys {
 
 class AppConstants {
   static const List<String> userTypesForLogin = [AdminUserType.admin, AdminUserType.reception];
+
+  static const int adminUsersDocumentLimitForPagination = 20;
+  static const int adminUsersRefreshIndexForPagination = 5;
 }
 
 class PatientGender {
