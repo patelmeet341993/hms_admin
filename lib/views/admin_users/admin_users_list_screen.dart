@@ -3,6 +3,7 @@ import 'package:admin/configs/constants.dart';
 import 'package:admin/controllers/admin_user_controller.dart';
 import 'package:admin/models/admin_user_model.dart';
 import 'package:admin/providers/admin_user_provider.dart';
+import 'package:admin/utils/date_presentation.dart';
 import 'package:admin/utils/logger_service.dart';
 import 'package:admin/utils/my_safe_state.dart';
 import 'package:admin/utils/my_utils.dart';
@@ -103,8 +104,8 @@ class _AdminUsersListScreenState extends State<AdminUsersListScreen> with Automa
   }
 
   Widget getMainBody(AdminUserProvider adminUserProvider) {
-    flexes = [1, 1, 2, 2, 1, 2, 2, 2];
-    List<String> titles = ["Sr No.", "Id", "Name", "Role", "Username", "Active", "Edit"];
+    flexes = [1, 1, 2, 2, 1, 2, 2, 2, 2];
+    List<String> titles = ["Sr No.", "Id", "Name", "Role", "Username", "Created On", "Active", "Edit"];
 
     Color textColor = themeData.colorScheme.onPrimary;
     FontWeight fontWeight = FontWeight.w800;
@@ -135,7 +136,7 @@ class _AdminUsersListScreenState extends State<AdminUsersListScreen> with Automa
                 ),
               ...List.generate(titles.length, (index) {
                 return MyTableCellModel(
-                  flex: flexes[index],
+                  flex: flexes[index + 1],
                   child: getTableCellWidget(
                     titles[index],
                     textColor: textColor,
@@ -242,10 +243,14 @@ class _AdminUsersListScreenState extends State<AdminUsersListScreen> with Automa
           ),
           MyTableCellModel(
             flex: flexes[6],
-            child: getTableCellWidget(adminUserModel.isActive ? "Activated" : "Deactivated", fontWeight: fontWeight),
+            child: getTableCellWidget(adminUserModel.createdTime != null ? DatePresentation.ddMMyyyyFormatter(adminUserModel.createdTime!.millisecondsSinceEpoch.toString()) : "Not Available", fontWeight: fontWeight),
           ),
           MyTableCellModel(
             flex: flexes[7],
+            child: getTableCellWidget(adminUserModel.isActive ? "Activated" : "Deactivated", fontWeight: fontWeight),
+          ),
+          MyTableCellModel(
+            flex: flexes[8],
             child: getEditDeleteUser(adminUserModel),
           ),
         ],
