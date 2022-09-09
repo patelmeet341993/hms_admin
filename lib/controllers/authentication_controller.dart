@@ -105,7 +105,7 @@ class AuthenticationController {
     AdminUserProvider adminUserProvider = Provider.of<AdminUserProvider>(NavigationController.mainScreenNavigator.currentContext!, listen: false);
     adminUserProvider.setAdminUserId(adminUserModel?.id ?? "", isNotify: false);
     adminUserProvider.setAdminUserModel(adminUserModel, isNotify: false);
-    SharedPrefManager().setString(SharePrefrenceKeys.loggedInUser, adminUserModel != null ? jsonEncode(adminUserModel.toMap()) : "");
+    SharedPrefManager().setString(SharePrefrenceKeys.loggedInUser, adminUserModel != null ? jsonEncode(adminUserModel.toMap(toJson: true)) : "");
 
     if(isLoginSuccess) {
       AdminUserController().startAdminUserSubscription();
