@@ -42,11 +42,11 @@ class AuthenticationController {
 
       if(documentSnapshot.exists && (documentSnapshot.data() ?? {}).isNotEmpty) {
         AdminUserModel newModel = AdminUserModel.fromMap(documentSnapshot.data()!);
-        if(adminUserModel.username == newModel.username && adminUserModel.password == newModel.password) {
+        if(adminUserModel.username == newModel.username && adminUserModel.password == newModel.password && newModel.isActive) {
           adminUserProvider.setAdminUserId(newModel.id);
           adminUserProvider.setAdminUserModel(newModel);
           if(adminUserModel != newModel) {
-            SharedPrefManager().setString(SharePrefrenceKeys.loggedInUser, jsonEncode(newModel.toMap()));
+            SharedPrefManager().setString(SharePrefrenceKeys.loggedInUser, jsonEncode(newModel.toMap(toJson: true)));
           }
           return newModel;
         }
@@ -95,7 +95,7 @@ class AuthenticationController {
       DocumentSnapshot<Map<String, dynamic>> docSnapshot = querySnapshot.docs.first;
       if((docSnapshot.data() ?? {}).isNotEmpty) {
         AdminUserModel model = AdminUserModel.fromMap(docSnapshot.data()!);
-        isLoginSuccess = model.username == userName && model.password == password && (userTypes.isNotEmpty ? userTypes.contains(model.role) : true);
+        isLoginSuccess = model.username == userName && model.password == password && (userTypes.isNotEmpty ? userTypes.contains(model.role) : true) && model.isActive;
         if(isLoginSuccess) {
           adminUserModel = model;
         }
