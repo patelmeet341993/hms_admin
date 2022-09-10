@@ -77,4 +77,13 @@ class AdminUserProvider extends ChangeNotifier {
       notifyListeners();
     }
   }
+
+  void updateUserData(String userid, AdminUserModel adminUserModel, {bool isNotify = true}) {
+    _adminUsers.where((element) => element.id == userid).forEach((element) {
+      element.updateFromMap(adminUserModel.toMap());
+    });
+    if(isNotify) {
+      notifyListeners();
+    }
+  }
 }
