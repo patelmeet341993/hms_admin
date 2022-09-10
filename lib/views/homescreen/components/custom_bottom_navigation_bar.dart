@@ -240,8 +240,7 @@ class _CustomBottomNavigationState extends State<CustomBottomNavigation>
   Widget largeScreen(ScreenMediaType screenMediaType, bool isExtended) {
     List<NavigationRailDestination> rails = [];
 
-    bool isTablet = ScreenMedia.isMinimumSize(ScreenMediaType.LG,
-        currentScreenMediaType: screenMediaType);
+    bool isTablet = ScreenMedia.isMinimumSize(ScreenMediaType.LG, currentScreenMediaType: screenMediaType);
 
     //Large Screen
     // if (isTablet) _isExtended = ValueNotifier<bool>(false);
@@ -320,6 +319,9 @@ class _CustomBottomNavigationState extends State<CustomBottomNavigation>
             color: verticalDividerColor??themeData.backgroundColor,
           ),
           Expanded(
+            child: screens[_currentIndex],
+          ),
+          /*Expanded(
             child: Column(
               mainAxisSize: MainAxisSize.max,
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -334,7 +336,7 @@ class _CustomBottomNavigationState extends State<CustomBottomNavigation>
                 ),
               ],
             ),
-          )
+          ),*/
         ],
       ),
     );
