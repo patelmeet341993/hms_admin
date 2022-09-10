@@ -240,7 +240,7 @@ class AdminUserController {
 
     bool isSuccessful = false;
 
-    isSuccessful = await FirestoreController().firestore.collection(FirebaseNodes.adminUsersCollection).doc(adminUserId).update({"isActive" : isActive}).then((value) {
+    isSuccessful = await FirestoreController().firestore.collection(FirebaseNodes.adminUsersCollection).doc(adminUserId).set({"isActive" : isActive}, SetOptions(merge: true)).then((value) {
       Log().d("User IsActive status updatd successfully");
       return true;
     })
