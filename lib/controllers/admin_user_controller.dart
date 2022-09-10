@@ -19,15 +19,19 @@ import 'firestore_controller.dart';
 class AdminUserController {
   static StreamSubscription<DocumentSnapshot<Map<String, dynamic>>>? adminUserStreamSubscription;
 
-  Future<AdminUserModel?> createAdminUserWithUsernameAndPassword({required BuildContext context, required AdminUserModel userModel, String userType = AdminUserType.admin,}) async {
+  Future<AdminUserModel?> createAdminUserWithUsernameAndPassword({required BuildContext context, required AdminUserModel userModel,}) async {
     if(userModel.username.isEmpty || userModel.password.isEmpty) {
       MyToast.showError("UserName is empty or password is empty", context);
       return null;
     }
 
+    if(userModel.role.isEmpty) {
+      userModel.role = AdminUserType.reception;
+    }
+
     AdminUserModel? adminUserModel;
 
-    QuerySnapshot<Map<String, dynamic>> querySnapshot = await FirestoreController().firestore.collection(FirebaseNodes.adminUsersCollection).where("role", isEqualTo: userType).where("username", isEqualTo: userModel.username).get();
+    QuerySnapshot<Map<String, dynamic>> querySnapshot = await FirestoreController().firestore.collection(FirebaseNodes.adminUsersCollection).where("role", isEqualTo: userModel.role).where("username", isEqualTo: userModel.username).get();
     if(querySnapshot.docs.isNotEmpty) {
       DocumentSnapshot<Map<String, dynamic>> docSnapshot = querySnapshot.docs.first;
       if((docSnapshot.data() ?? {}).isNotEmpty) {
@@ -44,7 +48,7 @@ class AdminUserController {
         name: userModel.name,
         username: userModel.username,
         password: userModel.password,
-        role: userType,
+        role: userModel.role,
         description: userModel.description,
         imageUrl: userModel.imageUrl,
         scannerData: userModel.scannerData,
