@@ -180,29 +180,27 @@ class AppTheme {
     canvasColor: Colors.transparent,
     backgroundColor: Colors.white,
     scaffoldBackgroundColor: Styles.lightBackgroundColor,
-    appBarTheme: const AppBarTheme(
+    appBarTheme: AppBarTheme(
       //textTheme: lightAppBarTextTheme,
-      titleTextStyle: TextStyle(
+      titleTextStyle: lightAppBarTextTheme.subtitle1,
+      toolbarTextStyle: const TextStyle(
         color: Styles.lightTextColor,
       ),
-      toolbarTextStyle: TextStyle(
-        color: Styles.lightTextColor,
-      ),
-      actionsIconTheme: IconThemeData(
+      actionsIconTheme: const IconThemeData(
         color: Styles.lightTextColor,
       ),
       color: Styles.lightAppBarColor,
-      iconTheme: IconThemeData(color: Styles.lightTextColor, size: 24),
+      iconTheme: const IconThemeData(color: Styles.lightTextColor, size: 24),
     ),
     navigationRailTheme: NavigationRailThemeData(
         selectedIconTheme:
-        IconThemeData(color: Styles.lightPrimaryColor, opacity: 1, size: 24),
+        const IconThemeData(color: Styles.lightPrimaryColor, opacity: 1, size: 24),
         unselectedIconTheme:
-        IconThemeData(color: Styles.lightTextColor, opacity: 1, size: 24),
+        const IconThemeData(color: Styles.lightTextColor, opacity: 1, size: 24),
         backgroundColor: Styles.lightBackgroundColor,
         elevation: 3,
-        selectedLabelTextStyle: TextStyle(color: Styles.lightPrimaryColor),
-        unselectedLabelTextStyle: TextStyle(color: Styles.lightTextColor),
+        selectedLabelTextStyle: const TextStyle(color: Styles.lightPrimaryColor),
+        unselectedLabelTextStyle: const TextStyle(color: Styles.lightTextColor),
     ),
     colorScheme: ColorScheme.light(
         primary: Styles.lightPrimaryColor,
