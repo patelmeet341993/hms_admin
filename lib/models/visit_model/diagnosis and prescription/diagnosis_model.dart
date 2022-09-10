@@ -47,7 +47,7 @@ class DiagnosisModel {
     return <String, dynamic>{
       "doctorId" : doctorId,
       "diagnosisDescription" : diagnosisDescription,
-      "prescription" : prescription.map((e) => e.toMap()),
+      "prescription" : prescription.map((e) => e.toMap()).toList(),
     };
   }
 
