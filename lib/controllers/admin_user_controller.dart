@@ -230,4 +230,21 @@ class AdminUserController {
       return [];
     }
   }
+
+  Future<bool> enableDisableAdminUser(String adminUserId, bool isActive) async {
+    Log().d("enableDisableAdminUser called for adminUserId:$adminUserId, isActive:$isActive");
+
+    bool isSuccessful = false;
+
+    isSuccessful = await FirestoreController().firestore.collection(FirebaseNodes.adminUsersCollection).doc(adminUserId).update({"isActive" : isActive}).then((value) {
+      Log().d("User IsActive status updatd successfully");
+      return true;
+    })
+    .catchError((e, s) {
+      Log().e("Error in Updating User IsActive Status:$e", s);
+      return false;
+    });
+
+    return isSuccessful;
+  }
 }
