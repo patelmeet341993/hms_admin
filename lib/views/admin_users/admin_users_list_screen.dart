@@ -7,6 +7,7 @@ import 'package:admin/utils/date_presentation.dart';
 import 'package:admin/utils/logger_service.dart';
 import 'package:admin/utils/my_safe_state.dart';
 import 'package:admin/utils/my_utils.dart';
+import 'package:admin/views/admin_users/add_edit_admin_user_dialog.dart';
 import 'package:admin/views/common/components/common_dialog.dart';
 import 'package:admin/views/common/components/loading_widget.dart';
 import 'package:admin/views/common/components/modal_progress_hud.dart';
@@ -20,7 +21,8 @@ import 'package:provider/provider.dart';
 import '../../utils/SizeConfig.dart';
 
 class AdminUsersListScreen extends StatefulWidget {
-  const AdminUsersListScreen({Key? key}) : super(key: key);
+  final String title;
+  const AdminUsersListScreen({Key? key, this.title = "Admin Users"}) : super(key: key);
 
   @override
   State<AdminUsersListScreen> createState() => _AdminUsersListScreenState();
@@ -79,6 +81,16 @@ class _AdminUsersListScreenState extends State<AdminUsersListScreen> with Automa
     }
   }
 
+  Future<void> showAddAdminUserDialog() async {
+    dynamic value = await showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AddEditAdminUserDialog();
+      },
+      barrierDismissible: false,
+    );
+  }
+
   @override
   void initState() {
     super.initState();
@@ -100,6 +112,22 @@ class _AdminUsersListScreenState extends State<AdminUsersListScreen> with Automa
             inAsyncCall: isLoading,
             progressIndicator: const LoadingWidget(),
             child: Scaffold(
+              appBar: AppBar(
+                title: Text(widget.title),
+                centerTitle: false,
+                actions: [
+                  Container(
+                    margin: const EdgeInsets.symmetric(horizontal: 10),
+                    child: Row(
+                      children: [
+                        getIconButton(iconData: Icons.add, onTap: () {
+                          showAddAdminUserDialog();
+                        }),
+                      ],
+                    ),
+                  ),
+                ],
+              ),
               body: SizedBox(
                 height: double.maxFinite,
                 width: double.maxFinite,
