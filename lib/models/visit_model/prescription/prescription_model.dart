@@ -65,7 +65,7 @@ class PrescriptionModel {
       "repeatDurationDays" : repeatDurationDays,
       "totalDays" : totalDays,
       "medicineType" : medicineType,
-      "doses" : doses.map((e) => e.toMap()),
+      "doses" : doses.map((e) => e.toMap()).toList(),
     };
   }
 
