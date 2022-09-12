@@ -1,13 +1,12 @@
 import 'package:admin/configs/app_strings.dart';
 import 'package:admin/configs/constants.dart';
-import 'package:admin/controllers/admin_user_controller.dart';
+import 'package:admin/controllers/admin_user/admin_user_controller.dart';
 import 'package:admin/models/admin_user_model.dart';
 import 'package:admin/providers/admin_user_provider.dart';
 import 'package:admin/utils/date_presentation.dart';
 import 'package:admin/utils/logger_service.dart';
 import 'package:admin/utils/my_safe_state.dart';
-import 'package:admin/utils/my_utils.dart';
-import 'package:admin/views/admin_users/add_edit_admin_user_dialog.dart';
+import 'package:admin/views/admin_users/components/add_edit_admin_user_dialog.dart';
 import 'package:admin/views/common/components/common_dialog.dart';
 import 'package:admin/views/common/components/loading_widget.dart';
 import 'package:admin/views/common/components/modal_progress_hud.dart';
@@ -81,14 +80,55 @@ class _AdminUsersListScreenState extends State<AdminUsersListScreen> with Automa
     }
   }
 
-  Future<void> showAddAdminUserDialog() async {
+  Future<void> showAddEditAdminUserDialog({AdminUserModel? adminUserModel}) async {
     dynamic value = await showDialog(
       context: context,
       builder: (BuildContext context) {
-        return AddEditAdminUserDialog();
+        return AddEditAdminUserDialog(adminUserModel: adminUserModel,);
       },
       barrierDismissible: false,
     );
+
+    if(value is AdminUserModel) {
+      bool isSuccessful;
+
+      isLoading = true;
+      mySetState();
+
+      if(adminUserModel != null) {
+        AdminUserModel newAdminUserModel = AdminUserModel(
+          id: adminUserModel.id,
+          name: value.name,
+          username: value.username,
+          password: value.password,
+          description: value.description,
+          role: value.role,
+          isActive: value.isActive,
+          createdTime: adminUserModel.createdTime,
+          scannerData: adminUserModel.scannerData,
+          imageUrl: adminUserModel.imageUrl,
+        );
+        isSuccessful = await AdminUserController().updateAdminUserProfileDataAndUpdateInListInProvider(context: context, adminUserModel: newAdminUserModel);
+      }
+      else {
+        isSuccessful = await AdminUserController().addAdminUserInFirestoreAndUpdateInProvider(
+          context: context,
+          adminUserModel: AdminUserModel(
+            name: value.name,
+            username: value.username,
+            password: value.password,
+            description: value.description,
+            role: value.role,
+            isActive: value.isActive,
+          ),
+        );
+      }
+
+      Log().i("isSuccessful:$isSuccessful");
+
+      isLoading = false;
+      mySetState();
+    }
   }
 
   @override
@@ -102,47 +142,47 @@ class _AdminUsersListScreenState extends State<AdminUsersListScreen> with Automa
 
   @override
   Widget build(BuildContext context) {
+    super.build(context);
     super.pageBuild();
 
     themeData = Theme.of(context);
     return Consumer<AdminUserProvider>(
       builder: (BuildContext context, AdminUserProvider adminUserProvider, Widget? child) {
-        return Container(
-          child: ModalProgressHUD(
-            inAsyncCall: isLoading,
-            progressIndicator: const LoadingWidget(),
-            child: Scaffold(
-              appBar: AppBar(
-                title: Text(widget.title),
-                centerTitle: false,
-                actions: [
-                  Container(
-                    margin: const EdgeInsets.symmetric(horizontal: 10),
-                    child: Row(
-                      children: [
-                        getIconButton(iconData: Icons.add, onTap: () {
-                          showAddAdminUserDialog();
-                        }),
-                      ],
-                    ),
+        return ModalProgressHUD(
+          inAsyncCall: isLoading,
+          progressIndicator: const LoadingWidget(),
+          child: Scaffold(
+            appBar: AppBar(
+              title: Text(widget.title),
+              centerTitle: false,
+              elevation: 0,
+              actions: [
+                Container(
+                  margin: const EdgeInsets.symmetric(horizontal: 10),
+                  child: Row(
+                    children: [
+                      getIconButton(iconData: Icons.add, onTap: () {
+                        showAddEditAdminUserDialog();
+                      }),
+                    ],
                   ),
-                ],
-              ),
-              body: SizedBox(
-                height: double.maxFinite,
-                width: double.maxFinite,
-                child: futureGetData != null ? FutureBuilder<List<AdminUserModel>>(
-                  future: futureGetData,
-                  builder: (BuildContext context, AsyncSnapshot<List<AdminUserModel>> snapshot) {
-                    if(snapshot.connectionState == ConnectionState.done) {
-                      return getMainBody(adminUserProvider);
-                    }
-                    else {
-                      return const LoadingWidget();
-                    }
-                  },
-                ) : getMainBody(adminUserProvider),
-              ),
+                ),
+              ],
+            ),
+            body: SizedBox(
+              height: double.maxFinite,
+              width: double.maxFinite,
+              child: futureGetData != null ? FutureBuilder<List<AdminUserModel>>(
+                future: futureGetData,
+                builder: (BuildContext context, AsyncSnapshot<List<AdminUserModel>> snapshot) {
+                  if(snapshot.connectionState == ConnectionState.done) {
+                    return getMainBody(adminUserProvider);
+                  }
+                  else {
+                    return const LoadingWidget();
+                  }
+                },
+              ) : getMainBody(adminUserProvider),
             ),
           ),
         );
@@ -159,7 +199,7 @@ class _AdminUsersListScreenState extends State<AdminUsersListScreen> with Automa
     double fontSize = 16;
 
     return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 10),
+      padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
       child: Column(
         children: [
           MyTableRowWidget(
@@ -219,7 +259,7 @@ class _AdminUsersListScreenState extends State<AdminUsersListScreen> with Automa
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 Container(
-                  margin: EdgeInsets.symmetric(vertical: 10),
+                  margin: const EdgeInsets.symmetric(vertical: 10),
                   child: LoadingAnimationWidget.staggeredDotsWave(
                     color: themeData.colorScheme.primary,
                     size: 40,
@@ -229,7 +269,7 @@ class _AdminUsersListScreenState extends State<AdminUsersListScreen> with Automa
             );
           }
           else {
-            return SizedBox();
+            return const SizedBox();
           }
         }
 
@@ -339,7 +379,9 @@ class _AdminUsersListScreenState extends State<AdminUsersListScreen> with Automa
         getIconButton(
           iconData: Icons.edit,
           onTap: () async {
-            isLoading = true;
+            showAddEditAdminUserDialog(adminUserModel: adminUserModel);
+
+            /*isLoading = true;
             mySetState();
 
             AdminUserModel adminUserModel = AdminUserModel(
@@ -353,7 +395,7 @@ class _AdminUsersListScreenState extends State<AdminUsersListScreen> with Automa
             await AdminUserController().addAdminUserInFirestoreAndUpdateInProvider(context: context, adminUserModel: adminUserModel);
 
             isLoading = false;
-            mySetState();
+            mySetState();*/
           },
         ),
         const SizedBox(width: 5,),
