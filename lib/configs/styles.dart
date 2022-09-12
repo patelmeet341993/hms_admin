@@ -21,4 +21,14 @@ class Styles {
 
   static const Color lightAppBarColor = Color(0xffffffff);
   static const Color darkAppBarColor = Color(0xff2e343b);
+
+  //region CustomColors
+     static const Color cardColor = Color(0xfff0f0f0);
+
+
+  //endregion//
+
+
+
+
 }
