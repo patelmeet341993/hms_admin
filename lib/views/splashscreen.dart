@@ -6,6 +6,7 @@ import 'package:admin/views/homescreen/homescreen.dart';
 import 'package:flutter/material.dart';
 import 'package:loading_animation_widget/loading_animation_widget.dart';
 
+import '../controllers/admin_user/admin_user_controller.dart';
 import '../controllers/authentication_controller.dart';
 
 class SplashScreen extends StatefulWidget {
@@ -28,6 +29,7 @@ class _SplashScreenState extends State<SplashScreen> {
 
     NavigationController.isFirst = false;
     if(user != null) {
+      AdminUserController().startAdminUserSubscription();
       Navigator.pushNamedAndRemoveUntil(NavigationController.mainScreenNavigator.currentContext!, HomeScreen.routeName, (route) => false);
     }
     else {

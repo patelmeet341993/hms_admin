@@ -147,15 +147,13 @@ class _CustomBottomNavigationState extends State<CustomBottomNavigation>
       builder: (BuildContext context, AppThemeProvider value,_) {
         // customAppTheme = themeData;
         return  LayoutBuilder(
-              builder: (BuildContext context, BoxConstraints constraints) {
-                if (ScreenMedia.isMinimumSize(ScreenMediaType.XS,
-                    currentWidth: constraints.maxWidth)) {
-                  return mobileScreen();
-                }
-                return largeScreen(
-                    ScreenMedia.getScreenMediaType(constraints.maxWidth),true);
-              },
-            );
+          builder: (BuildContext context, BoxConstraints constraints) {
+            if (ScreenMedia.isMinimumSize(ScreenMediaType.XS, currentWidth: constraints.maxWidth)) {
+              return mobileScreen();
+            }
+            return largeScreen(ScreenMedia.getScreenMediaType(constraints.maxWidth),true);
+          },
+        );
       },
     );
   }
@@ -242,8 +240,7 @@ class _CustomBottomNavigationState extends State<CustomBottomNavigation>
   Widget largeScreen(ScreenMediaType screenMediaType, bool isExtended) {
     List<NavigationRailDestination> rails = [];
 
-    bool isTablet = ScreenMedia.isMinimumSize(ScreenMediaType.LG,
-        currentScreenMediaType: screenMediaType);
+    bool isTablet = ScreenMedia.isMinimumSize(ScreenMediaType.LG, currentScreenMediaType: screenMediaType);
 
     //Large Screen
     // if (isTablet) _isExtended = ValueNotifier<bool>(false);
@@ -322,6 +319,9 @@ class _CustomBottomNavigationState extends State<CustomBottomNavigation>
             color: verticalDividerColor??themeData.backgroundColor,
           ),
           Expanded(
+            child: screens[_currentIndex],
+          ),
+          /*Expanded(
             child: Column(
               mainAxisSize: MainAxisSize.max,
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -336,7 +336,7 @@ class _CustomBottomNavigationState extends State<CustomBottomNavigation>
                 ),
               ],
             ),
-          )
+          ),*/
         ],
       ),
     );

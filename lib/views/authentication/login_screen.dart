@@ -3,13 +3,11 @@ import 'package:admin/providers/app_theme_provider.dart';
 import 'package:admin/utils/logger_service.dart';
 import 'package:admin/utils/my_safe_state.dart';
 import 'package:admin/utils/my_toast.dart';
-import 'package:admin/views/common/components/Properties.dart';
 import 'package:admin/views/common/components/loading_widget.dart';
 import 'package:admin/views/common/components/modal_progress_hud.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-import '../../configs/app_strings.dart';
 import '../../controllers/authentication_controller.dart';
 import '../../utils/SizeConfig.dart';
 import '../common/components/CustomContainer.dart';
