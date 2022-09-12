@@ -21,6 +21,7 @@ class PatientController {
       bloodGroup: "O+",
       dateOfBirth: Timestamp.fromDate(DateTime(2000, 4, 12)),
       createdTime: Timestamp.now(),
+      primaryMobile: "+919988776655",
       userMobiles: [
         "+919988776655",
       ],
@@ -41,6 +42,7 @@ class PatientController {
       id: newDocumentDataModel.docid,
       createdTime: newDocumentDataModel.timestamp,
       active: false,
+      primaryMobile: mobile,
       userMobiles: [mobile],
     );
 
