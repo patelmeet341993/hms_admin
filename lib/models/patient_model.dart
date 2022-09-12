@@ -4,7 +4,7 @@ import 'package:equatable/equatable.dart';
 import '../utils/parsing_helper.dart';
 
 class PatientModel extends Equatable {
-  String id = "", name = "", profilePicture = "", bloodGroup = "", gender = "";
+  String id = "", name = "", profilePicture = "", bloodGroup = "", gender = "", primaryMobile = "";
   Timestamp? dateOfBirth, createdTime;
   int totalVisits = 0;
   bool active = false;
@@ -16,6 +16,7 @@ class PatientModel extends Equatable {
     this.profilePicture = "",
     this.bloodGroup = "",
     this.gender = "",
+    this.primaryMobile = "",
     this.dateOfBirth,
     this.createdTime,
     this.totalVisits = 0,
@@ -29,6 +30,7 @@ class PatientModel extends Equatable {
     profilePicture = ParsingHelper.parseStringMethod(map['profilePicture']);
     bloodGroup = ParsingHelper.parseStringMethod(map['bloodGroup']);
     gender = ParsingHelper.parseStringMethod(map['gender']);
+    primaryMobile = ParsingHelper.parseStringMethod(map['primaryMobile']);
     dateOfBirth = ParsingHelper.parseTimestampMethod(map['dateOfBirth']);
     createdTime = ParsingHelper.parseTimestampMethod(map['createdTime']);
     totalVisits = ParsingHelper.parseIntMethod(map['totalVisits']);
@@ -42,6 +44,7 @@ class PatientModel extends Equatable {
     profilePicture = ParsingHelper.parseStringMethod(map['profilePicture']);
     bloodGroup = ParsingHelper.parseStringMethod(map['bloodGroup']);
     gender = ParsingHelper.parseStringMethod(map['gender']);
+    primaryMobile = ParsingHelper.parseStringMethod(map['primaryMobile']);
     dateOfBirth = ParsingHelper.parseTimestampMethod(map['dateOfBirth']);
     createdTime = ParsingHelper.parseTimestampMethod(map['createdTime']);
     totalVisits = ParsingHelper.parseIntMethod(map['totalVisits']);
@@ -56,6 +59,7 @@ class PatientModel extends Equatable {
       "profilePicture" : profilePicture,
       "bloodGroup" : bloodGroup,
       "gender" : gender,
+      "primaryMobile" : primaryMobile,
       "dateOfBirth" : dateOfBirth,
       "createdTime" : json ? createdTime?.toDate().toIso8601String() : createdTime,
       "totalVisits" : totalVisits,
@@ -76,6 +80,7 @@ class PatientModel extends Equatable {
     profilePicture,
     bloodGroup,
     gender,
+    primaryMobile,
     dateOfBirth?.millisecondsSinceEpoch ?? 0,
     createdTime?.millisecondsSinceEpoch ?? 0,
     totalVisits,
