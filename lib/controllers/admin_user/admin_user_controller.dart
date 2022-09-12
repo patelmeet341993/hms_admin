@@ -1,95 +1,42 @@
 import 'dart:async';
 
-import 'package:admin/controllers/data_controller.dart';
+import 'package:admin/controllers/admin_user/admin_user_repository.dart';
 import 'package:admin/controllers/navigation_controller.dart';
-import 'package:admin/models/new_document_data_model.dart';
 import 'package:admin/providers/admin_user_provider.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-import '../configs/app_strings.dart';
-import '../configs/constants.dart';
-import '../models/admin_user_model.dart';
-import '../utils/logger_service.dart';
-import '../utils/my_toast.dart';
-import '../utils/my_utils.dart';
-import 'firestore_controller.dart';
+import '../../configs/app_strings.dart';
+import '../../configs/constants.dart';
+import '../../models/admin_user_model.dart';
+import '../../utils/logger_service.dart';
+import '../../utils/my_toast.dart';
+import '../firestore_controller.dart';
 
 class AdminUserController {
   static StreamSubscription<DocumentSnapshot<Map<String, dynamic>>>? adminUserStreamSubscription;
 
-  Future<AdminUserModel?> createAdminUserWithUsernameAndPassword({required BuildContext context, required AdminUserModel userModel,}) async {
-    if(userModel.username.isEmpty || userModel.password.isEmpty) {
-      MyToast.showError("UserName is empty or password is empty", context);
-      return null;
-    }
-
-    if(userModel.role.isEmpty) {
-      userModel.role = AdminUserType.reception;
-    }
-
-    AdminUserModel? adminUserModel;
-
-    QuerySnapshot<Map<String, dynamic>> querySnapshot = await FirestoreController().firestore.collection(FirebaseNodes.adminUsersCollection).where("role", isEqualTo: userModel.role).where("username", isEqualTo: userModel.username).get();
-    if(querySnapshot.docs.isNotEmpty) {
-      DocumentSnapshot<Map<String, dynamic>> docSnapshot = querySnapshot.docs.first;
-      if((docSnapshot.data() ?? {}).isNotEmpty) {
-        AdminUserModel model = AdminUserModel.fromMap(docSnapshot.data()!);
-        if(model.username == userModel.username) {
-          adminUserModel = model;
-        }
-      }
-    }
-
-    if(adminUserModel == null) {
-      adminUserModel = AdminUserModel(
-        id: MyUtils.getUniqueIdFromUuid(),
-        name: userModel.name,
-        username: userModel.username,
-        password: userModel.password,
-        role: userModel.role,
-        description: userModel.description,
-        imageUrl: userModel.imageUrl,
-        scannerData: userModel.scannerData,
-        isActive: true,
-        createdTime: Timestamp.now(),
-      );
-
-      NewDocumentDataModel newDocumentDataModel = await DataController().getNewDocIdAndTimeStamp();
-      adminUserModel.id = newDocumentDataModel.docid;
-      adminUserModel.createdTime = newDocumentDataModel.timestamp;
-
-      bool isCreationSuccess = await FirestoreController().firestore.collection(FirebaseNodes.adminUsersCollection).doc(adminUserModel.id).set(adminUserModel.toMap()).then((value) {
-        Log().i("Admin User with Id:${adminUserModel!.id} Created Successfully");
-        return true;
-      })
-      .catchError((e, s) {
-        Log().e("Error in Creating Admin User:$e", s);
-        return false;
-      });
-      Log().i("isCreationSuccess:$isCreationSuccess");
-
-      if(isCreationSuccess) {
-        return adminUserModel;
-      }
-      else {
-        return null;
-      }
-    }
-    else {
-      MyToast.showError(AppStrings.givenUserAlreadyExist, context);
-      return null;
-    }
-  }
-
-  Future<void> addAdminUserInFirestoreAndUpdateInProvider({required BuildContext context, required AdminUserModel adminUserModel}) async {
+  Future<bool> addAdminUserInFirestoreAndUpdateInProvider({required BuildContext context, required AdminUserModel adminUserModel}) async {
+    Log().d("addAdminUserInFirestoreAndUpdateInProvider called with adminUserModel:$adminUserModel");
     AdminUserProvider adminUserProvider = Provider.of<AdminUserProvider>(NavigationController.mainScreenNavigator.currentContext!, listen: false);
 
-    AdminUserModel? newAdminUserModel = await AdminUserController().createAdminUserWithUsernameAndPassword(context: context, userModel: adminUserModel);
+    bool isCreated = false;
+    AdminUserModel? newAdminUserModel = await AdminUserRepository().createAdminUserWithUsernameAndPassword(
+      userModel: adminUserModel,
+      onValidationFailed: () {
+        MyToast.showError("UserName is empty or password is empty", context);
+      },
+      onUserAlreadyExistEvent: () {
+        MyToast.showError(AppStrings.givenUserAlreadyExist, context);
+      },
+    );
     if(newAdminUserModel != null) {
+      isCreated = true;
       adminUserProvider.addAdminUsersInList([newAdminUserModel]);
     }
+
+    return isCreated;
   }
 
   Future<bool> deleteAdminUsers(List<String> adminUserIds) async {
@@ -99,25 +46,15 @@ class AdminUserController {
 
     adminUserIds.removeWhere((element) => element.isEmpty);
     if(adminUserIds.isNotEmpty) {
-      WriteBatch writeBatch = FirestoreController().firestore.batch();
+      isDeleted = await AdminUserRepository().deleteAdminUsers(adminUserIds);
 
-      for (String id in adminUserIds) {
-        writeBatch.delete(FirestoreController().firestore.collection(FirebaseNodes.adminUsersCollection).doc(id));
+      if(isDeleted) {
+        AdminUserProvider adminUserProvider = Provider.of<AdminUserProvider>(NavigationController.mainScreenNavigator.currentContext!, listen: false);
+        adminUserProvider.setAdminUsers(adminUserProvider.adminUsers..removeWhere((element) => adminUserIds.contains(element.id)));
       }
-
-      isDeleted = await writeBatch.commit().then((value) {
-        Log().i("Deleted Admin User with Ids: $adminUserIds");
-        return true;
-      })
-      .catchError((e, s) {
-        Log().e("Error in Deleting Admin User with Id '$adminUserIds':$e", s);
-        return false;
-      });
     }
-
-    if(isDeleted) {
-      AdminUserProvider adminUserProvider = Provider.of<AdminUserProvider>(NavigationController.mainScreenNavigator.currentContext!, listen: false);
-      adminUserProvider.setAdminUsers(adminUserProvider.adminUsers..removeWhere((element) => adminUserIds.contains(element.id)));
+    else {
+      isDeleted = true;
     }
 
     return isDeleted;
@@ -240,14 +177,39 @@ class AdminUserController {
 
     bool isSuccessful = false;
 
-    isSuccessful = await FirestoreController().firestore.collection(FirebaseNodes.adminUsersCollection).doc(adminUserId).set({"isActive" : isActive}, SetOptions(merge: true)).then((value) {
-      Log().d("User IsActive status updatd successfully");
-      return true;
-    })
-    .catchError((e, s) {
-      Log().e("Error in Updating User IsActive Status:$e", s);
-      return false;
-    });
+    isSuccessful = await AdminUserRepository().setUpdateAdminUser(adminUserId: adminUserId, data: {"isActive" : isActive}, merge: true);
+    Log().i("enableDisableAdminUser isSuccessful:$isSuccessful");
+
+    return isSuccessful;
+  }
+
+  Future<bool> updateAdminUserProfileDataAndUpdateInListInProvider({required BuildContext context, required AdminUserModel adminUserModel}) async {
+    Log().d("updateAdminUserProfileData called with adminUserModel:$adminUserModel");
+
+    bool isSuccessful = false;
+
+    QuerySnapshot<Map<String, dynamic>> querySnapshot = await FirestoreController().firestore.collection(FirebaseNodes.adminUsersCollection).where("username", isEqualTo: adminUserModel.username).get();
+    if(querySnapshot.docs.isNotEmpty) {
+      if(querySnapshot.docs.first.id != adminUserModel.id) {
+        MyToast.showError("Someone else is already having this username", context);
+        return false;
+      }
+    }
+
+    isSuccessful = await AdminUserRepository().setUpdateAdminUser(adminUserId: adminUserModel.id, data: {
+      "name" : adminUserModel.name,
+      "username" : adminUserModel.username,
+      "password" : adminUserModel.password,
+      "description" : adminUserModel.description,
+      "role" : adminUserModel.role,
+      "isActive" : adminUserModel.isActive,
+    }, merge: true);
+    Log().i("updateAdminUserProfileData isSuccessful:$isSuccessful");
+
+    if(isSuccessful) {
+      AdminUserProvider adminUserProvider = Provider.of<AdminUserProvider>(NavigationController.mainScreenNavigator.currentContext!, listen: false);
+      adminUserProvider.updateUserData(adminUserModel.id, adminUserModel);
+    }
 
     return isSuccessful;
   }
