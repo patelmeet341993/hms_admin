@@ -1,6 +1,6 @@
 import 'dart:convert';
 
-import 'package:admin/controllers/admin_user_controller.dart';
+import 'package:admin/controllers/admin_user/admin_user_controller.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
