@@ -3,10 +3,11 @@
 * Version : 1.0.0
 * */
 
-import 'package:admin/configs/styles.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+
+import 'styles.dart';
 
 class AppTheme {
   static const int themeLight = 1;
@@ -45,131 +46,140 @@ class AppTheme {
     }
 
 
-    return GoogleFonts.ibmPlexSans(
+
+    return getTextStyleWithFontFamily(
+      textStyle: TextStyle(
         fontSize: finalFontSize,
         fontWeight: fontWeight,
         letterSpacing: letterSpacing,
         color: finalColor,
         decoration: decoration,
         height: height,
-        wordSpacing: wordSpacing);
+        wordSpacing: wordSpacing,
+      ),
+    );
+  }
+
+  static TextStyle getTextStyleWithFontFamily({TextStyle? textStyle}) {
+    // return (textStyle ?? TextStyle()).copyWith(fontFamily: "Mono");
+    return GoogleFonts.catamaran(textStyle: textStyle);
   }
 
   //App Bar Text
   static final TextTheme lightAppBarTextTheme = TextTheme(
-    headline1: GoogleFonts.ibmPlexSans(
+    headline1: getTextStyleWithFontFamily(
         textStyle: const TextStyle(fontSize: 102, color: Styles.lightTextColor)),
-    headline2: GoogleFonts.ibmPlexSans(
+    headline2: getTextStyleWithFontFamily(
         textStyle: const TextStyle(fontSize: 64, color: Styles.lightTextColor)),
-    headline3: GoogleFonts.ibmPlexSans(
+    headline3: getTextStyleWithFontFamily(
         textStyle: const TextStyle(fontSize: 51, color: Styles.lightTextColor)),
-    headline4: GoogleFonts.ibmPlexSans(
+    headline4: getTextStyleWithFontFamily(
         textStyle: const TextStyle(fontSize: 36, color: Styles.lightTextColor)),
-    headline5: GoogleFonts.ibmPlexSans(
+    headline5: getTextStyleWithFontFamily(
         textStyle: const TextStyle(fontSize: 25, color: Styles.lightTextColor)),
-    headline6: GoogleFonts.ibmPlexSans(
+    headline6: getTextStyleWithFontFamily(
         textStyle: const TextStyle(fontSize: 18, color: Styles.lightTextColor)),
-    subtitle1: GoogleFonts.ibmPlexSans(
+    subtitle1: getTextStyleWithFontFamily(
         textStyle: const TextStyle(fontSize: 17, color: Styles.lightTextColor)),
-    subtitle2: GoogleFonts.ibmPlexSans(
+    subtitle2: getTextStyleWithFontFamily(
         textStyle: const TextStyle(fontSize: 15, color: Styles.lightTextColor)),
-    bodyText1: GoogleFonts.ibmPlexSans(
+    bodyText1: getTextStyleWithFontFamily(
         textStyle: const TextStyle(fontSize: 16, color: Styles.lightTextColor)),
-    bodyText2: GoogleFonts.ibmPlexSans(
+    bodyText2: getTextStyleWithFontFamily(
         textStyle: const TextStyle(fontSize: 14, color: Styles.lightTextColor)),
-    button: GoogleFonts.ibmPlexSans(
+    button: getTextStyleWithFontFamily(
         textStyle: const TextStyle(fontSize: 15, color: Styles.lightTextColor)),
-    caption: GoogleFonts.ibmPlexSans(
+    caption: getTextStyleWithFontFamily(
         textStyle: const TextStyle(fontSize: 13, color: Styles.lightTextColor)),
-    overline: GoogleFonts.ibmPlexSans(
+    overline: getTextStyleWithFontFamily(
         textStyle: const TextStyle(fontSize: 11, color: Styles.lightTextColor)),
   );
 
   static final TextTheme darkAppBarTextTheme = TextTheme(
-    headline1: GoogleFonts.ibmPlexSans(
+    headline1: getTextStyleWithFontFamily(
         textStyle: const TextStyle(fontSize: 102, color: Styles.darkTextColor)),
-    headline2: GoogleFonts.ibmPlexSans(
+    headline2: getTextStyleWithFontFamily(
         textStyle: const TextStyle(fontSize: 64, color: Styles.darkTextColor)),
-    headline3: GoogleFonts.ibmPlexSans(
+    headline3: getTextStyleWithFontFamily(
         textStyle: const TextStyle(fontSize: 51, color: Styles.darkTextColor)),
-    headline4: GoogleFonts.ibmPlexSans(
+    headline4: getTextStyleWithFontFamily(
         textStyle: const TextStyle(fontSize: 36, color: Styles.darkTextColor)),
-    headline5: GoogleFonts.ibmPlexSans(
+    headline5: getTextStyleWithFontFamily(
         textStyle: const TextStyle(fontSize: 25, color: Styles.darkTextColor)),
-    headline6: GoogleFonts.ibmPlexSans(
+    headline6: getTextStyleWithFontFamily(
         textStyle: const TextStyle(fontSize: 20, color: Styles.darkTextColor)),
-    subtitle1: GoogleFonts.ibmPlexSans(
+    subtitle1: getTextStyleWithFontFamily(
         textStyle: const TextStyle(fontSize: 17, color: Styles.darkTextColor)),
-    subtitle2: GoogleFonts.ibmPlexSans(
+    subtitle2: getTextStyleWithFontFamily(
         textStyle: const TextStyle(fontSize: 15, color: Styles.darkTextColor)),
-    bodyText1: GoogleFonts.ibmPlexSans(
+    bodyText1: getTextStyleWithFontFamily(
         textStyle: const TextStyle(fontSize: 16, color: Styles.darkTextColor)),
-    bodyText2: GoogleFonts.ibmPlexSans(
+    bodyText2: getTextStyleWithFontFamily(
         textStyle: const TextStyle(fontSize: 14, color: Styles.darkTextColor)),
-    button: GoogleFonts.ibmPlexSans(
+    button: getTextStyleWithFontFamily(
         textStyle: const TextStyle(fontSize: 15, color: Styles.darkTextColor)),
-    caption: GoogleFonts.ibmPlexSans(
+    caption: getTextStyleWithFontFamily(
         textStyle: const TextStyle(fontSize: 13, color: Styles.darkTextColor)),
-    overline: GoogleFonts.ibmPlexSans(
+    overline: getTextStyleWithFontFamily(
         textStyle: const TextStyle(fontSize: 11, color: Styles.darkTextColor)),
   );
 
   //Text Themes
   static final TextTheme lightTextTheme = TextTheme(
-    headline1: GoogleFonts.ibmPlexSans(
+    headline1: getTextStyleWithFontFamily(
         textStyle: const TextStyle(fontSize: 102, color: Color(0xff4a4c4f))),
-    headline2: GoogleFonts.ibmPlexSans(
+    headline2: getTextStyleWithFontFamily(
         textStyle: const TextStyle(fontSize: 64, color: Color(0xff4a4c4f))),
-    headline3: GoogleFonts.ibmPlexSans(
+    headline3: getTextStyleWithFontFamily(
         textStyle: const TextStyle(fontSize: 51, color: Color(0xff4a4c4f))),
-    headline4: GoogleFonts.ibmPlexSans(
+    headline4: getTextStyleWithFontFamily(
         textStyle: const TextStyle(fontSize: 36, color: Color(0xff4a4c4f))),
-    headline5: GoogleFonts.ibmPlexSans(
+    headline5: getTextStyleWithFontFamily(
         textStyle: const TextStyle(fontSize: 25, color: Color(0xff4a4c4f))),
-    headline6: GoogleFonts.ibmPlexSans(
+    headline6: getTextStyleWithFontFamily(
         textStyle: const TextStyle(fontSize: 18, color: Color(0xff4a4c4f))),
-    subtitle1: GoogleFonts.ibmPlexSans(
+    subtitle1: getTextStyleWithFontFamily(
         textStyle: const TextStyle(fontSize: 17, color: Color(0xff4a4c4f))),
-    subtitle2: GoogleFonts.ibmPlexSans(
+    subtitle2: getTextStyleWithFontFamily(
         textStyle: const TextStyle(fontSize: 15, color: Color(0xff4a4c4f))),
-    bodyText1: GoogleFonts.ibmPlexSans(
+    bodyText1: getTextStyleWithFontFamily(
         textStyle: const TextStyle(fontSize: 16, color: Color(0xff4a4c4f))),
-    bodyText2: GoogleFonts.ibmPlexSans(
+    bodyText2: getTextStyleWithFontFamily(
         textStyle: const TextStyle(fontSize: 14, color: Color(0xff4a4c4f))),
-    button: GoogleFonts.ibmPlexSans(
+    button: getTextStyleWithFontFamily(
         textStyle: const TextStyle(fontSize: 15, color: Color(0xff4a4c4f))),
-    caption: GoogleFonts.ibmPlexSans(
+    caption: getTextStyleWithFontFamily(
         textStyle: const TextStyle(fontSize: 13, color: Color(0xff4a4c4f))),
-    overline: GoogleFonts.ibmPlexSans(
+    overline: getTextStyleWithFontFamily(
         textStyle: const TextStyle(fontSize: 11, color: Color(0xff4a4c4f))),
   );
 
   static final TextTheme darkTextTheme = TextTheme(
-    headline1: GoogleFonts.ibmPlexSans(
+    headline1: getTextStyleWithFontFamily(
         textStyle: const TextStyle(fontSize: 102, color: Colors.white)),
-    headline2: GoogleFonts.ibmPlexSans(
+    headline2: getTextStyleWithFontFamily(
         textStyle: const TextStyle(fontSize: 64, color: Colors.white)),
-    headline3: GoogleFonts.ibmPlexSans(
+    headline3: getTextStyleWithFontFamily(
         textStyle: const TextStyle(fontSize: 51, color: Colors.white)),
-    headline4: GoogleFonts.ibmPlexSans(
+    headline4: getTextStyleWithFontFamily(
         textStyle: const TextStyle(fontSize: 36, color: Colors.white)),
-    headline5: GoogleFonts.ibmPlexSans(
+    headline5: getTextStyleWithFontFamily(
         textStyle: const TextStyle(fontSize: 25, color: Colors.white)),
-    headline6: GoogleFonts.ibmPlexSans(
+    headline6: getTextStyleWithFontFamily(
         textStyle: const TextStyle(fontSize: 18, color: Colors.white)),
-    subtitle1: GoogleFonts.ibmPlexSans(
+    subtitle1: getTextStyleWithFontFamily(
         textStyle: const TextStyle(fontSize: 17, color: Colors.white)),
-    subtitle2: GoogleFonts.ibmPlexSans(
+    subtitle2: getTextStyleWithFontFamily(
         textStyle: const TextStyle(fontSize: 15, color: Colors.white)),
-    bodyText1: GoogleFonts.ibmPlexSans(
+    bodyText1: getTextStyleWithFontFamily(
         textStyle: const TextStyle(fontSize: 16, color: Colors.white)),
-    bodyText2: GoogleFonts.ibmPlexSans(
+    bodyText2: getTextStyleWithFontFamily(
         textStyle: const TextStyle(fontSize: 14, color: Colors.white)),
-    button: GoogleFonts.ibmPlexSans(
+    button: getTextStyleWithFontFamily(
         textStyle: const TextStyle(fontSize: 15, color: Colors.white)),
-    caption: GoogleFonts.ibmPlexSans(
+    caption: getTextStyleWithFontFamily(
         textStyle: const TextStyle(fontSize: 13, color: Colors.white)),
-    overline: GoogleFonts.ibmPlexSans(
+    overline: getTextStyleWithFontFamily(
         textStyle: const TextStyle(fontSize: 11, color: Colors.white)),
   );
 
@@ -180,27 +190,27 @@ class AppTheme {
     canvasColor: Colors.transparent,
     backgroundColor: Colors.white,
     scaffoldBackgroundColor: Styles.lightBackgroundColor,
-    appBarTheme: AppBarTheme(
+    appBarTheme: const AppBarTheme(
       //textTheme: lightAppBarTextTheme,
-      titleTextStyle: lightAppBarTextTheme.subtitle1,
-      toolbarTextStyle: const TextStyle(
+      titleTextStyle: TextStyle(
         color: Styles.lightTextColor,
       ),
-      actionsIconTheme: const IconThemeData(
+      toolbarTextStyle: TextStyle(
+        color: Styles.lightTextColor,
+      ),
+      actionsIconTheme: IconThemeData(
         color: Styles.lightTextColor,
       ),
       color: Styles.lightAppBarColor,
-      iconTheme: const IconThemeData(color: Styles.lightTextColor, size: 24),
+      iconTheme: IconThemeData(color: Styles.lightTextColor, size: 24),
     ),
     navigationRailTheme: NavigationRailThemeData(
-        selectedIconTheme:
-        const IconThemeData(color: Styles.lightPrimaryColor, opacity: 1, size: 24),
-        unselectedIconTheme:
-        const IconThemeData(color: Styles.lightTextColor, opacity: 1, size: 24),
+        selectedIconTheme: IconThemeData(color: Styles.lightPrimaryColor, opacity: 1, size: 24),
+        unselectedIconTheme: IconThemeData(color: Styles.lightTextColor, opacity: 1, size: 24),
         backgroundColor: Styles.lightBackgroundColor,
         elevation: 3,
-        selectedLabelTextStyle: const TextStyle(color: Styles.lightPrimaryColor),
-        unselectedLabelTextStyle: const TextStyle(color: Styles.lightTextColor),
+        selectedLabelTextStyle: TextStyle(color: Styles.lightPrimaryColor),
+        unselectedLabelTextStyle: TextStyle(color: Styles.lightTextColor),
     ),
     colorScheme: ColorScheme.light(
         primary: Styles.lightPrimaryColor,
@@ -235,7 +245,8 @@ class AppTheme {
     ),
     splashColor: Colors.white.withAlpha(100),
     iconTheme: const IconThemeData(
-      color: Colors.white,
+      color: Colors.black,
+      size: 30
     ),
     textTheme: lightTextTheme,
     indicatorColor: Colors.white,
