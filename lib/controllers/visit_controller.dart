@@ -104,7 +104,8 @@ class VisitController {
         patientId: "tBDre2xeNpifcG6wZYiv",
         createdTime: Timestamp.now(),
         baseAmount: 1800,
-        discount: 450,
+        discountAmount: 450,
+        discountPercentage: 10,
         totalAmount: 1350,
         paymentMode: PaymentModes.upi,
         paymentId: "Gpay_1234xyz",
@@ -116,7 +117,6 @@ class VisitController {
             dosePerUnit: "5",
             unitCount: 2,
             price: 10,
-            discount: 0,
             finalAmount: 20,
           ),
           PharmaBillingItemModel(
@@ -125,7 +125,6 @@ class VisitController {
             dosePerUnit: "1",
             unitCount: 1,
             price: 600,
-            discount: 0,
             finalAmount: 600,
           ),
           PharmaBillingItemModel(
@@ -134,7 +133,6 @@ class VisitController {
             dosePerUnit: "1",
             unitCount: 1,
             price: 1200,
-            discount: 0,
             finalAmount: 1200,
           ),
         ],

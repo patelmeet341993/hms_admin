@@ -1,6 +1,6 @@
 import 'package:admin/configs/constants.dart';
-import 'package:admin/models/home_screen_component_model.dart';
 import 'package:admin/providers/admin_user_provider.dart';
+import 'package:admin/views/common/models/home_screen_component_model.dart';
 import 'package:admin/views/homescreen/components/custom_bottom_navigation_bar.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
