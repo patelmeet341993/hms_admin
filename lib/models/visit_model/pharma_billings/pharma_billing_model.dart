@@ -12,6 +12,7 @@ class PharmaBillingModel {
   PharmaBillingModel({
     this.patientId = "",
     this.patientName = "",
+    this.paymentId = "",
     this.paymentMode = "",
     this.paymentStatus = "",
     this.baseAmount = 0,
