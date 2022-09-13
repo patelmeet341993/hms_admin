@@ -2,17 +2,19 @@ import '../../../utils/parsing_helper.dart';
 import '../prescription/prescription_model.dart';
 
 class DiagnosisModel {
-  String doctorId = "", diagnosisDescription = "";
+  String doctorId = "", doctorName = "", diagnosisDescription = "";
   List<PrescriptionModel> prescription = <PrescriptionModel>[];
 
   DiagnosisModel({
     this.doctorId = "",
+    this.doctorName = "",
     this.diagnosisDescription = "",
     this.prescription = const <PrescriptionModel>[],
   });
 
   DiagnosisModel.fromMap(Map<String, dynamic> map) {
     doctorId = ParsingHelper.parseStringMethod(map['doctorId']);
+    doctorName = ParsingHelper.parseStringMethod(map['doctorName']);
     diagnosisDescription = ParsingHelper.parseStringMethod(map['diagnosisDescription']);
 
     List<PrescriptionModel> prescriptionMain = <PrescriptionModel>[];
@@ -29,6 +31,7 @@ class DiagnosisModel {
 
   void updateFromMap(Map<String, dynamic> map) {
     doctorId = ParsingHelper.parseStringMethod(map['doctorId']);
+    doctorName = ParsingHelper.parseStringMethod(map['doctorName']);
     diagnosisDescription = ParsingHelper.parseStringMethod(map['diagnosisDescription']);
 
     List<PrescriptionModel> prescriptionMain = <PrescriptionModel>[];
@@ -46,6 +49,7 @@ class DiagnosisModel {
   Map<String, dynamic> toMap() {
     return <String, dynamic>{
       "doctorId" : doctorId,
+      "doctorName" : doctorName,
       "diagnosisDescription" : diagnosisDescription,
       "prescription" : prescription.map((e) => e.toMap()).toList(),
     };
