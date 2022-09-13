@@ -4,9 +4,9 @@ import 'package:equatable/equatable.dart';
 import '../utils/parsing_helper.dart';
 
 class AdminUserModel extends Equatable {
-  String id = "", name = "", username = "", password = "", role = "", description = "", imageUrl = "";
+  String id = "", name = "", username = "", password = "", role = "", description = "", imageUrl = "", hospitalId = "";
   Map<String, dynamic> scannerData = <String, dynamic>{};
-  bool isActive = false;
+  bool isActive = false, isUndeletable = false;
   Timestamp? createdTime;
 
   AdminUserModel({
@@ -17,8 +17,10 @@ class AdminUserModel extends Equatable {
     this.role = "",
     this.description = "",
     this.imageUrl = "",
+    this.hospitalId = "",
     this.scannerData = const <String, dynamic>{},
     this.isActive = false,
+    this.isUndeletable = false,
     this.createdTime,
   });
 
@@ -30,8 +32,10 @@ class AdminUserModel extends Equatable {
     role = ParsingHelper.parseStringMethod(map['role']);
     description = ParsingHelper.parseStringMethod(map['description']);
     imageUrl = ParsingHelper.parseStringMethod(map['imageUrl']);
+    hospitalId = ParsingHelper.parseStringMethod(map['hospitalId']);
     scannerData = ParsingHelper.parseMapMethod<dynamic, dynamic, String, dynamic>(map['scannerData']);
     isActive = ParsingHelper.parseBoolMethod(map['isActive']);
+    isUndeletable = ParsingHelper.parseBoolMethod(map['isUndeletable']);
     createdTime = ParsingHelper.parseTimestampMethod(map['createdTime']);
   }
 
@@ -43,8 +47,10 @@ class AdminUserModel extends Equatable {
     role = ParsingHelper.parseStringMethod(map['role']);
     description = ParsingHelper.parseStringMethod(map['description']);
     imageUrl = ParsingHelper.parseStringMethod(map['imageUrl']);
+    hospitalId = ParsingHelper.parseStringMethod(map['hospitalId']);
     scannerData = ParsingHelper.parseMapMethod<dynamic, dynamic, String, dynamic>(map['scannerData']);
     isActive = ParsingHelper.parseBoolMethod(map['isActive']);
+    isUndeletable = ParsingHelper.parseBoolMethod(map['isUndeletable']);
     createdTime = ParsingHelper.parseTimestampMethod(map['createdTime']);
   }
 
@@ -57,8 +63,10 @@ class AdminUserModel extends Equatable {
       "role": role,
       "description": description,
       "imageUrl": imageUrl,
+      "hospitalId": hospitalId,
       "scannerData": scannerData,
       "isActive": isActive,
+      "isUndeletable": isUndeletable,
       "createdTime": toJson ? createdTime?.toDate().toIso8601String() : createdTime,
     };
   }
@@ -69,5 +77,5 @@ class AdminUserModel extends Equatable {
   }
 
   @override
-  List<Object?> get props => [id, name, username, password, role, description, imageUrl, isActive, createdTime];
+  List<Object?> get props => [id, name, username, password, role, description, imageUrl, hospitalId, isActive, isUndeletable, createdTime];
 }
