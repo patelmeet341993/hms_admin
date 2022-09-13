@@ -2,7 +2,7 @@ import '../../../utils/parsing_helper.dart';
 
 class PharmaBillingItemModel {
   String medicineName = "", dose = "", dosePerUnit = "";
-  double unitCount = 0, price = 0, discount = 0, finalAmount = 0;
+  double unitCount = 0, price = 0, finalAmount = 0;
 
   PharmaBillingItemModel({
     this.medicineName = "",
@@ -10,7 +10,6 @@ class PharmaBillingItemModel {
     this.dosePerUnit = "",
     this.unitCount = 0,
     this.price = 0,
-    this.discount = 0,
     this.finalAmount = 0,
   });
 
@@ -20,7 +19,6 @@ class PharmaBillingItemModel {
     dosePerUnit = ParsingHelper.parseStringMethod(map['dosePerUnit']);
     unitCount = ParsingHelper.parseDoubleMethod(map['unitCount']);
     price = ParsingHelper.parseDoubleMethod(map['price']);
-    discount = ParsingHelper.parseDoubleMethod(map['discount']);
     finalAmount = ParsingHelper.parseDoubleMethod(map['finalAmount']);
   }
 
@@ -30,7 +28,6 @@ class PharmaBillingItemModel {
     dosePerUnit = ParsingHelper.parseStringMethod(map['dosePerUnit']);
     unitCount = ParsingHelper.parseDoubleMethod(map['unitCount']);
     price = ParsingHelper.parseDoubleMethod(map['price']);
-    discount = ParsingHelper.parseDoubleMethod(map['discount']);
     finalAmount = ParsingHelper.parseDoubleMethod(map['finalAmount']);
   }
 
@@ -41,7 +38,6 @@ class PharmaBillingItemModel {
       "dosePerUnit" : dosePerUnit,
       "unitCount" : unitCount,
       "price" : price,
-      "discount" : discount,
       "finalAmount" : finalAmount,
     };
   }
