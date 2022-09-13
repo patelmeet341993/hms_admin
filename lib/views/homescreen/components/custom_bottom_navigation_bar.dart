@@ -48,8 +48,7 @@ class CustomBottomNavigation extends StatefulWidget {
   _CustomBottomNavigationState createState() => _CustomBottomNavigationState();
 }
 
-class _CustomBottomNavigationState extends State<CustomBottomNavigation>
-    with SingleTickerProviderStateMixin {
+class _CustomBottomNavigationState extends State<CustomBottomNavigation> with SingleTickerProviderStateMixin {
   //ThemeData
   late ThemeData themeData;
   // CustomAppTheme customAppTheme;

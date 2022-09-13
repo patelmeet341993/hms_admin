@@ -23,6 +23,7 @@ class VisitModel {
     this.currentDoctorId = "",
     this.currentDoctorName = "",
     this.previousVisitId = "",
+    this.hospitalId = "",
     this.doctors = const <String, String>{},
     this.createdTime,
     this.updatedTime,
@@ -41,6 +42,7 @@ class VisitModel {
     currentDoctorId = ParsingHelper.parseStringMethod(map['currentDoctorId']);
     currentDoctorName = ParsingHelper.parseStringMethod(map['currentDoctorName']);
     previousVisitId = ParsingHelper.parseStringMethod(map['previousVisitId']);
+    hospitalId = ParsingHelper.parseStringMethod(map['hospitalId']);
     createdTime = ParsingHelper.parseTimestampMethod(map['createdTime']);
     updatedTime = ParsingHelper.parseTimestampMethod(map['updatedTime']);
     weight = ParsingHelper.parseDoubleMethod(map['weight']);
@@ -84,6 +86,7 @@ class VisitModel {
     currentDoctorId = ParsingHelper.parseStringMethod(map['currentDoctorId']);
     currentDoctorName = ParsingHelper.parseStringMethod(map['currentDoctorName']);
     previousVisitId = ParsingHelper.parseStringMethod(map['previousVisitId']);
+    hospitalId = ParsingHelper.parseStringMethod(map['hospitalId']);
     createdTime = ParsingHelper.parseTimestampMethod(map['createdTime']);
     updatedTime = ParsingHelper.parseTimestampMethod(map['updatedTime']);
     weight = ParsingHelper.parseDoubleMethod(map['weight']);
@@ -128,6 +131,7 @@ class VisitModel {
       "currentDoctorId" : currentDoctorId,
       "currentDoctorName" : currentDoctorName,
       "previousVisitId" : previousVisitId,
+      "hospitalId" : hospitalId,
       "createdTime" : createdTime,
       "updatedTime" : updatedTime,
       "weight" : weight,
