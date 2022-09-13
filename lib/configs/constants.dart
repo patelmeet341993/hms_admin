@@ -1,6 +1,6 @@
 //App Version
-import 'package:admin/models/home_screen_component_model.dart';
 import 'package:admin/views/admin_users/admin_users_list_screen.dart';
+import 'package:admin/views/common/models/home_screen_component_model.dart';
 import 'package:flutter/material.dart';
 
 import '../views/homescreen/dashboard_screen.dart';
@@ -19,6 +19,8 @@ class AppConstants {
 
   static const int adminUsersDocumentLimitForPagination = 20;
   static const int adminUsersRefreshIndexForPagination = 5;
+
+  static String hospitalId = "Hospital_1";
 }
 
 class PatientGender {
