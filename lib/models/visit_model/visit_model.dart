@@ -6,7 +6,7 @@ import 'pharma_billings/pharma_billing_model.dart';
 import 'visit_billings/visit_billing_model.dart';
 
 class VisitModel {
-  String id = "", patientId = "", description = "", currentDoctor = "", previousVisitId = "";
+  String id = "", patientId = "", patientName = "", description = "", currentDoctor = "", previousVisitId = "", hospitalId = "";
   Map<String, String> doctors = {};
   Timestamp? createdTime, updatedTime;
   double weight = 0;
@@ -18,6 +18,7 @@ class VisitModel {
   VisitModel({
     this.id = "",
     this.patientId = "",
+    this.patientName = "",
     this.description = "",
     this.currentDoctor = "",
     this.previousVisitId = "",
@@ -34,6 +35,7 @@ class VisitModel {
   VisitModel.fromMap(Map<String, dynamic> map) {
     id = ParsingHelper.parseStringMethod(map['id']);
     patientId = ParsingHelper.parseStringMethod(map['patientId']);
+    patientName = ParsingHelper.parseStringMethod(map['patientName']);
     description = ParsingHelper.parseStringMethod(map['description']);
     currentDoctor = ParsingHelper.parseStringMethod(map['currentDoctor']);
     previousVisitId = ParsingHelper.parseStringMethod(map['previousVisitId']);
@@ -75,6 +77,7 @@ class VisitModel {
   void updateFromMap(Map<String, dynamic> map) {
     id = ParsingHelper.parseStringMethod(map['id']);
     patientId = ParsingHelper.parseStringMethod(map['patientId']);
+    patientName = ParsingHelper.parseStringMethod(map['patientName']);
     description = ParsingHelper.parseStringMethod(map['description']);
     currentDoctor = ParsingHelper.parseStringMethod(map['currentDoctor']);
     previousVisitId = ParsingHelper.parseStringMethod(map['previousVisitId']);
@@ -117,6 +120,7 @@ class VisitModel {
     return <String, dynamic>{
       "id" : id,
       "patientId" : patientId,
+      "patientName" : patientName,
       "description" : description,
       "currentDoctor" : currentDoctor,
       "previousVisitId" : previousVisitId,
