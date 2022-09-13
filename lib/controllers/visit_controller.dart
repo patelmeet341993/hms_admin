@@ -24,7 +24,8 @@ class VisitController {
         AdminUserType.admin : "gjf3Mx4YV1TzAyP7xm0N",
       },
       weight: 70,
-      currentDoctor: "gjf3Mx4YV1TzAyP7xm0N",
+      currentDoctorId: "gjf3Mx4YV1TzAyP7xm0N",
+      currentDoctorName: "Bhavisha Parmar",
       active: true,
       diagnosis: [
         DiagnosisModel(
