@@ -43,6 +43,7 @@ class AdminUserRepository {
         role: userModel.role,
         description: userModel.description,
         imageUrl: userModel.imageUrl,
+        hospitalId: AppConstants.hospitalId,
         scannerData: userModel.scannerData,
         isActive: true,
         createdTime: Timestamp.now(),
