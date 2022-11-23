@@ -1,6 +1,5 @@
 import 'package:admin/controllers/navigation_controller.dart';
 import 'package:admin/models/admin_user_model.dart';
-import 'package:admin/utils/logger_service.dart';
 import 'package:admin/views/authentication/login_screen.dart';
 import 'package:admin/views/homescreen/homescreen.dart';
 import 'package:flutter/material.dart';
@@ -8,6 +7,7 @@ import 'package:loading_animation_widget/loading_animation_widget.dart';
 
 import '../controllers/admin_user/admin_user_controller.dart';
 import '../controllers/authentication_controller.dart';
+import '../utils/my_print.dart';
 import 'common/components/common_text.dart';
 
 class SplashScreen extends StatefulWidget {
@@ -26,7 +26,7 @@ class _SplashScreenState extends State<SplashScreen> {
     // await Future.delayed(Duration(seconds: 5));
 
     AdminUserModel? user = await AuthenticationController().isUserLoggedIn();
-    Log().i("User From isUserLoggedIn:$user");
+    MyPrint.printOnConsole("User From isUserLoggedIn:$user");
 
     NavigationController.isFirst = false;
     if(user != null) {

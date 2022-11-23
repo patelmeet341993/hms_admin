@@ -5,6 +5,8 @@ import 'package:admin/utils/logger_service.dart';
 import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:flutter/foundation.dart';
 
+import '../utils/my_print.dart';
+
 class ConnectionProvider extends ChangeNotifier {
   bool isInternet = true;
   StreamSubscription<ConnectivityResult>? subscription;
@@ -30,8 +32,9 @@ class ConnectionProvider extends ChangeNotifier {
         });
       });
     }
-    catch (E) {
-      Log().e("Error in Connectivity Subscription:  $E");
+    catch (e, s) {
+      MyPrint.printOnConsole("Error in Connectivity Subscription:$e");
+      MyPrint.printOnConsole(s);
     }
   }
 

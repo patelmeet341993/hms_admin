@@ -6,6 +6,7 @@ import '../configs/constants.dart';
 import '../models/new_document_data_model.dart';
 import '../providers/patient_provider.dart';
 import '../utils/logger_service.dart';
+import '../utils/my_print.dart';
 import '../utils/my_utils.dart';
 import 'data_controller.dart';
 import 'firestore_controller.dart';
@@ -22,16 +23,17 @@ class PatientController {
       dateOfBirth: Timestamp.fromDate(DateTime(2000, 4, 12)),
       createdTime: Timestamp.now(),
       primaryMobile: "+919988776655",
-      userMobiles: [
+      userMobiles: const [
         "+919988776655",
       ],
     );
 
     await FirestoreController().firestore.collection(FirebaseNodes.patientCollection).doc(patientModel.id).set(patientModel.toMap()).then((value) {
-      Log().i("Patient Created Successfully with id:${patientModel.id}");
+      MyPrint.printOnConsole("Patient Created Successfully with id:${patientModel.id}");
     })
     .catchError((e, s) {
-      Log().e(e, s);
+      MyPrint.printOnConsole("Error in PatientController().createDummyPatientDataInFirestore():$e");
+      MyPrint.printOnConsole(s);
     });
   }
 
@@ -50,10 +52,11 @@ class PatientController {
       return true;
     })
     .catchError((e, s) {
-      Log().e("Error in Creating Patient Model:$e", s);
+      MyPrint.printOnConsole("Error in Creating Patient Model:$e");
+      MyPrint.printOnConsole(s);
       return false;
     });
-    Log().i("isPatientCreated:$isPatientCreated");
+    MyPrint.printOnConsole("isPatientCreated:$isPatientCreated");
 
     if(isPatientCreated) {
       return patientModel;
@@ -70,7 +73,7 @@ class PatientController {
     PatientProvider patientProvider = Provider.of<PatientProvider>(NavigationController.mainScreenNavigator.currentContext!, listen: false);
 
     QuerySnapshot<Map<String, dynamic>> querySnapshot = await FirestoreController().firestore.collection(FirebaseNodes.patientCollection).where("userMobiles", arrayContainsAny: [mobileNumber]).get();
-    Log().i("Patient Documents Length For Mobile Number '${mobileNumber}' :${querySnapshot.docs.length}");
+    MyPrint.printOnConsole("Patient Documents Length For Mobile Number '${mobileNumber}' :${querySnapshot.docs.length}");
 
     for (DocumentSnapshot<Map<String, dynamic>> documentSnapshot in querySnapshot.docs) {
       if((documentSnapshot.data() ?? {}).isNotEmpty) {

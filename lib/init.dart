@@ -3,6 +3,7 @@ import 'dart:io';
 
 import 'package:admin/controllers/app_controller.dart';
 import 'package:admin/utils/logger_service.dart';
+import 'package:admin/utils/my_print.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/foundation.dart';
@@ -20,8 +21,9 @@ Future<void>? runErrorSafeApp(VoidCallback appRunner, {bool isDev = false}) {
       await initApp(isDev: isDev);
       appRunner();
     },
-    (e, stackTrace) {
-      Log().e(e, stackTrace);
+    (e, s) {
+      MyPrint.printOnConsole("Error in runZonedGuarded:$e");
+      MyPrint.printOnConsole(s);
       // AnalyticsController().recordError(e, stackTrace);
     },
   );
@@ -32,13 +34,11 @@ Future<void> initApp({bool isDev = false}) async {
   WidgetsFlutterBinding.ensureInitialized();
   AppController().isDev = isDev;
 
-  Log().i("IsDev:$isDev");
-
   List<Future> futures = [];
 
   if (kIsWeb) {
     FirebaseOptions options = getFirebaseOptions(isDev: isDev);
-    Log().i(options);
+    MyPrint.printOnConsole(options);
 
     futures.addAll([
       Firebase.initializeApp(

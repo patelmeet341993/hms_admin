@@ -1,6 +1,5 @@
 import 'package:admin/configs/app_theme.dart';
 import 'package:admin/providers/app_theme_provider.dart';
-import 'package:admin/utils/logger_service.dart';
 import 'package:admin/utils/my_safe_state.dart';
 import 'package:admin/utils/my_toast.dart';
 import 'package:admin/views/common/components/loading_widget.dart';
@@ -10,6 +9,7 @@ import 'package:provider/provider.dart';
 
 import '../../controllers/authentication_controller.dart';
 import '../../utils/SizeConfig.dart';
+import '../../utils/my_print.dart';
 import '../common/components/CustomContainer.dart';
 import '../common/components/MyCol.dart';
 import '../common/components/MyRow.dart';
@@ -37,7 +37,7 @@ class _LoginScreenState extends State<LoginScreen> with MySafeState {
 
     // await Future.delayed(const Duration(seconds: 3));
     bool isLoggedIn = await AuthenticationController().loginAdminUserWithUsernameAndPassword(context: context, userName: userName, password: password,);
-    Log().i("isLoggedIn:$isLoggedIn");
+    MyPrint.printOnConsole("isLoggedIn:$isLoggedIn");
 
     isLoading = false;
     mySetState();

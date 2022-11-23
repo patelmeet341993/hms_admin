@@ -11,6 +11,7 @@ import '../../configs/app_strings.dart';
 import '../../configs/constants.dart';
 import '../../models/admin_user_model.dart';
 import '../../utils/logger_service.dart';
+import '../../utils/my_print.dart';
 import '../../utils/my_toast.dart';
 import '../firestore_controller.dart';
 
@@ -40,7 +41,7 @@ class AdminUserController {
   }
 
   Future<bool> deleteAdminUsers(List<String> adminUserIds) async {
-    Log().i("deleteAdminUser called with adminUserIds: $adminUserIds");
+    MyPrint.printOnConsole("deleteAdminUser called with adminUserIds: $adminUserIds");
 
     bool isDeleted = false;
 
@@ -71,7 +72,7 @@ class AdminUserController {
       }
 
       adminUserStreamSubscription = FirestoreController().firestore.collection(FirebaseNodes.adminUsersCollection).doc(adminUserId).snapshots().listen((DocumentSnapshot<Map<String, dynamic>> snapshot) {
-        Log().i("Admin User Document Updated.\n"
+        MyPrint.printOnConsole("Admin User Document Updated.\n"
             "Snapshot Exist:${snapshot.exists}\n"
             "Data:${snapshot.data()}");
 
@@ -102,7 +103,7 @@ class AdminUserController {
   }
 
   Future<List<AdminUserModel>> getAdminUsers({bool isRefresh = true, bool isFromCache = false, bool isNotify = true}) async {
-    Log().i("getAdminUsers called with isRefresh:$isRefresh, isFromCache:$isFromCache");
+    MyPrint.printOnConsole("getAdminUsers called with isRefresh:$isRefresh, isFromCache:$isFromCache");
     AdminUserProvider adminUserProvider = Provider.of<AdminUserProvider>(NavigationController.mainScreenNavigator.currentContext!, listen: false);
 
     if(!isRefresh && isFromCache && adminUserProvider.adminUsersLength > 0) {
@@ -144,7 +145,7 @@ class AdminUserController {
       }
 
       QuerySnapshot<Map<String, dynamic>> querySnapshot = await query.get();
-      Log().i("Documents Length in Firestore for Admin Users:${querySnapshot.docs.length}");
+      MyPrint.printOnConsole("Documents Length in Firestore for Admin Users:${querySnapshot.docs.length}");
 
       if (querySnapshot.docs.length < AppConstants.adminUsersDocumentLimitForPagination) adminUserProvider.setHasMoreUsers = false;
 
@@ -159,12 +160,13 @@ class AdminUserController {
       }
       adminUserProvider.addAdminUsersInList(list, isNotify: false);
       adminUserProvider.setIsUsersLoading(false);
-      Log().i("Final AdminUsers Length From Firestore:${list.length}");
-      Log().i("Final AdminUsers Length in Provider:${adminUserProvider.adminUsersLength}");
+      MyPrint.printOnConsole("Final AdminUsers Length From Firestore:${list.length}");
+      MyPrint.printOnConsole("Final AdminUsers Length in Provider:${adminUserProvider.adminUsersLength}");
       return list;
     }
     catch(e, s) {
-      Log().e("Error in AdminUserController().getAdminUsers():$e", s);
+      MyPrint.printOnConsole("Error in AdminUserController().getAdminUsers():$e");
+      MyPrint.printOnConsole(s);
       adminUserProvider.setHasMoreUsers = true;
       adminUserProvider.setLastDocument = null;
       adminUserProvider.setAdminUsers([], isNotify: false);
@@ -178,7 +180,7 @@ class AdminUserController {
     bool isSuccessful = false;
 
     isSuccessful = await AdminUserRepository().setUpdateAdminUser(adminUserId: adminUserId, data: {"isActive" : isActive}, merge: true);
-    Log().i("enableDisableAdminUser isSuccessful:$isSuccessful");
+    MyPrint.printOnConsole("enableDisableAdminUser isSuccessful:$isSuccessful");
 
     return isSuccessful;
   }
@@ -204,7 +206,7 @@ class AdminUserController {
       "role" : adminUserModel.role,
       "isActive" : adminUserModel.isActive,
     }, merge: true);
-    Log().i("updateAdminUserProfileData isSuccessful:$isSuccessful");
+    MyPrint.printOnConsole("updateAdminUserProfileData isSuccessful:$isSuccessful");
 
     if(isSuccessful) {
       AdminUserProvider adminUserProvider = Provider.of<AdminUserProvider>(NavigationController.mainScreenNavigator.currentContext!, listen: false);

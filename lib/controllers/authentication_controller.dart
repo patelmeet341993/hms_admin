@@ -9,7 +9,7 @@ import '../configs/app_strings.dart';
 import '../configs/constants.dart';
 import '../models/admin_user_model.dart';
 import '../providers/admin_user_provider.dart';
-import '../utils/logger_service.dart';
+import '../utils/my_print.dart';
 import '../utils/my_toast.dart';
 import '../utils/parsing_helper.dart';
 import '../utils/shared_pref_manager.dart';
@@ -34,7 +34,8 @@ class AuthenticationController {
       }
     }
     catch(e, s) {
-      Log().e("Error in Decoding User Data From Shared Preference:$e", s);
+      MyPrint.printOnConsole("Error in Decoding User Data From Shared Preference:$e");
+      MyPrint.printOnConsole(s);
     }
 
     if(adminUserModel != null && adminUserModel.id.isNotEmpty) {

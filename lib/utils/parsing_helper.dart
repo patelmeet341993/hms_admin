@@ -3,7 +3,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:intl/intl.dart';
 
-import 'logger_service.dart';
+import 'my_print.dart';
 
 class ParsingHelper {
   static String parseStringMethod(dynamic value, {String defaultValue = ""}) {
@@ -135,13 +135,14 @@ class ParsingHelper {
     }
     else if(value is String) {
       DateTime? dateTime;
-      Log().i("DateTime Value:$value");
+      MyPrint.printOnConsole("DateTime Value:$value");
       if(dateFormat.isNotEmpty) {
         try {
           dateTime = DateFormat(dateFormat).parse(value);
         }
         catch(e, s) {
-          Log().e("Error in Converting from String to DateTime with Format '$dateFormat':$e", s);
+          MyPrint.printOnConsole("Error in Converting from String to DateTime with Format '$dateFormat':$e");
+          MyPrint.printOnConsole(s);
         }
       }
 
@@ -152,7 +153,8 @@ class ParsingHelper {
             dateTime = DateTime.fromMillisecondsSinceEpoch(intValue);
           }
           catch(e, s) {
-            Log().e("Error in Converting from String(int) to DateTime:$e", s);
+            MyPrint.printOnConsole("Error in Converting from String(int) to DateTime:$e");
+            MyPrint.printOnConsole(s);
           }
         }
       }
@@ -168,7 +170,8 @@ class ParsingHelper {
         dateTime = DateTime.fromMillisecondsSinceEpoch(value);
       }
       catch(e, s) {
-        Log().e("Error in Converting from int to DateTime:$e", s);
+        MyPrint.printOnConsole("Error in Converting from int to DateTime:$e");
+        MyPrint.printOnConsole(s);
       }
 
       return dateTime ?? defaultValue;

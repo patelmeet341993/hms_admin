@@ -6,11 +6,11 @@ import 'package:admin/models/visit_model/pharma_billings/pharma_billing_model.da
 import 'package:admin/models/visit_model/prescription/prescription_medicine_dose_model.dart';
 import 'package:admin/models/visit_model/visit_billings/visit_billing_model.dart';
 import 'package:admin/models/visit_model/visit_model.dart';
-import 'package:admin/utils/logger_service.dart';
 import 'package:admin/utils/my_utils.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
 import '../models/visit_model/prescription/prescription_model.dart';
+import '../utils/my_print.dart';
 
 class VisitController {
   Future<void> createDummyVisitDataInFirestore() async {
@@ -142,10 +142,11 @@ class VisitController {
     );
 
     await FirestoreController().firestore.collection(FirebaseNodes.visitsCollection).doc(visitModel.id).set(visitModel.toMap()).then((value) {
-      Log().i("Visit Created Successfully with id:${visitModel.id}");
+      MyPrint.printOnConsole("Visit Created Successfully with id:${visitModel.id}");
     })
     .catchError((e, s) {
-      Log().e(e, s);
+      MyPrint.printOnConsole("Error in VisitController().createDummyVisitDataInFirestore():$e");
+      MyPrint.printOnConsole(s);
     });
   }
 }

@@ -3,7 +3,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import '../../configs/constants.dart';
 import '../../models/admin_user_model.dart';
 import '../../models/new_document_data_model.dart';
-import '../../utils/logger_service.dart';
+import '../../utils/my_print.dart';
 import '../../utils/my_utils.dart';
 import '../data_controller.dart';
 import '../firestore_controller.dart';
@@ -54,7 +54,7 @@ class AdminUserRepository {
       adminUserModel.createdTime = newDocumentDataModel.timestamp;
 
       bool isCreationSuccess = await setUpdateAdminUser(adminUserId: adminUserModel.id, adminUserModel: adminUserModel, merge: false);
-      Log().i("isCreationSuccess:$isCreationSuccess");
+      MyPrint.printOnConsole("isCreationSuccess:$isCreationSuccess");
 
       if(isCreationSuccess) {
         return adminUserModel;
@@ -85,14 +85,15 @@ class AdminUserRepository {
     }
 
     bool isUpdationSuccess = await FirestoreController().firestore.collection(FirebaseNodes.adminUsersCollection).doc(adminUserId).set(data, SetOptions(merge: merge)).then((value) {
-      Log().i("Admin User with Id:$adminUserId Data  Set/Updated Successfully");
+      MyPrint.printOnConsole("Admin User with Id:$adminUserId Data  Set/Updated Successfully");
       return true;
     })
     .catchError((e, s) {
-      Log().e("Error in Setting/Updating Admin User:$e", s);
+      MyPrint.printOnConsole("Error in Setting/Updating Admin User:$e");
+      MyPrint.printOnConsole(s);
       return false;
     });
-    Log().i("isUpdationSuccess:$isUpdationSuccess");
+    MyPrint.printOnConsole("isUpdationSuccess:$isUpdationSuccess");
 
     return isUpdationSuccess;
   }
@@ -111,11 +112,12 @@ class AdminUserRepository {
     }
 
     isDeleted = await writeBatch.commit().then((value) {
-      Log().i("Deleted Admin User with Ids: $adminUserIds");
+      MyPrint.printOnConsole("Deleted Admin User with Ids: $adminUserIds");
       return true;
     })
     .catchError((e, s) {
-      Log().e("Error in Deleting Admin User with Id '$adminUserIds':$e", s);
+      MyPrint.printOnConsole("Error in Deleting Admin User with Id '$adminUserIds':$e");
+      MyPrint.printOnConsole(s);
       return false;
     });
 

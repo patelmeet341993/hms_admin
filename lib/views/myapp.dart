@@ -39,7 +39,7 @@ class MainApp extends StatelessWidget {
 
     return Consumer<AppThemeProvider>(
       builder: (BuildContext context, AppThemeProvider appThemeProvider, Widget? child) {
-        //Log().i("ThemeMode:${appThemeProvider.themeMode}");
+        //MyPrint.printOnConsole("ThemeMode:${appThemeProvider.themeMode}");
 
         return MaterialApp(
           debugShowCheckedModeBanner: false,

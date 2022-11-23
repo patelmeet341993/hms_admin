@@ -4,7 +4,6 @@ import 'package:admin/controllers/admin_user/admin_user_controller.dart';
 import 'package:admin/models/admin_user_model.dart';
 import 'package:admin/providers/admin_user_provider.dart';
 import 'package:admin/utils/date_presentation.dart';
-import 'package:admin/utils/logger_service.dart';
 import 'package:admin/utils/my_safe_state.dart';
 import 'package:admin/views/admin_users/components/add_edit_admin_user_dialog.dart';
 import 'package:admin/views/common/components/common_dialog.dart';
@@ -18,6 +17,7 @@ import 'package:loading_animation_widget/loading_animation_widget.dart';
 import 'package:provider/provider.dart';
 
 import '../../utils/SizeConfig.dart';
+import '../../utils/my_print.dart';
 
 class AdminUsersListScreen extends StatefulWidget {
   final String title;
@@ -55,7 +55,7 @@ class _AdminUsersListScreenState extends State<AdminUsersListScreen> with Automa
       mySetState();
 
       bool isDeleted = await AdminUserController().deleteAdminUsers(adminUserIds);
-      Log().i("isDeleted:$isDeleted");
+      MyPrint.printOnConsole("isDeleted:$isDeleted");
 
       isLoading = false;
       mySetState();
@@ -124,7 +124,7 @@ class _AdminUsersListScreenState extends State<AdminUsersListScreen> with Automa
         );
       }
 
-      Log().i("isSuccessful:$isSuccessful");
+      MyPrint.printOnConsole("isSuccessful:$isSuccessful");
 
       isLoading = false;
       mySetState();
