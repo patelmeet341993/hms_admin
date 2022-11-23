@@ -2,7 +2,6 @@ import 'dart:async';
 import 'dart:io';
 
 import 'package:admin/controllers/app_controller.dart';
-import 'package:admin/utils/logger_service.dart';
 import 'package:admin/utils/my_print.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
@@ -76,6 +75,5 @@ Future<void> initApp({bool isDev = false}) async {
       ),
     ]);
   }
-  Log.tag = 'hms';
   MyPrint.printOnConsole('Running ${isDev ? 'dev' : 'prod'} version...');
 }
