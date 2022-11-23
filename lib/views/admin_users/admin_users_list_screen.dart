@@ -1,8 +1,8 @@
+import 'package:admin/backend/admin_user/admin_user_controller.dart';
+import 'package:admin/backend/admin_user/admin_user_provider.dart';
 import 'package:admin/configs/app_strings.dart';
 import 'package:admin/configs/constants.dart';
-import 'package:admin/controllers/admin_user/admin_user_controller.dart';
 import 'package:admin/models/admin_user_model.dart';
-import 'package:admin/providers/admin_user_provider.dart';
 import 'package:admin/utils/date_presentation.dart';
 import 'package:admin/utils/my_safe_state.dart';
 import 'package:admin/views/admin_users/components/add_edit_admin_user_dialog.dart';
@@ -67,15 +67,13 @@ class _AdminUsersListScreenState extends State<AdminUsersListScreen> with Automa
       AdminUserProvider adminUserProvider = Provider.of<AdminUserProvider>(context, listen: false);
 
       adminUserModel.isActive = newValue;
-      adminUserProvider.updateUserData(adminUserModel.id, adminUserModel);
-      mySetState();
+      adminUserProvider.updateUserData(userid: adminUserModel.id, adminUserModel: adminUserModel);
 
       bool isUpdated = await AdminUserController().enableDisableAdminUser(adminUserModel.id, newValue);
 
       if(!isUpdated) {
         adminUserModel.isActive = !newValue;
-        adminUserProvider.updateUserData(adminUserModel.id, adminUserModel);
-        mySetState();
+        adminUserProvider.updateUserData(userid: adminUserModel.id, adminUserModel: adminUserModel);
       }
     }
   }
@@ -241,7 +239,7 @@ class _AdminUsersListScreenState extends State<AdminUsersListScreen> with Automa
   }
 
   Widget getAdminUsersListView(AdminUserProvider adminUserProvider) {
-    List<AdminUserModel> users = adminUserProvider.adminUsers;
+    List<String> users = adminUserProvider.adminUsersIds;
 
     if(users.isEmpty) {
       return const Center(
@@ -279,9 +277,15 @@ class _AdminUsersListScreenState extends State<AdminUsersListScreen> with Automa
           });
         }
 
-        AdminUserModel adminUserModel = users[index];
+        String userId = users[index];
+        AdminUserModel? adminUserModel = adminUserProvider.adminUserModelsMap[userId];
 
-        return getAdminUserWidget(adminUserModel, index);
+        if(adminUserModel != null) {
+          return getAdminUserWidget(adminUserModel, index);
+        }
+        else {
+          return SizedBox();
+        }
       },
     );
   }

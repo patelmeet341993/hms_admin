@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-import '../../controllers/authentication_controller.dart';
+import '../../backend/admin_user/admin_user_provider.dart';
+import '../../backend/authentication/authentication_controller.dart';
 import '../../models/admin_user_model.dart';
-import '../../providers/admin_user_provider.dart';
 
 class AdminUserProfileScreen extends StatefulWidget {
   const AdminUserProfileScreen({Key? key}) : super(key: key);

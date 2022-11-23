@@ -1,22 +1,21 @@
 import 'dart:convert';
 
-import 'package:admin/controllers/admin_user/admin_user_controller.dart';
+import 'package:admin/backend/admin_user/admin_user_controller.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-import '../configs/app_strings.dart';
-import '../configs/constants.dart';
-import '../models/admin_user_model.dart';
-import '../providers/admin_user_provider.dart';
-import '../utils/my_print.dart';
-import '../utils/my_toast.dart';
-import '../utils/parsing_helper.dart';
-import '../utils/shared_pref_manager.dart';
-import '../views/authentication/login_screen.dart';
-import '../views/homescreen/homescreen.dart';
-import 'firestore_controller.dart';
-import 'navigation_controller.dart';
+import '../../configs/app_strings.dart';
+import '../../configs/constants.dart';
+import '../../models/admin_user_model.dart';
+import '../../utils/my_print.dart';
+import '../../utils/my_toast.dart';
+import '../../utils/parsing_helper.dart';
+import '../../utils/shared_pref_manager.dart';
+import '../../views/authentication/login_screen.dart';
+import '../../views/homescreen/homescreen.dart';
+import '../admin_user/admin_user_provider.dart';
+import '../navigation/navigation_controller.dart';
 
 class AuthenticationController {
   Future<AdminUserModel?> isUserLoggedIn() async {
@@ -39,7 +38,7 @@ class AuthenticationController {
     }
 
     if(adminUserModel != null && adminUserModel.id.isNotEmpty) {
-      DocumentSnapshot<Map<String, dynamic>> documentSnapshot = await FirestoreController().firestore.collection(FirebaseNodes.adminUsersCollection).doc(adminUserModel.id).get();
+      DocumentSnapshot<Map<String, dynamic>> documentSnapshot = await FirebaseNodes.adminUserDocumentReference(userId: adminUserModel.id).get();
 
       if(documentSnapshot.exists && (documentSnapshot.data() ?? {}).isNotEmpty) {
         AdminUserModel newModel = AdminUserModel.fromMap(documentSnapshot.data()!);
@@ -87,7 +86,7 @@ class AuthenticationController {
 
     AdminUserModel? adminUserModel;
 
-    Query<Map<String, dynamic>> query = FirestoreController().firestore.collection(FirebaseNodes.adminUsersCollection).where("username", isEqualTo: userName);
+    Query<Map<String, dynamic>> query = FirebaseNodes.adminUsersCollectionReference.where("username", isEqualTo: userName);
     if(userTypes.isNotEmpty) {
       query = query.where("role", whereIn: userTypes);
     }

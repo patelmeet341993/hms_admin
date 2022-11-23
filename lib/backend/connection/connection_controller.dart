@@ -1,10 +1,10 @@
 import 'package:flutter/cupertino.dart';
 import 'package:provider/provider.dart';
 
-import '../configs/app_strings.dart';
-import '../providers/connection_provider.dart';
-import '../utils/my_toast.dart';
-import 'navigation_controller.dart';
+import '../../configs/app_strings.dart';
+import '../../utils/my_toast.dart';
+import '../navigation/navigation_controller.dart';
+import 'connection_provider.dart';
 
 class ConnectionController {
   static ConnectionController? _instance;

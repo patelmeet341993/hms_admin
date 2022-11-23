@@ -1,5 +1,4 @@
 import 'package:admin/configs/constants.dart';
-import 'package:admin/controllers/firestore_controller.dart';
 import 'package:admin/models/visit_model/diagnosis%20and%20prescription/diagnosis_model.dart';
 import 'package:admin/models/visit_model/pharma_billings/pharma_billing_item_model.dart';
 import 'package:admin/models/visit_model/pharma_billings/pharma_billing_model.dart';
@@ -9,8 +8,8 @@ import 'package:admin/models/visit_model/visit_model.dart';
 import 'package:admin/utils/my_utils.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
-import '../models/visit_model/prescription/prescription_model.dart';
-import '../utils/my_print.dart';
+import '../../models/visit_model/prescription/prescription_model.dart';
+import '../../utils/my_print.dart';
 
 class VisitController {
   Future<void> createDummyVisitDataInFirestore() async {
@@ -141,7 +140,7 @@ class VisitController {
       previousVisitId: "",
     );
 
-    await FirestoreController().firestore.collection(FirebaseNodes.visitsCollection).doc(visitModel.id).set(visitModel.toMap()).then((value) {
+    await FirebaseNodes.visitDocumentReference(visitId: visitModel.id).set(visitModel.toMap()).then((value) {
       MyPrint.printOnConsole("Visit Created Successfully with id:${visitModel.id}");
     })
     .catchError((e, s) {

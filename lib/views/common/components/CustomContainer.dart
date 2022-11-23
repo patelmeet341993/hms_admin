@@ -1,6 +1,6 @@
 import 'dart:ui';
 
-import 'package:admin/providers/app_theme_provider.dart';
+import 'package:admin/backend/app_theme/app_theme_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 

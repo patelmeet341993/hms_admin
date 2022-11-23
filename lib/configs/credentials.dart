@@ -1,6 +1,6 @@
 import 'package:firebase_core/firebase_core.dart';
 
-import '../controllers/app_controller.dart';
+import '../backend/common/app_controller.dart';
 import 'firebase_options_dev.dart' as firebase_dev;
 import 'firebase_options_prod.dart' as firebase_prod;
 

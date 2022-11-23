@@ -1,12 +1,12 @@
-import 'package:admin/controllers/navigation_controller.dart';
+import 'package:admin/backend/navigation/navigation_controller.dart';
 import 'package:admin/models/admin_user_model.dart';
 import 'package:admin/views/authentication/login_screen.dart';
 import 'package:admin/views/homescreen/homescreen.dart';
 import 'package:flutter/material.dart';
 import 'package:loading_animation_widget/loading_animation_widget.dart';
 
-import '../controllers/admin_user/admin_user_controller.dart';
-import '../controllers/authentication_controller.dart';
+import '../backend/admin_user/admin_user_controller.dart';
+import '../backend/authentication/authentication_controller.dart';
 import '../utils/my_print.dart';
 import 'common/components/common_text.dart';
 

@@ -1,5 +1,5 @@
+import 'package:admin/backend/app_theme/app_theme_provider.dart';
 import 'package:admin/configs/app_theme.dart';
-import 'package:admin/providers/app_theme_provider.dart';
 import 'package:admin/utils/my_safe_state.dart';
 import 'package:admin/utils/my_toast.dart';
 import 'package:admin/views/common/components/loading_widget.dart';
@@ -7,7 +7,7 @@ import 'package:admin/views/common/components/modal_progress_hud.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-import '../../controllers/authentication_controller.dart';
+import '../../backend/authentication/authentication_controller.dart';
 import '../../utils/SizeConfig.dart';
 import '../../utils/my_print.dart';
 import '../common/components/CustomContainer.dart';

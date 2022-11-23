@@ -1,7 +1,7 @@
 import 'dart:async';
 import 'dart:io';
 
-import 'package:admin/controllers/app_controller.dart';
+import 'package:admin/backend/common/app_controller.dart';
 import 'package:admin/utils/my_print.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';

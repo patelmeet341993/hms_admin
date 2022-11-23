@@ -4,8 +4,8 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
-import '../utils/my_print.dart';
-import '../views/splashscreen.dart';
+import '../../utils/my_print.dart';
+import '../../views/splashscreen.dart';
 
 class NavigationController {
   static NavigationController? _instance;

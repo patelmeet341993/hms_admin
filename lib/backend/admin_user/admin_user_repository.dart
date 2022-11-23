@@ -5,8 +5,8 @@ import '../../models/admin_user_model.dart';
 import '../../models/new_document_data_model.dart';
 import '../../utils/my_print.dart';
 import '../../utils/my_utils.dart';
-import '../data_controller.dart';
-import '../firestore_controller.dart';
+import '../common/data_controller.dart';
+import '../common/firestore_controller.dart';
 
 class AdminUserRepository {
   Future<AdminUserModel?> createAdminUserWithUsernameAndPassword({required AdminUserModel userModel, void Function()? onValidationFailed, void Function()? onUserAlreadyExistEvent}) async {
@@ -23,7 +23,7 @@ class AdminUserRepository {
 
     AdminUserModel? adminUserModel;
 
-    QuerySnapshot<Map<String, dynamic>> querySnapshot = await FirestoreController().firestore.collection(FirebaseNodes.adminUsersCollection).where("username", isEqualTo: userModel.username).get();
+    QuerySnapshot<Map<String, dynamic>> querySnapshot = await FirebaseNodes.adminUsersCollectionReference.where("username", isEqualTo: userModel.username).get();
     if(querySnapshot.docs.isNotEmpty) {
       DocumentSnapshot<Map<String, dynamic>> docSnapshot = querySnapshot.docs.first;
       if((docSnapshot.data() ?? {}).isNotEmpty) {
@@ -84,7 +84,7 @@ class AdminUserRepository {
       data = adminUserModel!.toMap();
     }
 
-    bool isUpdationSuccess = await FirestoreController().firestore.collection(FirebaseNodes.adminUsersCollection).doc(adminUserId).set(data, SetOptions(merge: merge)).then((value) {
+    bool isUpdationSuccess = await FirebaseNodes.adminUserDocumentReference(userId: adminUserId).set(data, SetOptions(merge: merge)).then((value) {
       MyPrint.printOnConsole("Admin User with Id:$adminUserId Data  Set/Updated Successfully");
       return true;
     })
@@ -105,10 +105,10 @@ class AdminUserRepository {
       return true;
     }
 
-    WriteBatch writeBatch = FirestoreController().firestore.batch();
+    WriteBatch writeBatch = FirestoreController.firestore.batch();
 
     for (String id in adminUserIds) {
-      writeBatch.delete(FirestoreController().firestore.collection(FirebaseNodes.adminUsersCollection).doc(id));
+      writeBatch.delete(FirebaseNodes.adminUserDocumentReference(userId: id));
     }
 
     isDeleted = await writeBatch.commit().then((value) {

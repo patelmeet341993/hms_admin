@@ -1,5 +1,5 @@
 //To Store Some Important App related Variables
-import '../utils/shared_pref_manager.dart';
+import '../../utils/shared_pref_manager.dart';
 
 class AppController {
   static AppController? _instance;

@@ -1,8 +1,8 @@
 import 'dart:async';
 
-import 'package:admin/controllers/admin_user/admin_user_repository.dart';
-import 'package:admin/controllers/navigation_controller.dart';
-import 'package:admin/providers/admin_user_provider.dart';
+import 'package:admin/backend/admin_user/admin_user_provider.dart';
+import 'package:admin/backend/admin_user/admin_user_repository.dart';
+import 'package:admin/backend/navigation/navigation_controller.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -12,7 +12,6 @@ import '../../configs/constants.dart';
 import '../../models/admin_user_model.dart';
 import '../../utils/my_print.dart';
 import '../../utils/my_toast.dart';
-import '../firestore_controller.dart';
 
 class AdminUserController {
   static StreamSubscription<DocumentSnapshot<Map<String, dynamic>>>? adminUserStreamSubscription;
@@ -33,7 +32,7 @@ class AdminUserController {
     );
     if(newAdminUserModel != null) {
       isCreated = true;
-      adminUserProvider.addAdminUsersInList([newAdminUserModel]);
+      adminUserProvider.addAdminUsersInList(adminUserModels: [newAdminUserModel]);
     }
 
     return isCreated;
@@ -50,7 +49,7 @@ class AdminUserController {
 
       if(isDeleted) {
         AdminUserProvider adminUserProvider = Provider.of<AdminUserProvider>(NavigationController.mainScreenNavigator.currentContext!, listen: false);
-        adminUserProvider.setAdminUsers(adminUserProvider.adminUsers..removeWhere((element) => adminUserIds.contains(element.id)));
+        adminUserProvider.setAdminUserIdsList(usersIds: adminUserProvider.adminUsersIds..removeWhere((element) => adminUserIds.contains(element)));
       }
     }
     else {
@@ -70,7 +69,7 @@ class AdminUserController {
         adminUserStreamSubscription = null;
       }
 
-      adminUserStreamSubscription = FirestoreController().firestore.collection(FirebaseNodes.adminUsersCollection).doc(adminUserId).snapshots().listen((DocumentSnapshot<Map<String, dynamic>> snapshot) {
+      adminUserStreamSubscription = FirebaseNodes.adminUserDocumentReference(userId: adminUserId).snapshots().listen((DocumentSnapshot<Map<String, dynamic>> snapshot) {
         MyPrint.printOnConsole("Admin User Document Updated.\n"
             "Snapshot Exist:${snapshot.exists}\n"
             "Data:${snapshot.data()}");
@@ -107,7 +106,7 @@ class AdminUserController {
 
     if(!isRefresh && isFromCache && adminUserProvider.adminUsersLength > 0) {
       MyPrint.printOnConsole("Returning Cached Data");
-      return adminUserProvider.adminUsers;
+      return adminUserProvider.getAdminUsersModelsList();
     }
 
     if (isRefresh) {
@@ -115,21 +114,19 @@ class AdminUserController {
       adminUserProvider.setHasMoreUsers = true; // flag for more products available or not
       adminUserProvider.setLastDocument = null; // flag for last document from where next 10 records to be fetched
       adminUserProvider.setIsUsersLoading(false, isNotify: isNotify);
-      adminUserProvider.setAdminUsers([], isNotify: isNotify);
+      adminUserProvider.setAdminUserIdsList(usersIds: <String>[], isNotify: isNotify);
     }
 
     try {
       if (!adminUserProvider.getHasMoreUsers) {
         MyPrint.printOnConsole('No More Users');
-        return adminUserProvider.adminUsers;
+        return adminUserProvider.getAdminUsersModelsList();
       }
-      if (adminUserProvider.getIsUsersLoading) return adminUserProvider.adminUsers;
+      if (adminUserProvider.getIsUsersLoading) return adminUserProvider.getAdminUsersModelsList();
 
       adminUserProvider.setIsUsersLoading(true, isNotify: isNotify);
 
-      Query<Map<String, dynamic>> query = FirestoreController()
-        .firestore
-        .collection(FirebaseNodes.adminUsersCollection)
+      Query<Map<String, dynamic>> query = FirebaseNodes.adminUsersCollectionReference
         .limit(AppConstants.adminUsersDocumentLimitForPagination)
         .orderBy("createdTime", descending: false);
 
@@ -157,7 +154,7 @@ class AdminUserController {
           list.add(adminUserModel);
         }
       }
-      adminUserProvider.addAdminUsersInList(list, isNotify: false);
+      adminUserProvider.addAdminUsersInList(adminUserModels: list, isNotify: false);
       adminUserProvider.setIsUsersLoading(false);
       MyPrint.printOnConsole("Final AdminUsers Length From Firestore:${list.length}");
       MyPrint.printOnConsole("Final AdminUsers Length in Provider:${adminUserProvider.adminUsersLength}");
@@ -168,7 +165,7 @@ class AdminUserController {
       MyPrint.printOnConsole(s);
       adminUserProvider.setHasMoreUsers = true;
       adminUserProvider.setLastDocument = null;
-      adminUserProvider.setAdminUsers([], isNotify: false);
+      adminUserProvider.setAdminUserIdsList(usersIds: [], isNotify: false);
       return [];
     }
   }
@@ -189,7 +186,7 @@ class AdminUserController {
 
     bool isSuccessful = false;
 
-    QuerySnapshot<Map<String, dynamic>> querySnapshot = await FirestoreController().firestore.collection(FirebaseNodes.adminUsersCollection).where("username", isEqualTo: adminUserModel.username).get();
+    QuerySnapshot<Map<String, dynamic>> querySnapshot = await FirebaseNodes.adminUsersCollectionReference.where("username", isEqualTo: adminUserModel.username).get();
     if(querySnapshot.docs.isNotEmpty) {
       if(querySnapshot.docs.first.id != adminUserModel.id) {
         MyToast.showError("Someone else is already having this username", context);
@@ -209,7 +206,7 @@ class AdminUserController {
 
     if(isSuccessful) {
       AdminUserProvider adminUserProvider = Provider.of<AdminUserProvider>(NavigationController.mainScreenNavigator.currentContext!, listen: false);
-      adminUserProvider.updateUserData(adminUserModel.id, adminUserModel);
+      adminUserProvider.updateUserData(userid: adminUserModel.id, adminUserModel: adminUserModel);
     }
 
     return isSuccessful;

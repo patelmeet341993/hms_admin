@@ -1,8 +1,8 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:uuid/uuid.dart';
 
-import '../models/new_document_data_model.dart';
-import 'firestore_controller.dart';
+import '../../configs/constants.dart';
+import '../../models/new_document_data_model.dart';
 
 class DataController {
   static DataController? _instance;
@@ -18,7 +18,7 @@ class DataController {
     String docId = "";
     Timestamp? timestamp;
 
-    await FirestoreController().firestore.collection("timestamp_collection").add({"temp_timestamp": FieldValue.serverTimestamp()}).then((DocumentReference<Map<String, dynamic>> reference) async {
+    await FirebaseNodes.timestampCollectionReference.add({"temp_timestamp": FieldValue.serverTimestamp()}).then((DocumentReference<Map<String, dynamic>> reference) async {
       docId = reference.id;
 
       if(isGetTimeStamp) {

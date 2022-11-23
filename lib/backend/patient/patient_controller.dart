@@ -2,14 +2,13 @@ import 'package:admin/models/patient_model.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:provider/provider.dart';
 
-import '../configs/constants.dart';
-import '../models/new_document_data_model.dart';
-import '../providers/patient_provider.dart';
-import '../utils/my_print.dart';
-import '../utils/my_utils.dart';
-import 'data_controller.dart';
-import 'firestore_controller.dart';
-import 'navigation_controller.dart';
+import '../../configs/constants.dart';
+import '../../models/new_document_data_model.dart';
+import '../../utils/my_print.dart';
+import '../../utils/my_utils.dart';
+import '../common/data_controller.dart';
+import '../navigation/navigation_controller.dart';
+import 'patient_provider.dart';
 
 class PatientController {
   Future<void> createDummyPatientDataInFirestore() async {
@@ -27,7 +26,7 @@ class PatientController {
       ],
     );
 
-    await FirestoreController().firestore.collection(FirebaseNodes.patientCollection).doc(patientModel.id).set(patientModel.toMap()).then((value) {
+    await FirebaseNodes.patientDocumentReference(patientId: patientModel.id).set(patientModel.toMap()).then((value) {
       MyPrint.printOnConsole("Patient Created Successfully with id:${patientModel.id}");
     })
     .catchError((e, s) {
@@ -47,7 +46,7 @@ class PatientController {
       userMobiles: [mobile],
     );
 
-    bool isPatientCreated = await FirestoreController().firestore.collection(FirebaseNodes.patientCollection).doc(patientModel.id).set(patientModel.toMap()).then((value) {
+    bool isPatientCreated = await FirebaseNodes.patientDocumentReference(patientId: patientModel.id).set(patientModel.toMap()).then((value) {
       return true;
     })
     .catchError((e, s) {
@@ -71,7 +70,7 @@ class PatientController {
 
     PatientProvider patientProvider = Provider.of<PatientProvider>(NavigationController.mainScreenNavigator.currentContext!, listen: false);
 
-    QuerySnapshot<Map<String, dynamic>> querySnapshot = await FirestoreController().firestore.collection(FirebaseNodes.patientCollection).where("userMobiles", arrayContainsAny: [mobileNumber]).get();
+    QuerySnapshot<Map<String, dynamic>> querySnapshot = await FirebaseNodes.patientCollectionReference.where("userMobiles", arrayContainsAny: [mobileNumber]).get();
     MyPrint.printOnConsole("Patient Documents Length For Mobile Number '${mobileNumber}' :${querySnapshot.docs.length}");
 
     for (DocumentSnapshot<Map<String, dynamic>> documentSnapshot in querySnapshot.docs) {
@@ -80,12 +79,12 @@ class PatientController {
         patients.add(patientModel);
       }
     }
-    patientProvider.setPatientModels(patients, isNotify: false);
+    patientProvider.addPatientModelsInList(patientModels: patients, isNotify: false);
     if(patients.isNotEmpty) {
-      patientProvider.setCurrentPatient(patients.first, isNotify: false);
+      patientProvider.setCurrentPatient(patientModel: patients.first, isNotify: false);
     }
     else {
-      patientProvider.setCurrentPatient(null, isNotify: false);
+      patientProvider.setCurrentPatient(patientModel: null, isNotify: false);
     }
 
     return patients;

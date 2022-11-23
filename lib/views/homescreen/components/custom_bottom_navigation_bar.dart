@@ -1,7 +1,7 @@
 
 import 'dart:math';
 
-import 'package:admin/providers/app_theme_provider.dart';
+import 'package:admin/backend/app_theme/app_theme_provider.dart';
 import 'package:admin/views/homescreen/components/homescreen_header.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';

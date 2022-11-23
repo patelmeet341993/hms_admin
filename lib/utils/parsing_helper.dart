@@ -69,7 +69,8 @@ class ParsingHelper {
     }
   }
 
-  static List<T2> parseListMethod<T1, T2>(dynamic value, {List<T2> defaultValue = const []}) {
+  static List<T2> parseListMethod<T1, T2>(dynamic value, {List<T2>? defaultValue}) {
+    defaultValue ??= <T2>[];
     if(value == null) {
       return defaultValue;
     }
@@ -96,7 +97,9 @@ class ParsingHelper {
     }
   }
 
-  static Map<K2, V2> parseMapMethod<K1, V1, K2, V2>(dynamic value, {Map<K2, V2> defaultValue = const {}}) {
+  static Map<K2, V2> parseMapMethod<K1, V1, K2, V2>(dynamic value, {Map<K2, V2>? defaultValue = const {}}) {
+    defaultValue??= <K2, V2>{};
+
     if(value == null) {
       return defaultValue;
     }

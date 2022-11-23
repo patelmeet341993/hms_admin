@@ -1,11 +1,13 @@
-//App Version
 import 'package:admin/views/admin_users/admin_users_list_screen.dart';
 import 'package:admin/views/common/models/home_screen_component_model.dart';
 import 'package:flutter/material.dart';
 
+import '../backend/common/firestore_controller.dart';
 import '../views/homescreen/dashboard_screen.dart';
 import '../views/profile/admin_user_profile_screen.dart';
+import 'typedefs.dart';
 
+//App Version
 const String app_version = "1.0.0";
 
 //Shared Preference Keys
@@ -21,6 +23,10 @@ class AppConstants {
   static const int adminUsersRefreshIndexForPagination = 5;
 
   static String hospitalId = "Hospital_1";
+}
+
+class AppUIConfiguration {
+  static double borderRadius = 7;
 }
 
 class PatientGender {
@@ -45,9 +51,52 @@ class AdminUserType {
 }
 
 class FirebaseNodes {
+  //region Admin Users
   static const String adminUsersCollection = "admin_users";
+
+  static MyFirestoreCollectionReference get adminUsersCollectionReference => FirestoreController.collectionReference(
+    collectionName: FirebaseNodes.adminUsersCollection,
+  );
+
+  static MyFirestoreDocumentReference adminUserDocumentReference({String? userId}) => FirestoreController.documentReference(
+    collectionName: FirebaseNodes.adminUsersCollection,
+    documentId: userId,
+  );
+  //endregion
+
+  //region Patient
   static const String patientCollection = "patient";
+
+  static MyFirestoreCollectionReference get patientCollectionReference => FirestoreController.collectionReference(
+    collectionName: FirebaseNodes.patientCollection,
+  );
+
+  static MyFirestoreDocumentReference patientDocumentReference({String? patientId}) => FirestoreController.documentReference(
+    collectionName: FirebaseNodes.patientCollection,
+    documentId: patientId,
+  );
+  //endregion
+
+  //region Visits
   static const String visitsCollection = "visits";
+
+  static MyFirestoreCollectionReference get visitsCollectionReference => FirestoreController.collectionReference(
+    collectionName: FirebaseNodes.visitsCollection,
+  );
+
+  static MyFirestoreDocumentReference visitDocumentReference({String? visitId}) => FirestoreController.documentReference(
+    collectionName: FirebaseNodes.visitsCollection,
+    documentId: visitId,
+  );
+  //endregion
+
+  //region Timestamp Collection
+  static const String timestampCollection = "timestamp_collection";
+
+  static MyFirestoreCollectionReference get timestampCollectionReference => FirestoreController.collectionReference(
+    collectionName: FirebaseNodes.timestampCollection,
+  );
+  //endregion
 }
 
 class PrescriptionMedicineDoseTime {
@@ -104,3 +153,4 @@ class HomeScreenComponentsList {
     }
   }
 }
+
