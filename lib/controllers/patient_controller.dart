@@ -5,7 +5,6 @@ import 'package:provider/provider.dart';
 import '../configs/constants.dart';
 import '../models/new_document_data_model.dart';
 import '../providers/patient_provider.dart';
-import '../utils/logger_service.dart';
 import '../utils/my_print.dart';
 import '../utils/my_utils.dart';
 import 'data_controller.dart';
@@ -67,7 +66,7 @@ class PatientController {
   }
 
   Future<List<PatientModel>> getPatientsForMobileNumber({required String mobileNumber}) async {
-    Log().d("getPatientsForMobileNumber called with mobile number: $mobileNumber");
+    MyPrint.printOnConsole("getPatientsForMobileNumber called with mobile number: $mobileNumber");
     List<PatientModel> patients = [];
 
     PatientProvider patientProvider = Provider.of<PatientProvider>(NavigationController.mainScreenNavigator.currentContext!, listen: false);

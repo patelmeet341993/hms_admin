@@ -10,7 +10,6 @@ import 'package:provider/provider.dart';
 import '../../configs/app_strings.dart';
 import '../../configs/constants.dart';
 import '../../models/admin_user_model.dart';
-import '../../utils/logger_service.dart';
 import '../../utils/my_print.dart';
 import '../../utils/my_toast.dart';
 import '../firestore_controller.dart';
@@ -19,7 +18,7 @@ class AdminUserController {
   static StreamSubscription<DocumentSnapshot<Map<String, dynamic>>>? adminUserStreamSubscription;
 
   Future<bool> addAdminUserInFirestoreAndUpdateInProvider({required BuildContext context, required AdminUserModel adminUserModel}) async {
-    Log().d("addAdminUserInFirestoreAndUpdateInProvider called with adminUserModel:$adminUserModel");
+    MyPrint.printOnConsole("addAdminUserInFirestoreAndUpdateInProvider called with adminUserModel:$adminUserModel");
     AdminUserProvider adminUserProvider = Provider.of<AdminUserProvider>(NavigationController.mainScreenNavigator.currentContext!, listen: false);
 
     bool isCreated = false;
@@ -87,7 +86,7 @@ class AdminUserController {
         }
       });
 
-      Log().d("Admin User Stream Started");
+      MyPrint.printOnConsole("Admin User Stream Started");
     }
   }
 
@@ -107,12 +106,12 @@ class AdminUserController {
     AdminUserProvider adminUserProvider = Provider.of<AdminUserProvider>(NavigationController.mainScreenNavigator.currentContext!, listen: false);
 
     if(!isRefresh && isFromCache && adminUserProvider.adminUsersLength > 0) {
-      Log().d("Returning Cached Data");
+      MyPrint.printOnConsole("Returning Cached Data");
       return adminUserProvider.adminUsers;
     }
 
     if (isRefresh) {
-      Log().d("Refresh");
+      MyPrint.printOnConsole("Refresh");
       adminUserProvider.setHasMoreUsers = true; // flag for more products available or not
       adminUserProvider.setLastDocument = null; // flag for last document from where next 10 records to be fetched
       adminUserProvider.setIsUsersLoading(false, isNotify: isNotify);
@@ -121,7 +120,7 @@ class AdminUserController {
 
     try {
       if (!adminUserProvider.getHasMoreUsers) {
-        Log().d('No More Users');
+        MyPrint.printOnConsole('No More Users');
         return adminUserProvider.adminUsers;
       }
       if (adminUserProvider.getIsUsersLoading) return adminUserProvider.adminUsers;
@@ -137,11 +136,11 @@ class AdminUserController {
       //For Last Document
       DocumentSnapshot<Map<String, dynamic>>? snapshot = adminUserProvider.getLastDocument;
       if(snapshot != null) {
-        Log().d("LastDocument not null");
+        MyPrint.printOnConsole("LastDocument not null");
         query = query.startAfterDocument(snapshot);
       }
       else {
-        Log().d("LastDocument null");
+        MyPrint.printOnConsole("LastDocument null");
       }
 
       QuerySnapshot<Map<String, dynamic>> querySnapshot = await query.get();
@@ -175,7 +174,7 @@ class AdminUserController {
   }
 
   Future<bool> enableDisableAdminUser(String adminUserId, bool isActive) async {
-    Log().d("enableDisableAdminUser called for adminUserId:$adminUserId, isActive:$isActive");
+    MyPrint.printOnConsole("enableDisableAdminUser called for adminUserId:$adminUserId, isActive:$isActive");
 
     bool isSuccessful = false;
 
@@ -186,7 +185,7 @@ class AdminUserController {
   }
 
   Future<bool> updateAdminUserProfileDataAndUpdateInListInProvider({required BuildContext context, required AdminUserModel adminUserModel}) async {
-    Log().d("updateAdminUserProfileData called with adminUserModel:$adminUserModel");
+    MyPrint.printOnConsole("updateAdminUserProfileData called with adminUserModel:$adminUserModel");
 
     bool isSuccessful = false;
 
