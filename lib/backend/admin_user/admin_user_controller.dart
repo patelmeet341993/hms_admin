@@ -24,10 +24,10 @@ class AdminUserController {
     AdminUserModel? newAdminUserModel = await AdminUserRepository().createAdminUserWithUsernameAndPassword(
       userModel: adminUserModel,
       onValidationFailed: () {
-        MyToast.showError("UserName is empty or password is empty", context);
+        MyToast.showError(context: context, msg: "UserName is empty or password is empty",);
       },
       onUserAlreadyExistEvent: () {
-        MyToast.showError(AppStrings.givenUserAlreadyExist, context);
+        MyToast.showError(context: context, msg: AppStrings.givenUserAlreadyExist,);
       },
     );
     if(newAdminUserModel != null) {
@@ -189,7 +189,7 @@ class AdminUserController {
     QuerySnapshot<Map<String, dynamic>> querySnapshot = await FirebaseNodes.adminUsersCollectionReference.where("username", isEqualTo: adminUserModel.username).get();
     if(querySnapshot.docs.isNotEmpty) {
       if(querySnapshot.docs.first.id != adminUserModel.id) {
-        MyToast.showError("Someone else is already having this username", context);
+        MyToast.showError(context: context, msg: "Someone else is already having this username",);
         return false;
       }
     }

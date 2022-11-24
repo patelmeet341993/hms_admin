@@ -19,7 +19,7 @@ class ConnectionController {
     ConnectionProvider connectionProvider = Provider.of<ConnectionProvider>(NavigationController.mainScreenNavigator.currentContext!, listen: false);
 
     if(!connectionProvider.isInternet && isShowErrorSnakbar && context != null) {
-      MyToast.showError(AppStrings.no_internet, context);
+      MyToast.showError(context: context, msg: AppStrings.no_internet,);
     }
 
     return connectionProvider.isInternet;

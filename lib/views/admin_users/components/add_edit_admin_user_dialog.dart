@@ -267,7 +267,7 @@ class _AddEditAdminUserDialogState extends State<AddEditAdminUserDialog> with My
                                     addEditAdminUser();
                                   }
                                   else if((selectedRole ?? "").isEmpty) {
-                                    MyToast.showError(AppStrings.role_is_required, context);
+                                    MyToast.showError(context: context, msg: AppStrings.role_is_required,);
                                   }
                                 }),
                                 Spacing.width(10),

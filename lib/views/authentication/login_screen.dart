@@ -43,7 +43,7 @@ class _LoginScreenState extends State<LoginScreen> with MySafeState {
     mySetState();
 
     if(!isLoggedIn) {
-      MyToast.showError("Login Failed", context);
+      MyToast.showError(context: context, msg: "Login Failed",);
     }
   }
 
