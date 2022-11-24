@@ -1,6 +1,6 @@
-import 'package:admin/models/admin_user_model.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/foundation.dart';
+import 'package:hms_models/models/admin_user/admin_user_model.dart';
 
 class AdminUserProvider extends ChangeNotifier {
   //region Logged In Admin User Model

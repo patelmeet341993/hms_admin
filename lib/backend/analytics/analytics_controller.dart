@@ -1,7 +1,6 @@
 import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:firebase_crashlytics/firebase_crashlytics.dart';
-
-import '../../utils/my_print.dart';
+import 'package:hms_models/utils/my_print.dart';
 
 class AnalyticsController {
   static AnalyticsController? _instance;

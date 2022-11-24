@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:hms_models/utils/size_config.dart';
 
-import '../../../utils/SizeConfig.dart';
 import 'MyCol.dart';
 import 'Properties.dart';
 import 'ScreenMedia.dart';
@@ -28,7 +28,7 @@ class MyRow extends StatelessWidget {
         for(MyCol col in children){
           if(getDisplayValue(col.display)[screenMediaType]==DisplayType.Block) {
             innerChildren.add(Container(
-              padding: Spacing.x(spacing??8),
+              padding: Spacing.x(spacing),
               width: getWidthFromFlex(constraints.maxWidth,
                   getFlexValue(col.flex)[screenMediaType] ?? 0),
               child: col,

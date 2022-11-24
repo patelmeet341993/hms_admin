@@ -1,11 +1,11 @@
-import 'package:admin/models/patient_model.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:hms_models/configs/constants.dart';
+import 'package:hms_models/models/common/new_document_data_model.dart';
+import 'package:hms_models/models/patient/patient_model.dart';
+import 'package:hms_models/utils/my_print.dart';
+import 'package:hms_models/utils/my_utils.dart';
 import 'package:provider/provider.dart';
 
-import '../../configs/constants.dart';
-import '../../models/new_document_data_model.dart';
-import '../../utils/my_print.dart';
-import '../../utils/my_utils.dart';
 import '../common/data_controller.dart';
 import '../navigation/navigation_controller.dart';
 import 'patient_provider.dart';
@@ -39,7 +39,7 @@ class PatientController {
     NewDocumentDataModel newDocumentDataModel = await DataController().getNewDocIdAndTimeStamp();
 
     PatientModel patientModel = PatientModel(
-      id: newDocumentDataModel.docid,
+      id: newDocumentDataModel.docId,
       createdTime: newDocumentDataModel.timestamp,
       active: false,
       primaryMobile: mobile,

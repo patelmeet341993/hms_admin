@@ -2,10 +2,10 @@ import 'dart:ui';
 
 import 'package:admin/backend/app_theme/app_theme_provider.dart';
 import 'package:flutter/material.dart';
+import 'package:hms_models/utils/size_config.dart';
 import 'package:provider/provider.dart';
 
 import '../../../configs/app_theme.dart';
-import '../../../utils/SizeConfig.dart';
 
 
 class MyContainer extends StatelessWidget {

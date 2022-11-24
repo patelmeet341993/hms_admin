@@ -1,17 +1,17 @@
 import 'package:admin/configs/app_strings.dart';
-import 'package:admin/configs/constants.dart';
-import 'package:admin/models/admin_user_model.dart';
-import 'package:admin/utils/my_safe_state.dart';
-import 'package:admin/utils/my_toast.dart';
 import 'package:admin/views/common/components/loading_widget.dart';
 import 'package:admin/views/common/components/modal_progress_hud.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:hms_models/configs/constants.dart';
+import 'package:hms_models/models/admin_user/admin_user_model.dart';
+import 'package:hms_models/utils/my_safe_state.dart';
+import 'package:hms_models/utils/my_toast.dart';
+import 'package:hms_models/utils/size_config.dart';
 
 import '../../../configs/app_theme.dart';
 import '../../../packages/flux/flutx.dart';
 import '../../../packages/flux/utils/spacing.dart';
-import '../../../utils/SizeConfig.dart';
 import '../../common/components/CustomContainer.dart';
 import '../../common/components/MyCol.dart';
 import '../../common/components/MyRow.dart';

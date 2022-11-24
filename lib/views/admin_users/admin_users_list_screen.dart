@@ -2,9 +2,6 @@ import 'package:admin/backend/admin_user/admin_user_controller.dart';
 import 'package:admin/backend/admin_user/admin_user_provider.dart';
 import 'package:admin/configs/app_strings.dart';
 import 'package:admin/configs/constants.dart';
-import 'package:admin/models/admin_user_model.dart';
-import 'package:admin/utils/date_presentation.dart';
-import 'package:admin/utils/my_safe_state.dart';
 import 'package:admin/views/admin_users/components/add_edit_admin_user_dialog.dart';
 import 'package:admin/views/common/components/common_dialog.dart';
 import 'package:admin/views/common/components/loading_widget.dart';
@@ -13,11 +10,13 @@ import 'package:admin/views/common/components/my_table/my_table_cell_model.dart'
 import 'package:admin/views/common/components/my_table/my_table_row_widget.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:hms_models/models/admin_user/admin_user_model.dart';
+import 'package:hms_models/utils/date_presentation.dart';
+import 'package:hms_models/utils/my_print.dart';
+import 'package:hms_models/utils/my_safe_state.dart';
+import 'package:hms_models/utils/size_config.dart';
 import 'package:loading_animation_widget/loading_animation_widget.dart';
 import 'package:provider/provider.dart';
-
-import '../../utils/SizeConfig.dart';
-import '../../utils/my_print.dart';
 
 class AdminUsersListScreen extends StatefulWidget {
   final String title;

@@ -6,9 +6,8 @@
 import 'dart:io';
 
 import 'package:admin/configs/constants.dart';
-import 'package:admin/utils/shared_pref_manager.dart';
 import 'package:flutter/material.dart';
-import 'package:shared_preferences/shared_preferences.dart';
+import 'package:hms_models/utils/shared_pref_manager.dart';
 
 class AppThemeProvider extends ChangeNotifier {
 
@@ -42,7 +41,6 @@ class AppThemeProvider extends ChangeNotifier {
     _themeMode = themeMode;
     notifyListeners();
 
-    SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
-    sharedPreferences.setInt("themeMode", themeMode);
+    SharedPrefManager().setInt("themeMode", themeMode);
   }
 }

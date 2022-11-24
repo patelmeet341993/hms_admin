@@ -1,8 +1,8 @@
 import 'package:flutter/cupertino.dart';
+import 'package:hms_models/utils/my_toast.dart';
 import 'package:provider/provider.dart';
 
 import '../../configs/app_strings.dart';
-import '../../utils/my_toast.dart';
 import '../navigation/navigation_controller.dart';
 import 'connection_provider.dart';
 

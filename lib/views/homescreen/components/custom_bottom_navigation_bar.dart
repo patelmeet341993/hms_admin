@@ -1,16 +1,14 @@
-
 import 'dart:math';
 
 import 'package:admin/backend/app_theme/app_theme_provider.dart';
 import 'package:admin/views/homescreen/components/homescreen_header.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
+import 'package:hms_models/utils/size_config.dart';
 import 'package:provider/provider.dart';
 
 import '../../../configs/app_theme.dart';
-import '../../../utils/SizeConfig.dart';
 import '../../common/components/ScreenMedia.dart';
-
 
 class CustomBottomNavigation extends StatefulWidget {
   final List<IconData> icons;
@@ -24,7 +22,7 @@ class CustomBottomNavigation extends StatefulWidget {
   final Color? splashColor, highlightColor, brandTextColor, verticalDividerColor;
   final Widget? floatingActionButton;
 
-   CustomBottomNavigation(
+   const CustomBottomNavigation(
       {Key? key,
         required this.icons,
         this.activeIcons = const [],
@@ -84,11 +82,6 @@ class _CustomBottomNavigationState extends State<CustomBottomNavigation> with Si
     changeTab(value);
   }
 
-  dispose() {
-    super.dispose();
-    _tabController!.dispose();
-  }
-
   changeTab(int index) {
     setState(() {
       _currentIndex = index;
@@ -102,7 +95,7 @@ class _CustomBottomNavigationState extends State<CustomBottomNavigation> with Si
 
     //Final Variables
     icons = widget.icons;
-    activeIcons = widget.activeIcons ?? icons;
+    activeIcons = widget.activeIcons;
     screens = widget.screens;
     titles = widget.titles;
     activeColor = widget.activeColor!;
@@ -140,6 +133,12 @@ class _CustomBottomNavigationState extends State<CustomBottomNavigation> with Si
   }
 
   @override
+  dispose() {
+    super.dispose();
+    _tabController!.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
     themeData = Theme.of(context);
     return Consumer<AppThemeProvider>(
@@ -172,7 +171,7 @@ class _CustomBottomNavigationState extends State<CustomBottomNavigation> with Si
               size: activeIconSize,
             ),
             Spacing.height(4),
-            titles != null
+            titles.isNotEmpty
                 ? Text(
               titles[i],
               style: AppTheme.getTextStyle(
@@ -181,7 +180,7 @@ class _CustomBottomNavigationState extends State<CustomBottomNavigation> with Si
                   activeColor ?? themeData.colorScheme.primary,
                   fontWeight: FontWeight.w600),
             )
-                : SizedBox()
+                : const SizedBox()
           ],
         )
             : Icon(
@@ -195,7 +194,7 @@ class _CustomBottomNavigationState extends State<CustomBottomNavigation> with Si
     return Scaffold(
       backgroundColor: themeData.backgroundColor,
       appBar: PreferredSize(
-        preferredSize: Size(double.infinity, 80),
+        preferredSize: const Size(double.infinity, 80),
         child: AppBar(
           toolbarHeight: 80,
           // primary: true,
@@ -205,8 +204,8 @@ class _CustomBottomNavigationState extends State<CustomBottomNavigation> with Si
       ),
       floatingActionButton: floatingActionButton,
       bottomNavigationBar: BottomAppBar(
-          elevation: bottomNavigationElevation??4,
-          shape: CircularNotchedRectangle(),
+          elevation: bottomNavigationElevation,
+          shape: const CircularNotchedRectangle(),
           child: Container(
             decoration: BoxDecoration(
               color: navigationBackground ?? themeData.bottomAppBarTheme.color,
@@ -221,7 +220,7 @@ class _CustomBottomNavigationState extends State<CustomBottomNavigation> with Si
               dragStartBehavior: DragStartBehavior.start,
 
               controller: _tabController,
-              indicator: BoxDecoration(),
+              indicator: const BoxDecoration(),
               indicatorSize: TabBarIndicatorSize.tab,
               indicatorColor: themeData.colorScheme.primary,
               tabs: tabs,
@@ -259,7 +258,7 @@ class _CustomBottomNavigationState extends State<CustomBottomNavigation> with Si
             color: activeColor ?? themeData.colorScheme.primary,
             size: 18,
           ),
-          label: titles != null
+          label: titles.isNotEmpty
               ? Text(
             titles[i],
             style: AppTheme.getTextStyle(themeData.textTheme.caption!,
@@ -268,7 +267,7 @@ class _CustomBottomNavigationState extends State<CustomBottomNavigation> with Si
                     : (color ?? themeData.colorScheme.onBackground),
                 fontWeight: FontWeight.w600),
           )
-              : Text(""),
+              : const Text(""),
         ),
       );
     }
@@ -349,7 +348,7 @@ class _NavigationRailHeader extends StatelessWidget {
   const _NavigationRailHeader({
     required this.extended,
     this.brandTextColor,
-  }) : assert(extended != null);
+  });
 
   @override
   Widget build(BuildContext context) {

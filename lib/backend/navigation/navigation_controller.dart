@@ -3,8 +3,8 @@ import 'package:admin/views/homescreen/homescreen.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:hms_models/utils/my_print.dart';
 
-import '../../utils/my_print.dart';
 import '../../views/splashscreen.dart';
 
 class NavigationController {

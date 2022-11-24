@@ -5,13 +5,14 @@ import 'package:admin/backend/admin_user/admin_user_repository.dart';
 import 'package:admin/backend/navigation/navigation_controller.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:hms_models/configs/constants.dart';
+import 'package:hms_models/models/admin_user/admin_user_model.dart';
+import 'package:hms_models/utils/my_print.dart';
+import 'package:hms_models/utils/my_toast.dart';
 import 'package:provider/provider.dart';
 
 import '../../configs/app_strings.dart';
 import '../../configs/constants.dart';
-import '../../models/admin_user_model.dart';
-import '../../utils/my_print.dart';
-import '../../utils/my_toast.dart';
 
 class AdminUserController {
   static StreamSubscription<DocumentSnapshot<Map<String, dynamic>>>? adminUserStreamSubscription;

@@ -1,8 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:hms_models/configs/constants.dart';
+import 'package:hms_models/models/common/new_document_data_model.dart';
 import 'package:uuid/uuid.dart';
-
-import '../../configs/constants.dart';
-import '../../models/new_document_data_model.dart';
 
 class DataController {
   static DataController? _instance;
@@ -36,7 +35,7 @@ class DataController {
       docId = Uuid().v1().replaceAll("-", "");
     }
 
-    return NewDocumentDataModel(docid: docId, timestamp: timestamp ?? Timestamp.now());
+    return NewDocumentDataModel(docId: docId, timestamp: timestamp ?? Timestamp.now());
   }
 
   Future<List<DocumentSnapshot<Map<String, dynamic>>>> getDocsWithIdsFromFirestoreCollection(Query query, List<String> docIds) async {

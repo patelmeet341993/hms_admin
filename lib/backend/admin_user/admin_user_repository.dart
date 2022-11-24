@@ -1,12 +1,13 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:hms_models/backend/common/firestore_controller.dart';
+import 'package:hms_models/configs/constants.dart';
+import 'package:hms_models/models/admin_user/admin_user_model.dart';
+import 'package:hms_models/models/common/new_document_data_model.dart';
+import 'package:hms_models/utils/my_print.dart';
+import 'package:hms_models/utils/my_utils.dart';
 
 import '../../configs/constants.dart';
-import '../../models/admin_user_model.dart';
-import '../../models/new_document_data_model.dart';
-import '../../utils/my_print.dart';
-import '../../utils/my_utils.dart';
 import '../common/data_controller.dart';
-import '../common/firestore_controller.dart';
 
 class AdminUserRepository {
   Future<AdminUserModel?> createAdminUserWithUsernameAndPassword({required AdminUserModel userModel, void Function()? onValidationFailed, void Function()? onUserAlreadyExistEvent}) async {
@@ -50,7 +51,7 @@ class AdminUserRepository {
       );
 
       NewDocumentDataModel newDocumentDataModel = await DataController().getNewDocIdAndTimeStamp();
-      adminUserModel.id = newDocumentDataModel.docid;
+      adminUserModel.id = newDocumentDataModel.docId;
       adminUserModel.createdTime = newDocumentDataModel.timestamp;
 
       bool isCreationSuccess = await setUpdateAdminUser(adminUserId: adminUserModel.id, adminUserModel: adminUserModel, merge: false);

@@ -1,6 +1,5 @@
 import 'package:flutter/foundation.dart';
-
-import '../../models/patient_model.dart';
+import 'package:hms_models/models/patient/patient_model.dart';
 
 class PatientProvider extends ChangeNotifier {
   //region Current patient

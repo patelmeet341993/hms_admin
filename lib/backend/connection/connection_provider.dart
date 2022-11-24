@@ -3,8 +3,7 @@ import 'dart:io';
 
 import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:flutter/foundation.dart';
-
-import '../../utils/my_print.dart';
+import 'package:hms_models/utils/my_print.dart';
 
 class ConnectionProvider extends ChangeNotifier {
   bool isInternet = true;

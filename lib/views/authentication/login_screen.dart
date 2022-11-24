@@ -1,15 +1,15 @@
 import 'package:admin/backend/app_theme/app_theme_provider.dart';
 import 'package:admin/configs/app_theme.dart';
-import 'package:admin/utils/my_safe_state.dart';
-import 'package:admin/utils/my_toast.dart';
 import 'package:admin/views/common/components/loading_widget.dart';
 import 'package:admin/views/common/components/modal_progress_hud.dart';
 import 'package:flutter/material.dart';
+import 'package:hms_models/utils/my_print.dart';
+import 'package:hms_models/utils/my_safe_state.dart';
+import 'package:hms_models/utils/my_toast.dart';
+import 'package:hms_models/utils/size_config.dart';
 import 'package:provider/provider.dart';
 
 import '../../backend/authentication/authentication_controller.dart';
-import '../../utils/SizeConfig.dart';
-import '../../utils/my_print.dart';
 import '../common/components/CustomContainer.dart';
 import '../common/components/MyCol.dart';
 import '../common/components/MyRow.dart';
@@ -156,15 +156,17 @@ class _LoginScreenState extends State<LoginScreen> with MySafeState {
                   mainAxisSize: MainAxisSize.min,
                   children: <Widget>[
                     MyContainer.rounded(
-                      color: themeData.primaryColor.withOpacity(0.1),
+                      color: themeData.primaryColor.withOpacity(0.1),height: 100,width: 100,
                         child: Center(
-                          child: Text("HMS",style: TextStyle(
+                          child: Text(
+                            "HMS",
+                            style: TextStyle(
                               color: themeData.primaryColor,
                               fontStyle: FontStyle.italic,fontSize: 20,fontWeight: FontWeight.w800
+                            ),
                           ),
-                          ),
-                        ),height: 100,width: 100,),
-
+                        ),
+                    ),
                     Spacing.height(24),
                     Text(
                       "Receptionist",
@@ -233,7 +235,7 @@ class _LoginScreenState extends State<LoginScreen> with MySafeState {
                                       borderSide: BorderSide.none),
                                   enabledBorder: const OutlineInputBorder(
                                       borderRadius:
-                                      const BorderRadius.all(
+                                      BorderRadius.all(
                                         Radius.circular(8),
                                       ),
                                       borderSide: BorderSide.none),
@@ -307,7 +309,7 @@ class _LoginScreenState extends State<LoginScreen> with MySafeState {
 
                                   border: const OutlineInputBorder(
                                       borderRadius:
-                                      const BorderRadius.all(
+                                      BorderRadius.all(
                                         Radius.circular(8.0),
                                       ),
                                       borderSide: BorderSide.none),
