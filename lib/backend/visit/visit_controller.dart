@@ -1,14 +1,4 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:hms_models/configs/constants.dart';
-import 'package:hms_models/models/visit_model/diagnosis/diagnosis_model.dart';
-import 'package:hms_models/models/visit_model/pharma_billings/pharma_billing_item_model.dart';
-import 'package:hms_models/models/visit_model/pharma_billings/pharma_billing_model.dart';
-import 'package:hms_models/models/visit_model/prescription/prescription_medicine_dose_model.dart';
-import 'package:hms_models/models/visit_model/prescription/prescription_model.dart';
-import 'package:hms_models/models/visit_model/visit_billings/visit_billing_model.dart';
-import 'package:hms_models/models/visit_model/visit_model.dart';
-import 'package:hms_models/utils/my_print.dart';
-import 'package:hms_models/utils/my_utils.dart';
+import 'package:hms_models/hms_models.dart';
 
 class VisitController {
   Future<void> createDummyVisitDataInFirestore() async {

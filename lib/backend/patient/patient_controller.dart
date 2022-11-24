@@ -1,9 +1,4 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:hms_models/configs/constants.dart';
-import 'package:hms_models/models/common/new_document_data_model.dart';
-import 'package:hms_models/models/patient/patient_model.dart';
-import 'package:hms_models/utils/my_print.dart';
-import 'package:hms_models/utils/my_utils.dart';
+import 'package:hms_models/hms_models.dart';
 import 'package:provider/provider.dart';
 
 import '../common/data_controller.dart';

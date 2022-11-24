@@ -1,10 +1,4 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:hms_models/backend/common/firestore_controller.dart';
-import 'package:hms_models/configs/constants.dart';
-import 'package:hms_models/models/admin_user/admin_user_model.dart';
-import 'package:hms_models/models/common/new_document_data_model.dart';
-import 'package:hms_models/utils/my_print.dart';
-import 'package:hms_models/utils/my_utils.dart';
+import 'package:hms_models/hms_models.dart';
 
 import '../../configs/constants.dart';
 import '../common/data_controller.dart';
@@ -24,11 +18,11 @@ class AdminUserRepository {
 
     AdminUserModel? adminUserModel;
 
-    QuerySnapshot<Map<String, dynamic>> querySnapshot = await FirebaseNodes.adminUsersCollectionReference.where("username", isEqualTo: userModel.username).get();
+    MyFirestoreQuerySnapshot querySnapshot = await FirebaseNodes.adminUsersCollectionReference.where("username", isEqualTo: userModel.username).get();
     if(querySnapshot.docs.isNotEmpty) {
-      DocumentSnapshot<Map<String, dynamic>> docSnapshot = querySnapshot.docs.first;
-      if((docSnapshot.data() ?? {}).isNotEmpty) {
-        AdminUserModel model = AdminUserModel.fromMap(docSnapshot.data()!);
+      MyFirestoreQueryDocumentSnapshot docSnapshot = querySnapshot.docs.first;
+      if(docSnapshot.data().isNotEmpty) {
+        AdminUserModel model = AdminUserModel.fromMap(docSnapshot.data());
         if(model.username == userModel.username) {
           adminUserModel = model;
         }
