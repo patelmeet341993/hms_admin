@@ -37,7 +37,6 @@ dependencies:
   ########
   # Core #
   ########
-
   hms_models:
     git: https://github.com/patelmeet341993/hms_models
 
@@ -98,6 +97,7 @@ flutter:
   assets:
     - assets/
     - assets/extra/
+    - assets/lotties/
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware
