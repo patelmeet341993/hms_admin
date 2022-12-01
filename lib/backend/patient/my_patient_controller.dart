@@ -5,7 +5,7 @@ import '../common/data_controller.dart';
 import '../navigation/navigation_controller.dart';
 import 'patient_provider.dart';
 
-class PatientController {
+class MyPatientController {
   Future<void> createDummyPatientDataInFirestore() async {
     PatientModel patientModel = PatientModel(
       id: MyUtils.getUniqueIdFromUuid(),
