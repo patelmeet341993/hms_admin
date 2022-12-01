@@ -1,6 +1,6 @@
 import 'package:hms_models/hms_models.dart';
 
-class VisitController {
+class MyVisitController {
   Future<void> createDummyVisitDataInFirestore() async {
     VisitModel visitModel = VisitModel(
       id: MyUtils.getUniqueIdFromUuid(),
