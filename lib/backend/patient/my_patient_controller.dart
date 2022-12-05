@@ -1,11 +1,19 @@
+import 'package:admin/backend/patient/my_patient_repository.dart';
+import 'package:flutter/material.dart';
 import 'package:hms_models/hms_models.dart';
-import 'package:provider/provider.dart';
 
+import '../../views/patient/components/patient_profile_dialog.dart';
 import '../common/data_controller.dart';
-import '../navigation/navigation_controller.dart';
 import 'patient_provider.dart';
 
 class MyPatientController {
+  final PatientProvider patientProvider;
+  late MyPatientRepository _myPatientRepository;
+  
+  MyPatientController({required this.patientProvider, MyPatientRepository? repository}) {
+    _myPatientRepository = repository ?? MyPatientRepository();
+  }
+  
   Future<void> createDummyPatientDataInFirestore() async {
     PatientModel patientModel = PatientModel(
       id: MyUtils.getUniqueIdFromUuid(),
@@ -63,10 +71,8 @@ class MyPatientController {
     MyPrint.printOnConsole("getPatientsForMobileNumber called with mobile number: $mobileNumber");
     List<PatientModel> patients = [];
 
-    PatientProvider patientProvider = Provider.of<PatientProvider>(NavigationController.mainScreenNavigator.currentContext!, listen: false);
-
     QuerySnapshot<Map<String, dynamic>> querySnapshot = await FirebaseNodes.patientCollectionReference.where("userMobiles", arrayContainsAny: [mobileNumber]).get();
-    MyPrint.printOnConsole("Patient Documents Length For Mobile Number '${mobileNumber}' :${querySnapshot.docs.length}");
+    MyPrint.printOnConsole("Patient Documents Length For Mobile Number '$mobileNumber' :${querySnapshot.docs.length}");
 
     for (DocumentSnapshot<Map<String, dynamic>> documentSnapshot in querySnapshot.docs) {
       if((documentSnapshot.data() ?? {}).isNotEmpty) {
@@ -83,5 +89,19 @@ class MyPatientController {
     }
 
     return patients;
+  }
+  
+  Future<void> showPatientProfileCompleteDialog({required BuildContext context, required String patientId, PatientModel? patientModel}) async {
+    if(patientId.isEmpty) return;
+
+    await showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return PatientProfileDialog(
+          patientId: patientId,
+          patientModel: patientModel,
+        );
+      },
+    );
   }
 }
