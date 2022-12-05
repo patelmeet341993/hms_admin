@@ -1,6 +1,10 @@
+import 'package:admin/backend/navigation/navigation_controller.dart';
+import 'package:admin/backend/patient/my_patient_controller.dart';
+import 'package:admin/backend/patient/patient_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:hms_models/backend/patient/patient_controller.dart';
 import 'package:hms_models/hms_models.dart';
+import 'package:provider/provider.dart';
 
 class ScannerScreen extends StatefulWidget {
   static const String routeName = "/ScannerScreen";
@@ -11,19 +15,28 @@ class ScannerScreen extends StatefulWidget {
 }
 
 class _ScannerScreenState extends State<ScannerScreen> with SingleTickerProviderStateMixin{
-
   String scannedText = "";
   VisitModel? visitModel;
 
-  void showDialogView()async{
-    String code = await MyUtils.scanQRAndGetData(context: context);
+  Future<void> scanQRCode() async {
+    String patientId = "z6AJ2DPn34vJOlx6q6dn";
+    PatientModel? patientModel = await PatientController().getPatientModelFromPatientId(patientId: patientId);
+    PatientProvider patientProvider = Provider.of<PatientProvider>(NavigationController.mainScreenNavigator.currentContext!, listen: false);
+    MyPatientController(patientProvider: patientProvider).showPatientProfileCompleteDialog(
+      context: context,
+      patientId: patientId,
+      // patientModel: patientModel,
+    );
+    return;
+
+    QRCodeDataModel code = await MyUtils.scanQRAndGetQRCodeDataModel(context: context);
     MyPrint.printOnConsole("code:$code");
 
-    scannedText = code;
+    scannedText = code.toEncodedString();
     setState(() {});
 
-    if(code.isNotEmpty){
-       getPatientData(code);
+    if(code.id.isNotEmpty && code.type == QRCodeTypes.patient){
+       getPatientData(code.id);
     }
   }
 
@@ -34,10 +47,22 @@ class _ScannerScreenState extends State<ScannerScreen> with SingleTickerProvider
     MyPrint.printOnConsole("patientModel:$patientModel");
 
     if(patientModel != null) {
+      if(patientModel.isProfileComplete) {
+        MyToast.showSuccess(context: context, msg: "Patient Profile Completed");
+      }
+      else {
+        MyToast.showError(context: context, msg: "Patient Profile Not Complete");
 
+        PatientProvider patientProvider = Provider.of<PatientProvider>(NavigationController.mainScreenNavigator.currentContext!, listen: false);
+        MyPatientController(patientProvider: patientProvider).showPatientProfileCompleteDialog(
+          context: context,
+          patientId: patientId,
+          patientModel: patientModel,
+        );
+      }
     }
     else {
-
+      MyToast.showError(context: context, msg: "Patient Not Found");
     }
   }
 
@@ -46,7 +71,7 @@ class _ScannerScreenState extends State<ScannerScreen> with SingleTickerProvider
   void initState() {
     super.initState();
     WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
-      showDialogView();
+      scanQRCode();
     });
   }
 
@@ -62,7 +87,7 @@ class _ScannerScreenState extends State<ScannerScreen> with SingleTickerProvider
         children: [
           Text("scannedText: $scannedText"),
           MaterialButton(onPressed: (){
-            showDialogView();
+            scanQRCode();
           },child: const Text("Scan"),),
         ],
       ),
