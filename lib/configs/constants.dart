@@ -25,6 +25,12 @@ class AppConstants {
   static const int adminUsersRefreshIndexForPagination = 5;
 
   static String hospitalId = "Hospital_1";
+
+  static const String genderMale = "Male";
+  static const String genderFemale = "Female";
+  static const String genderOther = "Other";
+
+  static const List<String> genderList = [AppConstants.genderMale, AppConstants.genderFemale, AppConstants.genderOther];
 }
 
 class AppUIConfiguration {
