@@ -1,5 +1,6 @@
 import 'package:admin/backend/admin_user/admin_user_provider.dart';
 import 'package:admin/backend/app_theme/app_theme_provider.dart';
+import 'package:admin/backend/common/app_controller.dart';
 import 'package:admin/backend/connection/connection_provider.dart';
 import 'package:admin/configs/app_theme.dart';
 import 'package:flutter/material.dart';
@@ -22,6 +23,7 @@ class MyApp extends StatelessWidget {
         ChangeNotifierProvider<ConnectionProvider>(create: (_) => ConnectionProvider(), lazy: false),
         ChangeNotifierProvider<AdminUserProvider>(create: (_) => AdminUserProvider(), lazy: false),
         ChangeNotifierProvider<PatientProvider>(create: (_) => PatientProvider(), lazy: false),
+        ChangeNotifierProvider<CloudinaryController>(create: (_) => CloudinaryController(isDev: AppController().isDev), lazy: false),
       ],
       child: MainApp(),
     );
