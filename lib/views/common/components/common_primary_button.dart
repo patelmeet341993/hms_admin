@@ -21,25 +21,25 @@ class CommonPrimaryButton extends StatelessWidget {
 
     List<BoxShadow> boxShadow = [
       BoxShadow(
-        color: Color(0xff343987).withOpacity(0.15),
+        color: const Color(0xff343987).withOpacity(0.15),
         offset: const Offset(0, 4),
         blurRadius: 4,
         spreadRadius: 0,
       ),
       BoxShadow(
-        color: Color(0xff000000).withOpacity(0.25),
+        color: const Color(0xff000000).withOpacity(0.25),
         offset: const Offset(0, 4),
         blurRadius: 4,
         spreadRadius: 0,
       ),
       BoxShadow(
-        color: Color(0xff000000).withOpacity(0.12),
+        color: const Color(0xff000000).withOpacity(0.12),
         offset: const Offset(4, 0),
         blurRadius: 4,
         spreadRadius: 0,
       ),
       BoxShadow(
-        color: Color(0xff343987).withOpacity(0.12),
+        color: const Color(0xff343987).withOpacity(0.12),
         offset: const Offset(0, 4),
         blurRadius: 4,
         spreadRadius: 0,
@@ -58,7 +58,7 @@ class CommonPrimaryButton extends StatelessWidget {
               Color(0xff7B7D9A)
             ],
           ),
-          borderRadius: BorderRadius.circular(16),
+          borderRadius: BorderRadius.circular(18),
           boxShadow: boxShadow,
         ),
         child: Container(
@@ -83,7 +83,9 @@ class CommonPrimaryButton extends StatelessWidget {
                 alignment: Alignment.center,
                 child: Text(
                   text,
-                  style: themeData.textTheme.subtitle1,
+                  style: themeData.textTheme.subtitle1?.copyWith(
+                    color: filled ? themeData.colorScheme.onPrimary : null,
+                  ),
                 ),
               ),
               /*Positioned(
