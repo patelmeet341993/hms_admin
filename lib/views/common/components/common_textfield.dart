@@ -1,32 +1,65 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_feather_icons/flutter_feather_icons.dart';
-
-import '../../../configs/styles.dart';
-import '../../../packages/flux/themes/text_style.dart';
-import '../../../packages/flux/widgets/text_field/text_field.dart';
+import 'package:flutter/services.dart';
 
 class CommonTextField extends StatelessWidget {
+  final TextEditingController? textEditingController;
+  final IconData? prefixIcon;
+  final TextInputType? textInputType;
+  final bool isRequired;
+  final String hint;
+  final String? Function(String? value)? validator;
+  final EdgeInsets? margin;
+  final List<TextInputFormatter>? inputFormatters;
 
-  const CommonTextField({Key? key}) : super(key: key);
+  const CommonTextField({
+    Key? key,
+    this.textEditingController,
+    this.prefixIcon,
+    this.textInputType,
+    this.isRequired = false,
+    this.hint = '',
+    this.validator,
+    this.margin = const EdgeInsets.symmetric(vertical: 10),
+    this.inputFormatters,
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     ThemeData themeData = Theme.of(context);
-    return FxTextField(
-      focusedBorderColor: themeData.primaryColor,
 
-      cursorColor: themeData.primaryColor,
-      textFieldStyle: FxTextFieldStyle.outlined,
-      labelText: 'Search a doctor or health issue',
-      labelStyle: FxTextStyle.bodySmall(
-          color: Colors.grey, xMuted: true),
-      floatingLabelBehavior: FloatingLabelBehavior.never,
-      filled: true,
-      fillColor: Styles.cardColor,
-      prefixIcon: Icon(
-        FeatherIcons.search,
-        color: themeData.primaryColor,
-        size: 20,
+    return Container(
+      margin: margin,
+      child: TextFormField(
+        controller: textEditingController,
+        style: themeData.textTheme.subtitle2,
+        decoration: InputDecoration(
+          label: getTextFieldLabelWithRequiredStar(label: hint, isRequired: isRequired),
+          prefixIcon: prefixIcon != null ? Icon(
+            prefixIcon,
+            size: 22,
+            // color: Styles.onBackground.withAlpha(200),
+          ) : null,
+          contentPadding: const EdgeInsets.symmetric(horizontal: 10, vertical: 12),
+        ),
+        inputFormatters: inputFormatters,
+        keyboardType: textInputType,
+        autofocus: false,
+        textCapitalization: TextCapitalization.sentences,
+        validator: validator,
+      ),
+    );
+  }
+
+  Widget getTextFieldLabelWithRequiredStar({required String label, bool isRequired = false}) {
+    return Text.rich(
+      TextSpan(
+        text: "$label ",
+        children: [
+          if(isRequired) const TextSpan(
+            text: '*',
+            style: TextStyle(color: Colors.red),
+          ),
+        ],
       ),
     );
   }
