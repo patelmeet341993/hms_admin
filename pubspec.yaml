@@ -55,6 +55,7 @@ dependencies:
   fluttertoast: ^8.0.9
   flutter_svg: ^1.1.4
   flutter_feather_icons: ^2.0.0+1
+  cached_network_image: ^3.2.1
 
   ####################
   # State management #
@@ -70,6 +71,7 @@ dependencies:
   uuid: ^3.0.6
   equatable: ^2.0.5
   qr_flutter: ^4.0.0
+  file_picker: ^5.2.3
 
 dev_dependencies:
   flutter_test:
