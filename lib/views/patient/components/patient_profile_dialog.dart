@@ -1,12 +1,15 @@
 import 'dart:typed_data';
 
+import 'package:admin/backend/navigation/navigation_controller.dart';
 import 'package:admin/views/common/components/common_textfield.dart';
+import 'package:admin/views/common/components/modal_progress_hud.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:hms_models/backend/patient/patient_controller.dart';
 import 'package:hms_models/hms_models.dart';
+import 'package:provider/provider.dart';
 
 import '../../../configs/constants.dart';
 import '../../common/components/common_primary_button.dart';
@@ -29,6 +32,8 @@ class PatientProfileDialog extends StatefulWidget {
 class _PatientProfileDialogState extends State<PatientProfileDialog> {
   late ThemeData themeData;
 
+  bool isLoading = false;
+
   String patientId = "";
   PatientModel? patientModel;
   
@@ -44,11 +49,27 @@ class _PatientProfileDialogState extends State<PatientProfileDialog> {
 
   Uint8List? profilePictureBytes;
   String profilePictureImageUrl = "";
+  List<String> deletedImages= [];
+
+  void initializeValuesFromProvider(PatientModel patientModel) {
+    MyPrint.printOnConsole("initializeValuesFromProvider called");
+
+    MyPrint.printOnConsole("patientModel:$patientModel");
+    nameController.text = patientModel.name;
+    primaryMobileController.text = patientModel.primaryMobile;
+    dateOfBirth = patientModel.dateOfBirth?.toDate();
+    gender = patientModel.gender;
+    profilePictureImageUrl = patientModel.profilePicture;
+  }
 
   Future<void> getPatientData() async {
     if(patientId.isEmpty) return;
 
     patientModel = await PatientController().getPatientModelFromPatientId(patientId: patientId);
+
+    if(patientModel != null) {
+      initializeValuesFromProvider(patientModel!);
+    }
 
     MyPrint.printOnConsole("patientModel in PatientProfileDialog().getPatientData():$patientModel");
   }
@@ -91,6 +112,81 @@ class _PatientProfileDialogState extends State<PatientProfileDialog> {
       profilePictureBytes = platformFile.bytes;
       setState(() {});
     }
+
+    /*XFile? pickedFile = await ImagePicker().pickImage(source: ImageSource.camera);
+    MyPrint.printOnConsole("pickedFile:$pickedFile");
+
+    Uint8List? data = await pickedFile?.readAsBytes();
+    if(data != null) {
+      profilePictureBytes = data;
+      setState(() {});
+    }*/
+  }
+
+  Future<void> updatePatientData() async {
+    if(patientModel != null) {
+      isLoading = true;
+      setState(() {});
+
+      String profilePicImageUrl = "";
+      List<Future> futures = [];
+
+      CloudinaryController cloudinaryController = Provider.of<CloudinaryController>(NavigationController.mainScreenNavigator.currentContext!, listen: false);
+
+      MyPrint.printOnConsole("deletedImages:$deletedImages");
+      if(deletedImages.isNotEmpty) {
+        cloudinaryController.deleteImagesFromCloudinary(images: deletedImages);
+        deletedImages.clear();
+      }
+
+      MyPrint.printOnConsole("profilePictureBytes not null:${profilePictureBytes != null}");
+      if(profilePictureBytes != null) {
+        futures.add(cloudinaryController.uploadPatientImage(patientId: patientId, bytes: profilePictureBytes!).then((String value) {
+          profilePicImageUrl = value;
+
+          MyPrint.printOnConsole("Uploaded Profile Pic Url:$value");
+        })
+        .catchError((e, s) {
+          MyPrint.printOnConsole("Error in Uploading Profile Image:$e");
+          MyPrint.printOnConsole(s);
+        }));
+      }
+
+      if(futures.isNotEmpty) {
+        await Future.wait(futures);
+      }
+
+      if(profilePicImageUrl.isEmpty && profilePictureImageUrl.isNotEmpty) profilePicImageUrl = profilePictureImageUrl;
+      MyPrint.printOnConsole("Final Profile Pic Url:$profilePicImageUrl");
+
+      PatientModel newModel = PatientModel.fromMap(patientModel!.toMap());
+
+      newModel.name = nameController.text;
+      newModel.primaryMobile = primaryMobileController.text;
+      newModel.dateOfBirth = dateOfBirth != null ? Timestamp.fromDate(dateOfBirth!) : null;
+      newModel.gender = gender ?? "";
+      newModel.profilePicture = profilePicImageUrl;
+      newModel.isProfileComplete = true;
+
+      MyPrint.printOnConsole("Final PatientModel:$newModel");
+
+      bool isUpdated = await PatientController().updatePatientData(patientModel: newModel);
+      MyPrint.printOnConsole("isUpdated:$isUpdated");
+
+      isLoading = false;
+      setState(() {});
+
+      if(isUpdated) {
+        patientModel!.updateFromMap(newModel.toMap());
+        Navigator.pop(context, true);
+      }
+      else {
+        MyToast.showError(context: context, msg: "Some error occurred while updating data");
+      }
+    }
+    else {
+      MyToast.showError(context: context, msg: "Patient Data not found");
+    }
   }
   
   @override
@@ -102,6 +198,9 @@ class _PatientProfileDialogState extends State<PatientProfileDialog> {
     if(patientModel == null) {
       futureGetPatientData = getPatientData();
     }
+    else {
+      initializeValuesFromProvider(patientModel!);
+    }
   }
   
   @override
@@ -109,7 +208,6 @@ class _PatientProfileDialogState extends State<PatientProfileDialog> {
     themeData = Theme.of(context);
 
     return Dialog(
-      // backgroundColor: Colors.red,
       child: futureGetPatientData != null ? FutureBuilder(
         future: futureGetPatientData,
         builder: (BuildContext context, AsyncSnapshot snapshot) {
@@ -131,97 +229,111 @@ class _PatientProfileDialogState extends State<PatientProfileDialog> {
       padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
       constraints: BoxConstraints(
         maxWidth: MediaQuery.of(context).size.width * 0.4,
+        maxHeight: MediaQuery.of(context).size.height * 0.8,
       ),
-      child: Form(
-        key: _formKey,
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            Text(
-              "Profile",
-              style: themeData.textTheme.headline6,
-            ),
-            CommonTextField(
-              hint: "Name",
-              textEditingController: nameController,
-              isRequired: true,
-              prefixIcon: Icons.person,
-              validator: (String? text) {
-                if(text?.isEmpty ?? true) {
-                  return "Name Cannot be empty";
-                }
-                else {
-                  return null;
-                }
-              },
-            ),
-            CommonTextField(
-              hint: "Mobile Number",
-              textEditingController: primaryMobileController,
-              isRequired: true,
-              prefixIcon: Icons.phone,
-              textInputType: TextInputType.number,
-              inputFormatters: [
-                FilteringTextInputFormatter.digitsOnly,
-                LengthLimitingTextInputFormatter(10),
+      child: ModalProgressHUD(
+        inAsyncCall: isLoading,
+        progressIndicator: const LoadingWidget(),
+        child: SingleChildScrollView(
+          child: Form(
+            key: _formKey,
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Text(
+                  "Profile",
+                  style: themeData.textTheme.headline6,
+                ),
+                CommonTextField(
+                  hint: "Name",
+                  textEditingController: nameController,
+                  isRequired: true,
+                  prefixIcon: Icons.person,
+                  validator: (String? text) {
+                    if(text?.isEmpty ?? true) {
+                      return "Name Cannot be empty";
+                    }
+                    else {
+                      return null;
+                    }
+                  },
+                ),
+                CommonTextField(
+                  hint: "Mobile Number",
+                  textEditingController: primaryMobileController,
+                  isRequired: true,
+                  prefixIcon: Icons.phone,
+                  textInputType: TextInputType.number,
+                  inputFormatters: [
+                    FilteringTextInputFormatter.digitsOnly,
+                    LengthLimitingTextInputFormatter(10),
+                  ],
+                  validator: (String? text) {
+                    if(text?.isEmpty ?? true) {
+                      return "Mobile Number Cannot be empty";
+                    }
+                    else {
+                      if(text!.length < 10) {
+                        return "Invalid Mobile Numner";
+                      }
+                      else {
+                        return null;
+                      }
+                    }
+                  },
+                ),
+                getDateOfBirthSelection(),
+                getGenderSelection(),
+                getUploadImageSection(
+                  title: "Profile Picture",
+                  bytes: profilePictureBytes,
+                  url: profilePictureImageUrl,
+                  onPickImage: () {
+                    pickProfilePictureImage();
+                  },
+                  onDeleteImage: () {
+                    if(profilePictureBytes != null) profilePictureBytes = null;
+                    if(profilePictureImageUrl.isNotEmpty) {
+                      deletedImages.add(profilePictureImageUrl);
+                      profilePictureImageUrl = "";
+                    }
+                    setState(() {});
+                  },
+                ),
+                CommonPrimaryButton(
+                  text: "Submit",
+                  onTap: () {
+                    bool formValid = _formKey.currentState?.validate() ?? false;
+                    bool dobValid = dateOfBirth != null;
+                    bool genderValid = gender?.isNotEmpty ?? false;
+                    bool profilePictureValid = profilePictureBytes != null || profilePictureImageUrl.isNotEmpty;
+
+                    MyPrint.printOnConsole("formValid:$formValid, dobValid:$dobValid, genderValid:$genderValid, profilePictureValid:$profilePictureValid");
+
+                    if(formValid && dobValid && genderValid && profilePictureValid) {
+                      updatePatientData();
+                    }
+                    else if(!formValid) {
+
+                    }
+                    else if(!dobValid) {
+                      MyToast.showError(context: context, msg: "Date Of Birth is Mandatory");
+                    }
+                    else if(!genderValid) {
+                      MyToast.showError(context: context, msg: "Gender is Mandatory");
+                    }
+                    else if(!profilePictureValid) {
+                      MyToast.showError(context: context, msg: "Profile Picture is Mandatory");
+                    }
+                    else {
+
+                    }
+                  },
+                  filled: true,
+                ),
               ],
-              validator: (String? text) {
-                if(text?.isEmpty ?? true) {
-                  return "Mobile Number Cannot be empty";
-                }
-                else {
-                  if(text!.length < 10) {
-                    return "Invalid Mobile Numner";
-                  }
-                  else {
-                    return null;
-                  }
-                }
-              },
             ),
-            getDateOfBirthSelection(),
-            getGenderSelection(),
-            getUploadImageSection(
-              title: "Upload Profile",
-              bytes: profilePictureBytes,
-              url: profilePictureImageUrl,
-              onPickImage: () {
-                pickProfilePictureImage();
-              },
-              onDeleteImage: () {
-                if(profilePictureBytes != null) profilePictureBytes = null;
-                if(profilePictureImageUrl.isNotEmpty) profilePictureImageUrl = "";
-                setState(() {});
-              },
-            ),
-            CommonPrimaryButton(
-              text: "Submit",
-              onTap: () {
-                bool formValid = _formKey.currentState?.validate() ?? false;
-                bool dobValid = dateOfBirth != null;
-                bool genderValid = gender?.isNotEmpty ?? false;
-
-                MyPrint.printOnConsole("formValid:$formValid, dobValid:$dobValid, genderValid:$genderValid");
-
-                if(formValid && dobValid && genderValid) {
-
-                }
-                else if(!formValid) {
-
-                }
-                else if(!dobValid) {
-                  MyToast.showError(context: context, msg: "Date Of Birth is Mandatory");
-                }
-                else if(!genderValid) {
-                  MyToast.showError(context: context, msg: "Gender is Mandatory");
-                }
-                else {
-
-                }
-              },
-              filled: true,
-            ),
-          ],
+          ),
         ),
       ),
     );
@@ -341,11 +453,11 @@ class _PatientProfileDialogState extends State<PatientProfileDialog> {
       margin: const EdgeInsets.symmetric(vertical: 10),
       padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 20),
       decoration: BoxDecoration(
-        border: Border.all(color: themeData.colorScheme.onPrimary),
+        border: Border.all(color: themeData.colorScheme.onBackground),
         borderRadius: BorderRadius.circular(5),
       ),
       child: Column(
-        crossAxisAlignment: CrossAxisAlignment.stretch,
+        // crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
           Text(
             title,
@@ -364,12 +476,14 @@ class _PatientProfileDialogState extends State<PatientProfileDialog> {
                       child: bytes != null
                         ? Image.memory(
                             bytes,
-                            // width: MediaQuery.of(context).size.width * 0.8,
+                            width: 200,
+                            height: 200,
                           )
                         : CachedNetworkImage(
                             // imageUrl: "https://picsum.photos/370/370",
                             imageUrl: url,
-                            // width: MediaQuery.of(context).size.width * 0.8,
+                            width: 200,
+                            height: 200,
                             placeholder: (_, __) {
                               return const Center(child: LoadingWidget());
                             },
@@ -391,8 +505,8 @@ class _PatientProfileDialogState extends State<PatientProfileDialog> {
                 text: "Select Image",
                 onTap: onPickImage,
                 filled: false,
-                margin: const EdgeInsets.symmetric(horizontal: 50, vertical: 10),
-                padding: const EdgeInsets.symmetric(horizontal: 50, vertical: 5),
+                margin: const EdgeInsets.symmetric(horizontal: 0, vertical: 10),
+                padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 5),
               ),
             ],
           ),
