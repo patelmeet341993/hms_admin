@@ -19,16 +19,6 @@ class _ScannerScreenState extends State<ScannerScreen> with SingleTickerProvider
   VisitModel? visitModel;
 
   Future<void> scanQRCode() async {
-    String patientId = "z6AJ2DPn34vJOlx6q6dn";
-    PatientModel? patientModel = await PatientController().getPatientModelFromPatientId(patientId: patientId);
-    PatientProvider patientProvider = Provider.of<PatientProvider>(NavigationController.mainScreenNavigator.currentContext!, listen: false);
-    MyPatientController(patientProvider: patientProvider).showPatientProfileCompleteDialog(
-      context: context,
-      patientId: patientId,
-      // patientModel: patientModel,
-    );
-    return;
-
     QRCodeDataModel code = await MyUtils.scanQRAndGetQRCodeDataModel(context: context);
     MyPrint.printOnConsole("code:$code");
 
