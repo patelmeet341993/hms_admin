@@ -1,6 +1,6 @@
 import 'package:hms_models/hms_models.dart';
 
-import '../../configs/constants.dart';
+import '../common/app_controller.dart';
 import '../common/data_controller.dart';
 
 class AdminUserRepository {
@@ -38,7 +38,7 @@ class AdminUserRepository {
         role: userModel.role,
         description: userModel.description,
         imageUrl: userModel.imageUrl,
-        hospitalId: AppConstants.hospitalId,
+        hospitalId: AppController().hospitalId,
         scannerData: userModel.scannerData,
         isActive: true,
         createdTime: Timestamp.now(),
