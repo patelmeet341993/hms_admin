@@ -24,8 +24,6 @@ class AppConstants {
   static const int adminUsersDocumentLimitForPagination = 20;
   static const int adminUsersRefreshIndexForPagination = 5;
 
-  static String hospitalId = "Hospital_1";
-
   static const String genderMale = "Male";
   static const String genderFemale = "Female";
   static const String genderOther = "Other";
