@@ -11,10 +11,10 @@ import 'configs/credentials.dart';
 
 /// Runs the app in [runZonedGuarded] to handle all types of errors, including [FlutterError]s.
 /// Any error that is caught will be send to Sentry backend
-Future<void>? runErrorSafeApp(VoidCallback appRunner, {bool isDev = false}) {
+Future<void>? runErrorSafeApp(VoidCallback appRunner, {bool isDev = false, required String hospitalId}) {
   return runZonedGuarded<Future<void>>(
     () async {
-      await initApp(isDev: isDev);
+      await initApp(isDev: isDev, hospitalId: hospitalId);
       appRunner();
     },
     (e, s) {
@@ -26,9 +26,10 @@ Future<void>? runErrorSafeApp(VoidCallback appRunner, {bool isDev = false}) {
 }
 
 /// It provides initial initialisation the app and its global services
-Future<void> initApp({bool isDev = false}) async {
+Future<void> initApp({bool isDev = false, required String hospitalId}) async {
   WidgetsFlutterBinding.ensureInitialized();
   AppController().isDev = isDev;
+  AppController().hospitalId = hospitalId;
 
   List<Future> futures = [];
 
