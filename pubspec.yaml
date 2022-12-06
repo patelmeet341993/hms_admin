@@ -30,49 +30,11 @@ dependencies:
   flutter:
     sdk: flutter
 
-
-  # The following adds the Cupertino Icons font to your application.
-  # Use with the CupertinoIcons class for iOS style icons.
-
   ########
   # Core #
   ########
   hms_models:
     git: https://github.com/patelmeet341993/hms_models
-
-  ###########
-  # Logging #
-  ###########
-  logger: ^1.1.0 # colourful logs in log console
-
-  ######
-  # UI #
-  ######
-  cupertino_icons: ^1.0.5
-  loading_animation_widget: ^1.2.0+2
-  flutter_spinkit: ^5.1.0
-  google_fonts: ^3.0.1
-  fluttertoast: ^8.0.9
-  flutter_svg: ^1.1.4
-  flutter_feather_icons: ^2.0.0+1
-  cached_network_image: ^3.2.1
-
-  ####################
-  # State management #
-  ####################
-  provider: ^6.0.3
-
-  #########
-  # Utils #
-  #########
-  shared_preferences: ^2.0.15
-  intl: ^0.17.0
-  connectivity_plus: ^2.3.6+1
-  uuid: ^3.0.6
-  equatable: ^2.0.5
-  qr_flutter: ^4.0.0
-  file_picker: ^5.2.3
-  image_picker: ^0.8.6
 
 dev_dependencies:
   flutter_test:
