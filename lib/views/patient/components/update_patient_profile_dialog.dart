@@ -3,33 +3,30 @@ import 'dart:typed_data';
 import 'package:admin/backend/navigation/navigation_controller.dart';
 import 'package:admin/views/common/components/common_textfield.dart';
 import 'package:admin/views/common/components/modal_progress_hud.dart';
-import 'package:cached_network_image/cached_network_image.dart';
-import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:hms_models/backend/patient/patient_controller.dart';
 import 'package:hms_models/hms_models.dart';
-import 'package:provider/provider.dart';
 
 import '../../../configs/constants.dart';
 import '../../common/components/common_primary_button.dart';
 import '../../common/components/loading_widget.dart';
 
-class PatientProfileDialog extends StatefulWidget {
+class UpdatePatientProfileDialog extends StatefulWidget {
   final String patientId;
   final PatientModel? patientModel;
   
-  const PatientProfileDialog({
+  const UpdatePatientProfileDialog({
     Key? key,
     required this.patientId,
     this.patientModel,
   }) : super(key: key);
 
   @override
-  State<PatientProfileDialog> createState() => _PatientProfileDialogState();
+  State<UpdatePatientProfileDialog> createState() => _UpdatePatientProfileDialogState();
 }
 
-class _PatientProfileDialogState extends State<PatientProfileDialog> {
+class _UpdatePatientProfileDialogState extends State<UpdatePatientProfileDialog> {
   late ThemeData themeData;
 
   bool isLoading = false;
@@ -45,7 +42,7 @@ class _PatientProfileDialogState extends State<PatientProfileDialog> {
   TextEditingController primaryMobileController = TextEditingController();
 
   DateTime? dateOfBirth;
-  String? gender;
+  String? gender, bloodGroup = BloodGroup.bloodGroupsList.firstElement;
 
   Uint8List? profilePictureBytes;
   String profilePictureImageUrl = "";
@@ -59,6 +56,10 @@ class _PatientProfileDialogState extends State<PatientProfileDialog> {
     primaryMobileController.text = patientModel.primaryMobile;
     dateOfBirth = patientModel.dateOfBirth?.toDate();
     gender = patientModel.gender;
+
+    bloodGroup = patientModel.bloodGroup;
+    if(bloodGroup.checkEmpty && BloodGroup.bloodGroupsList.isNotEmpty) bloodGroup = BloodGroup.bloodGroupsList.first;
+
     profilePictureImageUrl = patientModel.profilePicture;
   }
 
@@ -165,6 +166,7 @@ class _PatientProfileDialogState extends State<PatientProfileDialog> {
       newModel.primaryMobile = primaryMobileController.text;
       newModel.dateOfBirth = dateOfBirth != null ? Timestamp.fromDate(dateOfBirth!) : null;
       newModel.gender = gender ?? "";
+      newModel.bloodGroup = bloodGroup ?? "";
       newModel.profilePicture = profilePicImageUrl;
       newModel.isProfileComplete = true;
 
@@ -240,102 +242,70 @@ class _PatientProfileDialogState extends State<PatientProfileDialog> {
             child: Column(
               mainAxisSize: MainAxisSize.min,
               children: [
-                Text(
-                  "Profile",
-                  style: themeData.textTheme.headline6,
-                ),
-                CommonTextField(
-                  hint: "Name",
-                  textEditingController: nameController,
-                  isRequired: true,
-                  prefixIcon: Icons.person,
-                  validator: (String? text) {
-                    if(text?.isEmpty ?? true) {
-                      return "Name Cannot be empty";
-                    }
-                    else {
-                      return null;
-                    }
-                  },
-                ),
-                CommonTextField(
-                  hint: "Mobile Number",
-                  textEditingController: primaryMobileController,
-                  isRequired: true,
-                  prefixIcon: Icons.phone,
-                  textInputType: TextInputType.number,
-                  inputFormatters: [
-                    FilteringTextInputFormatter.digitsOnly,
-                    LengthLimitingTextInputFormatter(10),
-                  ],
-                  validator: (String? text) {
-                    if(text?.isEmpty ?? true) {
-                      return "Mobile Number Cannot be empty";
-                    }
-                    else {
-                      if(text!.length < 10) {
-                        return "Invalid Mobile Numner";
-                      }
-                      else {
-                        return null;
-                      }
-                    }
-                  },
-                ),
+                getProfileText(),
+                getNameTextField(),
+                getPrimaryMobileTextField(),
                 getDateOfBirthSelection(),
                 getGenderSelection(),
-                getUploadImageSection(
-                  title: "Profile Picture",
-                  bytes: profilePictureBytes,
-                  url: profilePictureImageUrl,
-                  onPickImage: () {
-                    pickProfilePictureImage();
-                  },
-                  onDeleteImage: () {
-                    if(profilePictureBytes != null) profilePictureBytes = null;
-                    if(profilePictureImageUrl.isNotEmpty) {
-                      deletedImages.add(profilePictureImageUrl);
-                      profilePictureImageUrl = "";
-                    }
-                    setState(() {});
-                  },
-                ),
-                CommonPrimaryButton(
-                  text: "Submit",
-                  onTap: () {
-                    bool formValid = _formKey.currentState?.validate() ?? false;
-                    bool dobValid = dateOfBirth != null;
-                    bool genderValid = gender?.isNotEmpty ?? false;
-                    bool profilePictureValid = profilePictureBytes != null || profilePictureImageUrl.isNotEmpty;
-
-                    MyPrint.printOnConsole("formValid:$formValid, dobValid:$dobValid, genderValid:$genderValid, profilePictureValid:$profilePictureValid");
-
-                    if(formValid && dobValid && genderValid && profilePictureValid) {
-                      updatePatientData();
-                    }
-                    else if(!formValid) {
-
-                    }
-                    else if(!dobValid) {
-                      MyToast.showError(context: context, msg: "Date Of Birth is Mandatory");
-                    }
-                    else if(!genderValid) {
-                      MyToast.showError(context: context, msg: "Gender is Mandatory");
-                    }
-                    else if(!profilePictureValid) {
-                      MyToast.showError(context: context, msg: "Profile Picture is Mandatory");
-                    }
-                    else {
-
-                    }
-                  },
-                  filled: true,
-                ),
+                getBloodGroupSelection(),
+                getProfileImageSelection(),
+                getSubmitButton(),
               ],
             ),
           ),
         ),
       ),
+    );
+  }
+
+  Widget getProfileText() {
+    return Text(
+      "Profile",
+      style: themeData.textTheme.headline6,
+    );
+  }
+
+  Widget getNameTextField() {
+    return CommonTextField(
+      hint: "Name",
+      textEditingController: nameController,
+      isRequired: true,
+      prefixIcon: Icons.person,
+      validator: (String? text) {
+        if(text?.isEmpty ?? true) {
+          return "Name Cannot be empty";
+        }
+        else {
+          return null;
+        }
+      },
+    );
+  }
+
+  Widget getPrimaryMobileTextField() {
+    return CommonTextField(
+      hint: "Mobile Number",
+      textEditingController: primaryMobileController,
+      isRequired: true,
+      prefixIcon: Icons.phone,
+      textInputType: TextInputType.number,
+      inputFormatters: [
+        FilteringTextInputFormatter.digitsOnly,
+        LengthLimitingTextInputFormatter(10),
+      ],
+      validator: (String? text) {
+        if(text?.isEmpty ?? true) {
+          return "Mobile Number Cannot be empty";
+        }
+        else {
+          if(text!.length < 10) {
+            return "Invalid Mobile Numner";
+          }
+          else {
+            return null;
+          }
+        }
+      },
     );
   }
 
@@ -448,6 +418,102 @@ class _PatientProfileDialogState extends State<PatientProfileDialog> {
   }
   //endregion
 
+  Widget getBloodGroupSelection() {
+    List<String> bloodGroupsList = BloodGroup.bloodGroupsList;
+
+    return Container(
+      margin: const EdgeInsets.symmetric(vertical: 10),
+      child: Theme(
+        data: themeData.copyWith(
+          highlightColor: Colors.transparent,
+          // splashColor: Colors.transparent,
+        ),
+        child: Column(
+          children: [
+            const Text("Blood Group Selection"),
+            GridView(
+              shrinkWrap: true,
+              physics: const NeverScrollableScrollPhysics(),
+              gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                crossAxisCount: 4,
+                childAspectRatio: 3,
+              ),
+              children: bloodGroupsList.map((e) {
+                return RadioListTile<String>(
+                  value: e,
+                  groupValue: bloodGroup,
+                  onChanged: (String? newBloodGroup) {
+                    bloodGroup = newBloodGroup;
+                    setState(() {});
+                  },
+                  title: Text(e),
+                );
+              }).toList(),
+            ),
+          ],
+        )
+      ),
+    );
+  }
+
+  Widget getProfileImageSelection() {
+    return getUploadImageSection(
+      title: "Profile Picture",
+      bytes: profilePictureBytes,
+      url: profilePictureImageUrl,
+      onPickImage: () {
+        pickProfilePictureImage();
+      },
+      onDeleteImage: () {
+        if(profilePictureBytes != null) profilePictureBytes = null;
+        if(profilePictureImageUrl.isNotEmpty) {
+          deletedImages.add(profilePictureImageUrl);
+          profilePictureImageUrl = "";
+        }
+        setState(() {});
+      },
+    );
+  }
+
+  Widget getSubmitButton() {
+    return CommonPrimaryButton(
+      text: "Submit",
+      onTap: () {
+        bool formValid = _formKey.currentState?.validate() ?? false;
+        bool dobValid = dateOfBirth != null;
+        bool genderValid = gender?.isNotEmpty ?? false;
+        bool bloodGroupValid = bloodGroup?.isNotEmpty ?? false;
+        bool profilePictureValid = profilePictureBytes != null || profilePictureImageUrl.isNotEmpty;
+
+        MyPrint.printOnConsole("formValid:$formValid, dobValid:$dobValid, genderValid:$genderValid, profilePictureValid:$profilePictureValid");
+
+        if(formValid && dobValid && genderValid && bloodGroupValid && profilePictureValid) {
+          updatePatientData();
+        }
+        else if(!formValid) {
+
+        }
+        else if(!dobValid) {
+          MyToast.showError(context: context, msg: "Date Of Birth is Mandatory");
+        }
+        else if(!genderValid) {
+          MyToast.showError(context: context, msg: "Gender is Mandatory");
+        }
+        else if(!bloodGroupValid) {
+          MyToast.showError(context: context, msg: "Blood Group is Mandatory");
+        }
+        else if(!profilePictureValid) {
+          MyToast.showError(context: context, msg: "Profile Picture is Mandatory");
+        }
+        else {
+
+        }
+      },
+      filled: true,
+    );
+  }
+
+  //Supporting Widgets
   Widget getUploadImageSection({required title, required Uint8List? bytes, required String url, void Function()? onPickImage, void Function()? onDeleteImage}) {
     return Container(
       margin: const EdgeInsets.symmetric(vertical: 10),
