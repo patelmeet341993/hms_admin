@@ -100,6 +100,7 @@ class _AdminUsersListScreenState extends State<AdminUsersListScreen> with Automa
           createdTime: adminUserModel.createdTime,
           scannerData: adminUserModel.scannerData,
           imageUrl: adminUserModel.imageUrl,
+          hospitalId: adminUserModel.hospitalId.isNotEmpty ? adminUserModel.hospitalId : AppController().hospitalId,
         );
         isSuccessful = await AdminUserController().updateAdminUserProfileDataAndUpdateInListInProvider(context: context, adminUserModel: newAdminUserModel);
       }
@@ -279,7 +280,7 @@ class _AdminUsersListScreenState extends State<AdminUsersListScreen> with Automa
           return getAdminUserWidget(adminUserModel, index);
         }
         else {
-          return SizedBox();
+          return const SizedBox();
         }
       },
     );
