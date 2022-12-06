@@ -1,8 +1,9 @@
 import 'package:admin/backend/patient/my_patient_repository.dart';
+import 'package:admin/views/patient/components/patient_profile_details_dialog.dart';
 import 'package:flutter/material.dart';
 import 'package:hms_models/hms_models.dart';
 
-import '../../views/patient/components/patient_profile_dialog.dart';
+import '../../views/patient/components/update_patient_profile_dialog.dart';
 import '../common/data_controller.dart';
 import 'patient_provider.dart';
 
@@ -91,17 +92,35 @@ class MyPatientController {
     return patients;
   }
   
-  Future<void> showPatientProfileCompleteDialog({required BuildContext context, required String patientId, PatientModel? patientModel}) async {
-    if(patientId.isEmpty) return;
+  Future<bool> showUpdatePatientProfileDialog({required BuildContext context, required String patientId, PatientModel? patientModel}) async {
+    if(patientId.isEmpty) return false;
 
-    await showDialog(
+    dynamic value = await showDialog(
       context: context,
       builder: (BuildContext context) {
-        return PatientProfileDialog(
+        return UpdatePatientProfileDialog(
           patientId: patientId,
           patientModel: patientModel,
         );
       },
     );
+
+    return ParsingHelper.parseBoolMethod(value);
+  }
+
+  Future<bool> showPatientProfileDetailsDialog({required BuildContext context, required String patientId, PatientModel? patientModel}) async {
+    if(patientId.isEmpty) return false;
+
+    dynamic value = await showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return PatientProfileDetailsDialog(
+          patientId: patientId,
+          patientModel: patientModel,
+        );
+      },
+    );
+
+    return ParsingHelper.parseBoolMethod(value);
   }
 }
