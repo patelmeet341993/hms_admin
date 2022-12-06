@@ -3,7 +3,6 @@ import 'dart:convert';
 import 'package:admin/backend/admin_user/admin_user_controller.dart';
 import 'package:flutter/material.dart';
 import 'package:hms_models/hms_models.dart';
-import 'package:provider/provider.dart';
 
 import '../../configs/app_strings.dart';
 import '../../configs/constants.dart';

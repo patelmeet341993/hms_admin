@@ -5,7 +5,6 @@ import 'package:admin/backend/connection/connection_provider.dart';
 import 'package:admin/configs/app_theme.dart';
 import 'package:flutter/material.dart';
 import 'package:hms_models/hms_models.dart';
-import 'package:provider/provider.dart';
 
 import '../backend/navigation/navigation_controller.dart';
 import '../backend/patient/patient_provider.dart';

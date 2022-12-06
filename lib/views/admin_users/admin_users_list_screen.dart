@@ -10,13 +10,9 @@ import 'package:admin/views/common/components/my_table/my_table_cell_model.dart'
 import 'package:admin/views/common/components/my_table/my_table_row_widget.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:hms_models/models/admin_user/admin_user_model.dart';
-import 'package:hms_models/utils/date_presentation.dart';
-import 'package:hms_models/utils/my_print.dart';
-import 'package:hms_models/utils/my_safe_state.dart';
-import 'package:hms_models/utils/size_config.dart';
-import 'package:loading_animation_widget/loading_animation_widget.dart';
-import 'package:provider/provider.dart';
+import 'package:hms_models/hms_models.dart';
+
+import '../../backend/common/app_controller.dart';
 
 class AdminUsersListScreen extends StatefulWidget {
   final String title;
