@@ -25,31 +25,52 @@ class _ScannerScreenState extends State<ScannerScreen> with SingleTickerProvider
     scannedText = code.toEncodedString();
     setState(() {});
 
-    if(code.id.isNotEmpty && code.type == QRCodeTypes.patient){
-       getPatientData(code.id);
+    if(code.id.isNotEmpty) {
+      if(code.type == QRCodeTypes.patient) {
+        handlePatientData(code.id);
+      }
     }
   }
 
-  Future<void> getPatientData(String patientId) async {
+  Future<void> handlePatientData(String patientId) async {
     MyPrint.printOnConsole("getPatientData called with patientId: $patientId");
 
     PatientModel? patientModel = await PatientController().getPatientModelFromPatientId(patientId: patientId);
     MyPrint.printOnConsole("patientModel:$patientModel");
 
     if(patientModel != null) {
-      if(patientModel.isProfileComplete) {
-        MyToast.showSuccess(context: context, msg: "Patient Profile Completed");
-      }
-      else {
+      PatientProvider patientProvider = Provider.of<PatientProvider>(NavigationController.mainScreenNavigator.currentContext!, listen: false);
+      MyPatientController myPatientController = MyPatientController(patientProvider: patientProvider);
+
+      //region If Profile Not Completed, then first show dialog to complete that then proceed further,
+      //if profile completion failed, return
+      if(!patientModel.isProfileComplete) {
         MyToast.showError(context: context, msg: "Patient Profile Not Complete");
 
-        PatientProvider patientProvider = Provider.of<PatientProvider>(NavigationController.mainScreenNavigator.currentContext!, listen: false);
-        MyPatientController(patientProvider: patientProvider).showPatientProfileCompleteDialog(
+        bool isProfileCompleted = await myPatientController.showUpdatePatientProfileDialog(
           context: context,
           patientId: patientId,
           patientModel: patientModel,
         );
+        MyPrint.printOnConsole("isProfileCompleted:$isProfileCompleted");
+
+        if(!isProfileCompleted) return;
+
+        /*patientModel = await PatientController().getPatientModelFromPatientId(patientId: patientId);
+        if(!(patientModel?.isProfileComplete ?? false)) return;*/
       }
+      else {
+        MyToast.showSuccess(context: context, msg: "Patient Profile Completed");
+      }
+      //endregion
+
+      await myPatientController.showPatientProfileDetailsDialog(
+        context: context,
+        patientId: patientId,
+        patientModel: patientModel,
+      );
+
+      MyPrint.printOnConsole("handlePatientData completed");
     }
     else {
       MyToast.showError(context: context, msg: "Patient Not Found");
