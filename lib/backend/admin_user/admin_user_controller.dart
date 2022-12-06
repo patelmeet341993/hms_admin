@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:admin/backend/admin_user/admin_user_provider.dart';
 import 'package:admin/backend/admin_user/admin_user_repository.dart';
+import 'package:admin/backend/common/app_controller.dart';
 import 'package:admin/backend/navigation/navigation_controller.dart';
 import 'package:flutter/material.dart';
 import 'package:hms_models/hms_models.dart';
@@ -182,7 +183,13 @@ class AdminUserController {
 
     bool isSuccessful = false;
 
-    QuerySnapshot<Map<String, dynamic>> querySnapshot = await FirebaseNodes.adminUsersCollectionReference.where("username", isEqualTo: adminUserModel.username).get();
+    String hospitalId = adminUserModel.hospitalId.isNotEmpty ? adminUserModel.hospitalId : AppController().hospitalId;
+    adminUserModel.hospitalId = hospitalId;
+
+    QuerySnapshot<Map<String, dynamic>> querySnapshot = await FirebaseNodes.adminUsersCollectionReference
+        .where("username", isEqualTo: adminUserModel.username)
+        .where("hospitalId", isEqualTo: hospitalId)
+        .get();
     if(querySnapshot.docs.isNotEmpty) {
       if(querySnapshot.docs.first.id != adminUserModel.id) {
         MyToast.showError(context: context, msg: "Someone else is already having this username",);
@@ -197,6 +204,7 @@ class AdminUserController {
       "description" : adminUserModel.description,
       "role" : adminUserModel.role,
       "isActive" : adminUserModel.isActive,
+      "hospitalId" : hospitalId,
     }, merge: true);
     MyPrint.printOnConsole("updateAdminUserProfileData isSuccessful:$isSuccessful");
 
