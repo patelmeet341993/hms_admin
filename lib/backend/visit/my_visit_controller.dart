@@ -1,3 +1,5 @@
+import 'package:admin/views/visit/components/add_visit_dialog.dart';
+import 'package:flutter/material.dart';
 import 'package:hms_models/hms_models.dart';
 
 class MyVisitController {
@@ -136,5 +138,21 @@ class MyVisitController {
       MyPrint.printOnConsole("Error in VisitController().createDummyVisitDataInFirestore():$e");
       MyPrint.printOnConsole(s);
     });
+  }
+
+  Future<bool> showAddVisitDialog({required BuildContext context, required String patientId, PatientModel? patientModel}) async {
+    if(patientId.isEmpty) return false;
+
+    dynamic value = await showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AddVisitDialog(
+          patientId: patientId,
+          patientModel: patientModel,
+        );
+      },
+    );
+
+    return ParsingHelper.parseBoolMethod(value);
   }
 }
