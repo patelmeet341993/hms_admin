@@ -50,7 +50,9 @@ class AdminUserController {
       isDeleted = await adminUserRepository.deleteAdminUsers(adminUserIds);
 
       if(isDeleted) {
-        adminUserProvider.setAdminUserIdsList(usersIds: adminUserProvider.adminUsersIds..removeWhere((element) => adminUserIds.contains(element)));
+        List<String> currentAdminUserIds = List.from(adminUserProvider.adminUsersIds);
+        currentAdminUserIds.removeWhere((element) => adminUserIds.contains(element));
+        adminUserProvider.setAdminUserIdsList(usersIds: currentAdminUserIds);
       }
     }
     else {
