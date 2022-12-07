@@ -122,4 +122,37 @@ class AdminUserRepository {
 
     return isDeleted;
   }
+
+  Future<List<AdminUserModel>> getAdminUsersWithType({required String hospitalId, required List<String> types}) async {
+    MyPrint.printOnConsole("AdminUserRepository.getAdminUsersWithType() called with hospitalId:'$hospitalId'");
+    
+    List<AdminUserModel> adminUsers = <AdminUserModel>[];
+    
+    try {
+      if(hospitalId.isNotEmpty) {
+        MyFirestoreQuerySnapshot querySnapshot = await FirebaseNodes.adminUsersCollectionReference
+            .where("hospitalId", isEqualTo: hospitalId)
+            .where("role", whereIn: types)
+            .get();
+        MyPrint.printOnConsole("querySnapshot length:${querySnapshot.docs.length}");
+
+        for (MyFirestoreQueryDocumentSnapshot value in querySnapshot.docs) {
+          if(value.data().isNotEmpty) {
+            adminUsers.add(AdminUserModel.fromMap(value.data()));
+          }
+        }
+
+        MyPrint.printOnConsole("Final adminUsers length:${adminUsers.length}");
+      }
+      else {
+        MyPrint.printOnConsole("Hospital Id is Empty");
+      }
+    }
+    catch(e, s) {
+      MyPrint.printOnConsole("Error in AdminUserRepository.getAdminUsersWithType():$e");
+      MyPrint.logOnConsole(s);
+    }
+    
+    return adminUsers;
+  }
 }
