@@ -219,4 +219,26 @@ class AdminUserController {
   }
 
 
+  Future<List<AdminUserModel>> getDoctorsList() async {
+    MyPrint.printOnConsole("AdminUserController().getDoctorsList() called");
+
+    List<AdminUserModel> doctors = <AdminUserModel>[];
+
+    try {
+      doctors = await adminUserRepository.getAdminUsersWithType(
+        hospitalId: AppController().hospitalId,
+        types: [
+          AdminUserType.doctor,
+        ],
+      );
+
+      MyPrint.printOnConsole("doctors:$doctors");
+    }
+    catch(e, s) {
+      MyPrint.printOnConsole("Error in AdminUserController().getDoctorsList():$e");
+      MyPrint.logOnConsole(s);
+    }
+
+    return doctors;
+  }
 }
