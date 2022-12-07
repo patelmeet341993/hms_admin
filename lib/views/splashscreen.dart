@@ -2,11 +2,10 @@ import 'package:admin/backend/navigation/navigation_controller.dart';
 import 'package:admin/views/authentication/login_screen.dart';
 import 'package:admin/views/homescreen/homescreen.dart';
 import 'package:flutter/material.dart';
-import 'package:hms_models/models/admin_user/admin_user_model.dart';
-import 'package:hms_models/utils/my_print.dart';
-import 'package:loading_animation_widget/loading_animation_widget.dart';
+import 'package:hms_models/hms_models.dart';
 
 import '../backend/admin_user/admin_user_controller.dart';
+import '../backend/admin_user/admin_user_provider.dart';
 import '../backend/authentication/authentication_controller.dart';
 import 'common/components/common_text.dart';
 
@@ -30,7 +29,8 @@ class _SplashScreenState extends State<SplashScreen> {
 
     NavigationController.isFirst = false;
     if(user != null) {
-      AdminUserController().startAdminUserSubscription();
+      AdminUserProvider adminUserProvider = Provider.of<AdminUserProvider>(NavigationController.mainScreenNavigator.currentContext!, listen: false);
+      AdminUserController(adminUserProvider: adminUserProvider).startAdminUserSubscription();
       Navigator.pushNamedAndRemoveUntil(NavigationController.mainScreenNavigator.currentContext!, HomeScreen.routeName, (route) => false);
     }
     else {

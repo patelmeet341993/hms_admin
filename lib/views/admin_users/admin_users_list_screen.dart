@@ -24,6 +24,8 @@ class AdminUsersListScreen extends StatefulWidget {
 
 class _AdminUsersListScreenState extends State<AdminUsersListScreen> with AutomaticKeepAliveClientMixin, MySafeState {
   late ThemeData themeData;
+  late AdminUserProvider adminUserProvider;
+  late AdminUserController adminUserController;
   Future<List<AdminUserModel>>? futureGetData;
 
   bool isLoading = false;
@@ -49,7 +51,7 @@ class _AdminUsersListScreenState extends State<AdminUsersListScreen> with Automa
       isLoading = true;
       mySetState();
 
-      bool isDeleted = await AdminUserController().deleteAdminUsers(adminUserIds);
+      bool isDeleted = await adminUserController.deleteAdminUsers(adminUserIds);
       MyPrint.printOnConsole("isDeleted:$isDeleted");
 
       isLoading = false;
@@ -59,12 +61,10 @@ class _AdminUsersListScreenState extends State<AdminUsersListScreen> with Automa
 
   Future<void> enableDisableUser(AdminUserModel adminUserModel, bool newValue) async {
     if(adminUserModel.isActive != newValue) {
-      AdminUserProvider adminUserProvider = Provider.of<AdminUserProvider>(context, listen: false);
-
       adminUserModel.isActive = newValue;
       adminUserProvider.updateUserData(userid: adminUserModel.id, adminUserModel: adminUserModel);
 
-      bool isUpdated = await AdminUserController().enableDisableAdminUser(adminUserModel.id, newValue);
+      bool isUpdated = await adminUserController.enableDisableAdminUser(adminUserModel.id, newValue);
 
       if(!isUpdated) {
         adminUserModel.isActive = !newValue;
@@ -102,10 +102,10 @@ class _AdminUsersListScreenState extends State<AdminUsersListScreen> with Automa
           imageUrl: adminUserModel.imageUrl,
           hospitalId: adminUserModel.hospitalId.isNotEmpty ? adminUserModel.hospitalId : AppController().hospitalId,
         );
-        isSuccessful = await AdminUserController().updateAdminUserProfileDataAndUpdateInListInProvider(context: context, adminUserModel: newAdminUserModel);
+        isSuccessful = await adminUserController.updateAdminUserProfileDataAndUpdateInListInProvider(context: context, adminUserModel: newAdminUserModel);
       }
       else {
-        isSuccessful = await AdminUserController().addAdminUserInFirestoreAndUpdateInProvider(
+        isSuccessful = await adminUserController.addAdminUserInFirestoreAndUpdateInProvider(
           context: context,
           adminUserModel: AdminUserModel(
             name: value.name,
@@ -128,9 +128,10 @@ class _AdminUsersListScreenState extends State<AdminUsersListScreen> with Automa
   @override
   void initState() {
     super.initState();
-    AdminUserProvider adminUserProvider = Provider.of<AdminUserProvider>(context, listen: false);
+    adminUserProvider = Provider.of<AdminUserProvider>(context, listen: false);
+    adminUserController = AdminUserController(adminUserProvider: adminUserProvider);
     if(adminUserProvider.adminUsersLength <= 0) {
-      futureGetData = AdminUserController().getAdminUsers(isNotify: false);
+      futureGetData = adminUserController.getAdminUsers(isNotify: false);
     }
   }
 
@@ -140,31 +141,36 @@ class _AdminUsersListScreenState extends State<AdminUsersListScreen> with Automa
     super.pageBuild();
 
     themeData = Theme.of(context);
-    return Consumer<AdminUserProvider>(
-      builder: (BuildContext context, AdminUserProvider adminUserProvider, Widget? child) {
-        return ModalProgressHUD(
-          inAsyncCall: isLoading,
-          progressIndicator: const LoadingWidget(),
-          child: Scaffold(
-            appBar: getAppBar(),
-            body: SizedBox(
-              height: double.maxFinite,
-              width: double.maxFinite,
-              child: futureGetData != null ? FutureBuilder<List<AdminUserModel>>(
-                future: futureGetData,
-                builder: (BuildContext context, AsyncSnapshot<List<AdminUserModel>> snapshot) {
-                  if(snapshot.connectionState == ConnectionState.done) {
-                    return getMainBody(adminUserProvider);
-                  }
-                  else {
-                    return const LoadingWidget();
-                  }
-                },
-              ) : getMainBody(adminUserProvider),
+    return MultiProvider(
+      providers: [
+        ChangeNotifierProvider.value(value: adminUserProvider),
+      ],
+      child: Consumer<AdminUserProvider>(
+        builder: (BuildContext context, AdminUserProvider adminUserProvider, Widget? child) {
+          return ModalProgressHUD(
+            inAsyncCall: isLoading,
+            progressIndicator: const LoadingWidget(),
+            child: Scaffold(
+              appBar: getAppBar(),
+              body: SizedBox(
+                height: double.maxFinite,
+                width: double.maxFinite,
+                child: futureGetData != null ? FutureBuilder<List<AdminUserModel>>(
+                  future: futureGetData,
+                  builder: (BuildContext context, AsyncSnapshot<List<AdminUserModel>> snapshot) {
+                    if(snapshot.connectionState == ConnectionState.done) {
+                      return getMainBody(adminUserProvider);
+                    }
+                    else {
+                      return const LoadingWidget();
+                    }
+                  },
+                ) : getMainBody(adminUserProvider),
+              ),
             ),
-          ),
-        );
-      },
+          );
+        },
+      ),
     );
   }
 
@@ -179,7 +185,7 @@ class _AdminUsersListScreenState extends State<AdminUsersListScreen> with Automa
           child: Row(
             children: [
               getIconButton(iconData: Icons.refresh, onTap: () {
-                futureGetData = AdminUserController().getAdminUsers(isNotify: true);
+                futureGetData = adminUserController.getAdminUsers(isNotify: true);
               }),
             ],
           ),
@@ -283,7 +289,7 @@ class _AdminUsersListScreenState extends State<AdminUsersListScreen> with Automa
 
         if(adminUserProvider.getHasMoreUsers && index > (adminUserProvider.adminUsersLength - AppConstants.adminUsersRefreshIndexForPagination)) {
           WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
-            AdminUserController().getAdminUsers(isRefresh: false, isFromCache: false, isNotify: false);
+            adminUserController.getAdminUsers(isRefresh: false, isFromCache: false, isNotify: false);
           });
         }
 
@@ -406,7 +412,7 @@ class _AdminUsersListScreenState extends State<AdminUsersListScreen> with Automa
               username: "Meet341993${MyUtils.getUniqueIdFromUuid()}",
               password: "123456789",
             );
-            await AdminUserController().addAdminUserInFirestoreAndUpdateInProvider(context: context, adminUserModel: adminUserModel);
+            await adminUserController.addAdminUserInFirestoreAndUpdateInProvider(context: context, adminUserModel: adminUserModel);
 
             isLoading = false;
             mySetState();*/

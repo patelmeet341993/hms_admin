@@ -114,7 +114,7 @@ class AuthenticationController {
     SharedPrefManager().setString(SharePrefrenceKeys.loggedInUser, adminUserModel != null ? jsonEncode(adminUserModel.toMap(toJson: true)) : "");
 
     if(isLoginSuccess) {
-      AdminUserController().startAdminUserSubscription();
+      AdminUserController(adminUserProvider: adminUserProvider).startAdminUserSubscription();
       Navigator.pushNamedAndRemoveUntil(context, HomeScreen.routeName, (route) => false);
     }
 
@@ -127,7 +127,7 @@ class AuthenticationController {
     AdminUserProvider adminUserProvider = Provider.of<AdminUserProvider>(NavigationController.mainScreenNavigator.currentContext!, listen: false);
     adminUserProvider.setAdminUserId("");
     adminUserProvider.setAdminUserModel(null, isNotify: false);
-    AdminUserController().stopAdminUserSubscription();
+    AdminUserController(adminUserProvider: adminUserProvider).stopAdminUserSubscription();
     SharedPrefManager().setString(SharePrefrenceKeys.loggedInUser, "");
     isLoggedOut = true;
 

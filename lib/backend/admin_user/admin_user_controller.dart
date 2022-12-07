@@ -3,7 +3,6 @@ import 'dart:async';
 import 'package:admin/backend/admin_user/admin_user_provider.dart';
 import 'package:admin/backend/admin_user/admin_user_repository.dart';
 import 'package:admin/backend/common/app_controller.dart';
-import 'package:admin/backend/navigation/navigation_controller.dart';
 import 'package:flutter/material.dart';
 import 'package:hms_models/hms_models.dart';
 
@@ -11,14 +10,20 @@ import '../../configs/app_strings.dart';
 import '../../configs/constants.dart';
 
 class AdminUserController {
+  final AdminUserProvider adminUserProvider;
+  late AdminUserRepository adminUserRepository;
+
+  AdminUserController({required this.adminUserProvider}) {
+    adminUserRepository = AdminUserRepository();
+  }
+
   static StreamSubscription<DocumentSnapshot<Map<String, dynamic>>>? adminUserStreamSubscription;
 
   Future<bool> addAdminUserInFirestoreAndUpdateInProvider({required BuildContext context, required AdminUserModel adminUserModel}) async {
     MyPrint.printOnConsole("addAdminUserInFirestoreAndUpdateInProvider called with adminUserModel:$adminUserModel");
-    AdminUserProvider adminUserProvider = Provider.of<AdminUserProvider>(NavigationController.mainScreenNavigator.currentContext!, listen: false);
 
     bool isCreated = false;
-    AdminUserModel? newAdminUserModel = await AdminUserRepository().createAdminUserWithUsernameAndPassword(
+    AdminUserModel? newAdminUserModel = await adminUserRepository.createAdminUserWithUsernameAndPassword(
       userModel: adminUserModel,
       onValidationFailed: () {
         MyToast.showError(context: context, msg: "UserName is empty or password is empty",);
@@ -42,10 +47,9 @@ class AdminUserController {
 
     adminUserIds.removeWhere((element) => element.isEmpty);
     if(adminUserIds.isNotEmpty) {
-      isDeleted = await AdminUserRepository().deleteAdminUsers(adminUserIds);
+      isDeleted = await adminUserRepository.deleteAdminUsers(adminUserIds);
 
       if(isDeleted) {
-        AdminUserProvider adminUserProvider = Provider.of<AdminUserProvider>(NavigationController.mainScreenNavigator.currentContext!, listen: false);
         adminUserProvider.setAdminUserIdsList(usersIds: adminUserProvider.adminUsersIds..removeWhere((element) => adminUserIds.contains(element)));
       }
     }
@@ -57,7 +61,6 @@ class AdminUserController {
   }
 
   void startAdminUserSubscription() async {
-    AdminUserProvider adminUserProvider = Provider.of<AdminUserProvider>(NavigationController.mainScreenNavigator.currentContext!, listen: false);
     String adminUserId = adminUserProvider.adminUserId;
 
     if(adminUserId.isNotEmpty) {
@@ -87,8 +90,6 @@ class AdminUserController {
   }
 
   void stopAdminUserSubscription() async {
-    AdminUserProvider adminUserProvider = Provider.of<AdminUserProvider>(NavigationController.mainScreenNavigator.currentContext!, listen: false);
-
     if(adminUserStreamSubscription != null) {
       adminUserStreamSubscription!.cancel();
       adminUserStreamSubscription = null;
@@ -99,7 +100,6 @@ class AdminUserController {
 
   Future<List<AdminUserModel>> getAdminUsers({bool isRefresh = true, bool isFromCache = false, bool isNotify = true}) async {
     MyPrint.printOnConsole("getAdminUsers called with isRefresh:$isRefresh, isFromCache:$isFromCache");
-    AdminUserProvider adminUserProvider = Provider.of<AdminUserProvider>(NavigationController.mainScreenNavigator.currentContext!, listen: false);
 
     if(!isRefresh && isFromCache && adminUserProvider.adminUsersLength > 0) {
       MyPrint.printOnConsole("Returning Cached Data");
@@ -173,7 +173,7 @@ class AdminUserController {
 
     bool isSuccessful = false;
 
-    isSuccessful = await AdminUserRepository().setUpdateAdminUser(adminUserId: adminUserId, data: {"isActive" : isActive}, merge: true);
+    isSuccessful = await adminUserRepository.setUpdateAdminUser(adminUserId: adminUserId, data: {"isActive" : isActive}, merge: true);
     MyPrint.printOnConsole("enableDisableAdminUser isSuccessful:$isSuccessful");
 
     return isSuccessful;
@@ -198,7 +198,7 @@ class AdminUserController {
       }
     }
 
-    isSuccessful = await AdminUserRepository().setUpdateAdminUser(adminUserId: adminUserModel.id, data: {
+    isSuccessful = await adminUserRepository.setUpdateAdminUser(adminUserId: adminUserModel.id, data: {
       "name" : adminUserModel.name,
       "username" : adminUserModel.username,
       "password" : adminUserModel.password,
@@ -210,10 +210,11 @@ class AdminUserController {
     MyPrint.printOnConsole("updateAdminUserProfileData isSuccessful:$isSuccessful");
 
     if(isSuccessful) {
-      AdminUserProvider adminUserProvider = Provider.of<AdminUserProvider>(NavigationController.mainScreenNavigator.currentContext!, listen: false);
       adminUserProvider.updateUserData(userid: adminUserModel.id, adminUserModel: adminUserModel);
     }
 
     return isSuccessful;
   }
+
+
 }
