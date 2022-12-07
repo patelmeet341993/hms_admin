@@ -146,23 +146,7 @@ class _AdminUsersListScreenState extends State<AdminUsersListScreen> with Automa
           inAsyncCall: isLoading,
           progressIndicator: const LoadingWidget(),
           child: Scaffold(
-            appBar: AppBar(
-              title: Text(widget.title),
-              centerTitle: false,
-              elevation: 0,
-              actions: [
-                Container(
-                  margin: const EdgeInsets.symmetric(horizontal: 10),
-                  child: Row(
-                    children: [
-                      getIconButton(iconData: Icons.add, onTap: () {
-                        showAddEditAdminUserDialog();
-                      }),
-                    ],
-                  ),
-                ),
-              ],
-            ),
+            appBar: getAppBar(),
             body: SizedBox(
               height: double.maxFinite,
               width: double.maxFinite,
@@ -181,6 +165,36 @@ class _AdminUsersListScreenState extends State<AdminUsersListScreen> with Automa
           ),
         );
       },
+    );
+  }
+
+  AppBar getAppBar() {
+    return AppBar(
+      title: Text(widget.title),
+      centerTitle: false,
+      elevation: 0,
+      actions: [
+        Container(
+          margin: const EdgeInsets.symmetric(horizontal: 10),
+          child: Row(
+            children: [
+              getIconButton(iconData: Icons.refresh, onTap: () {
+                futureGetData = AdminUserController().getAdminUsers(isNotify: true);
+              }),
+            ],
+          ),
+        ),
+        Container(
+          margin: const EdgeInsets.symmetric(horizontal: 10),
+          child: Row(
+            children: [
+              getIconButton(iconData: Icons.add, onTap: () {
+                showAddEditAdminUserDialog();
+              }),
+            ],
+          ),
+        ),
+      ],
     );
   }
 
