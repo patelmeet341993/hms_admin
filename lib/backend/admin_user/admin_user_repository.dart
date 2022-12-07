@@ -16,18 +16,22 @@ class AdminUserRepository {
       userModel.role = AdminUserType.reception;
     }
 
+    if(userModel.hospitalId.isEmpty) {
+      userModel.hospitalId = AppController().hospitalId;
+    }
+
     AdminUserModel? adminUserModel;
 
-    MyFirestoreQuerySnapshot querySnapshot = await FirebaseNodes.adminUsersCollectionReference.where("username", isEqualTo: userModel.username).get();
+    MyFirestoreQuerySnapshot querySnapshot = await FirebaseNodes.adminUsersCollectionReference
+        .where("username", isEqualTo: userModel.username)
+        .where("hospitalId", isEqualTo: userModel.hospitalId)
+        .get();
     if(querySnapshot.docs.isNotEmpty) {
       MyFirestoreQueryDocumentSnapshot docSnapshot = querySnapshot.docs.first;
-      if(docSnapshot.data().isNotEmpty) {
-        AdminUserModel model = AdminUserModel.fromMap(docSnapshot.data());
-        if(model.username == userModel.username) {
-          adminUserModel = model;
-        }
-      }
+      AdminUserModel model = AdminUserModel.fromMap(docSnapshot.data());
+      adminUserModel = model;
     }
+    MyPrint.printOnConsole("adminUserModel:$adminUserModel");
 
     if(adminUserModel == null) {
       adminUserModel = AdminUserModel(
@@ -38,7 +42,7 @@ class AdminUserRepository {
         role: userModel.role,
         description: userModel.description,
         imageUrl: userModel.imageUrl,
-        hospitalId: AppController().hospitalId,
+        hospitalId: userModel.hospitalId,
         scannerData: userModel.scannerData,
         isActive: true,
         createdTime: Timestamp.now(),
