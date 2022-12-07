@@ -21,4 +21,12 @@ class AppController {
 
     isLightTheme = isLight ?? true;
   }
+
+  //region HospitalId
+  static String _hospitalId = "Hospital_1";
+
+  String get hospitalId => _hospitalId;
+
+  set hospitalId(String id) => _hospitalId = id;
+  //endregion
 }

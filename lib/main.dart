@@ -9,5 +9,6 @@ Future<void> main() async {
       const MyApp(),
     ),
     isDev: false,
+    hospitalId: "Hospital_1",
   );
 }

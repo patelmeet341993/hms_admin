@@ -1,9 +1,9 @@
 import 'dart:convert';
 
 import 'package:admin/backend/admin_user/admin_user_controller.dart';
+import 'package:admin/backend/common/app_controller.dart';
 import 'package:flutter/material.dart';
 import 'package:hms_models/hms_models.dart';
-import 'package:provider/provider.dart';
 
 import '../../configs/app_strings.dart';
 import '../../configs/constants.dart';
@@ -37,7 +37,10 @@ class AuthenticationController {
 
       if(documentSnapshot.exists && (documentSnapshot.data() ?? {}).isNotEmpty) {
         AdminUserModel newModel = AdminUserModel.fromMap(documentSnapshot.data()!);
-        if(adminUserModel.username == newModel.username && adminUserModel.password == newModel.password && newModel.isActive) {
+        if(adminUserModel.username == newModel.username &&
+            adminUserModel.password == newModel.password &&
+            newModel.isActive &&
+            newModel.hospitalId == AppController().hospitalId) {
           adminUserProvider.setAdminUserId(newModel.id);
           adminUserProvider.setAdminUserModel(newModel);
           if(adminUserModel != newModel) {
@@ -67,7 +70,8 @@ class AuthenticationController {
     }
   }
   
-  Future<bool> loginAdminUserWithUsernameAndPassword({required BuildContext context, required String userName, required String password, List<String> userTypes = AppConstants.userTypesForLogin,}) async {
+  Future<bool> loginAdminUserWithUsernameAndPassword({required BuildContext context, required String userName, required String password,
+    List<String> userTypes = AppConstants.userTypesForLogin,}) async {
     bool isLoginSuccess = false;
 
     if(userName.isEmpty || password.isEmpty) {
@@ -81,7 +85,9 @@ class AuthenticationController {
 
     AdminUserModel? adminUserModel;
 
-    Query<Map<String, dynamic>> query = FirebaseNodes.adminUsersCollectionReference.where("username", isEqualTo: userName);
+    Query<Map<String, dynamic>> query = FirebaseNodes.adminUsersCollectionReference
+        .where("username", isEqualTo: userName)
+        .where("hospitalId", isEqualTo: AppController().hospitalId);
     if(userTypes.isNotEmpty) {
       query = query.where("role", whereIn: userTypes);
     }
@@ -90,7 +96,12 @@ class AuthenticationController {
       DocumentSnapshot<Map<String, dynamic>> docSnapshot = querySnapshot.docs.first;
       if((docSnapshot.data() ?? {}).isNotEmpty) {
         AdminUserModel model = AdminUserModel.fromMap(docSnapshot.data()!);
-        isLoginSuccess = model.username == userName && model.password == password && (userTypes.isNotEmpty ? userTypes.contains(model.role) : true) && model.isActive;
+        isLoginSuccess =
+            model.username == userName &&
+            model.password == password &&
+            (userTypes.isNotEmpty ? userTypes.contains(model.role) : true) &&
+            model.isActive &&
+            model.hospitalId == AppController().hospitalId;
         if(isLoginSuccess) {
           adminUserModel = model;
         }
@@ -103,7 +114,7 @@ class AuthenticationController {
     SharedPrefManager().setString(SharePrefrenceKeys.loggedInUser, adminUserModel != null ? jsonEncode(adminUserModel.toMap(toJson: true)) : "");
 
     if(isLoginSuccess) {
-      AdminUserController().startAdminUserSubscription();
+      AdminUserController(adminUserProvider: adminUserProvider).startAdminUserSubscription();
       Navigator.pushNamedAndRemoveUntil(context, HomeScreen.routeName, (route) => false);
     }
 
@@ -116,7 +127,7 @@ class AuthenticationController {
     AdminUserProvider adminUserProvider = Provider.of<AdminUserProvider>(NavigationController.mainScreenNavigator.currentContext!, listen: false);
     adminUserProvider.setAdminUserId("");
     adminUserProvider.setAdminUserModel(null, isNotify: false);
-    AdminUserController().stopAdminUserSubscription();
+    AdminUserController(adminUserProvider: adminUserProvider).stopAdminUserSubscription();
     SharedPrefManager().setString(SharePrefrenceKeys.loggedInUser, "");
     isLoggedOut = true;
 

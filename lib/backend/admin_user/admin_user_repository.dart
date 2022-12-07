@@ -1,6 +1,6 @@
 import 'package:hms_models/hms_models.dart';
 
-import '../../configs/constants.dart';
+import '../common/app_controller.dart';
 import '../common/data_controller.dart';
 
 class AdminUserRepository {
@@ -16,18 +16,22 @@ class AdminUserRepository {
       userModel.role = AdminUserType.reception;
     }
 
+    if(userModel.hospitalId.isEmpty) {
+      userModel.hospitalId = AppController().hospitalId;
+    }
+
     AdminUserModel? adminUserModel;
 
-    MyFirestoreQuerySnapshot querySnapshot = await FirebaseNodes.adminUsersCollectionReference.where("username", isEqualTo: userModel.username).get();
+    MyFirestoreQuerySnapshot querySnapshot = await FirebaseNodes.adminUsersCollectionReference
+        .where("username", isEqualTo: userModel.username)
+        .where("hospitalId", isEqualTo: userModel.hospitalId)
+        .get();
     if(querySnapshot.docs.isNotEmpty) {
       MyFirestoreQueryDocumentSnapshot docSnapshot = querySnapshot.docs.first;
-      if(docSnapshot.data().isNotEmpty) {
-        AdminUserModel model = AdminUserModel.fromMap(docSnapshot.data());
-        if(model.username == userModel.username) {
-          adminUserModel = model;
-        }
-      }
+      AdminUserModel model = AdminUserModel.fromMap(docSnapshot.data());
+      adminUserModel = model;
     }
+    MyPrint.printOnConsole("adminUserModel:$adminUserModel");
 
     if(adminUserModel == null) {
       adminUserModel = AdminUserModel(
@@ -38,7 +42,7 @@ class AdminUserRepository {
         role: userModel.role,
         description: userModel.description,
         imageUrl: userModel.imageUrl,
-        hospitalId: AppConstants.hospitalId,
+        hospitalId: userModel.hospitalId,
         scannerData: userModel.scannerData,
         isActive: true,
         createdTime: Timestamp.now(),
@@ -117,5 +121,38 @@ class AdminUserRepository {
     });
 
     return isDeleted;
+  }
+
+  Future<List<AdminUserModel>> getAdminUsersWithType({required String hospitalId, required List<String> types}) async {
+    MyPrint.printOnConsole("AdminUserRepository.getAdminUsersWithType() called with hospitalId:'$hospitalId'");
+    
+    List<AdminUserModel> adminUsers = <AdminUserModel>[];
+    
+    try {
+      if(hospitalId.isNotEmpty) {
+        MyFirestoreQuerySnapshot querySnapshot = await FirebaseNodes.adminUsersCollectionReference
+            .where("hospitalId", isEqualTo: hospitalId)
+            .where("role", whereIn: types)
+            .get();
+        MyPrint.printOnConsole("querySnapshot length:${querySnapshot.docs.length}");
+
+        for (MyFirestoreQueryDocumentSnapshot value in querySnapshot.docs) {
+          if(value.data().isNotEmpty) {
+            adminUsers.add(AdminUserModel.fromMap(value.data()));
+          }
+        }
+
+        MyPrint.printOnConsole("Final adminUsers length:${adminUsers.length}");
+      }
+      else {
+        MyPrint.printOnConsole("Hospital Id is Empty");
+      }
+    }
+    catch(e, s) {
+      MyPrint.printOnConsole("Error in AdminUserRepository.getAdminUsersWithType():$e");
+      MyPrint.logOnConsole(s);
+    }
+    
+    return adminUsers;
   }
 }
