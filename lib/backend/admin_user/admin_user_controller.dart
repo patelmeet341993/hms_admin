@@ -124,6 +124,7 @@ class AdminUserController {
       adminUserProvider.setIsUsersLoading(true, isNotify: isNotify);
 
       Query<Map<String, dynamic>> query = FirebaseNodes.adminUsersCollectionReference
+        .where("hospitalId", isEqualTo: AppController().hospitalId)
         .limit(AppConstants.adminUsersDocumentLimitForPagination)
         .orderBy("createdTime", descending: false);
 
