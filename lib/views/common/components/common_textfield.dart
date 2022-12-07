@@ -6,6 +6,7 @@ class CommonTextField extends StatelessWidget {
   final IconData? prefixIcon;
   final TextInputType? textInputType;
   final bool isRequired;
+  final AutovalidateMode? autovalidateMode;
   final String hint;
   final String? Function(String? value)? validator;
   final EdgeInsets? margin;
@@ -17,6 +18,7 @@ class CommonTextField extends StatelessWidget {
     this.prefixIcon,
     this.textInputType,
     this.isRequired = false,
+    this.autovalidateMode,
     this.hint = '',
     this.validator,
     this.margin = const EdgeInsets.symmetric(vertical: 10),
@@ -32,6 +34,7 @@ class CommonTextField extends StatelessWidget {
       child: TextFormField(
         controller: textEditingController,
         style: themeData.textTheme.subtitle2,
+        autovalidateMode: autovalidateMode,
         decoration: InputDecoration(
           label: getTextFieldLabelWithRequiredStar(label: hint, isRequired: isRequired),
           prefixIcon: prefixIcon != null ? Icon(
