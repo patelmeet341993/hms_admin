@@ -1,6 +1,5 @@
 import 'dart:typed_data';
 
-import 'package:admin/backend/navigation/navigation_controller.dart';
 import 'package:admin/views/common/components/common_textfield.dart';
 import 'package:admin/views/common/components/modal_progress_hud.dart';
 import 'package:flutter/material.dart';
@@ -43,9 +42,9 @@ class _UpdatePatientProfileDialogState extends State<UpdatePatientProfileDialog>
   DateTime? dateOfBirth;
   String? gender, bloodGroup = BloodGroup.bloodGroupsList.firstElement;
 
-  Uint8List? profilePictureBytes;
+  /*Uint8List? profilePictureBytes;
   String profilePictureImageUrl = "";
-  List<String> deletedImages= [];
+  List<String> deletedImages= [];*/
 
   void initializeValuesFromProvider(PatientModel patientModel) {
     MyPrint.printOnConsole("initializeValuesFromProvider called");
@@ -59,7 +58,7 @@ class _UpdatePatientProfileDialogState extends State<UpdatePatientProfileDialog>
     bloodGroup = patientModel.bloodGroup;
     if(bloodGroup.checkEmpty && BloodGroup.bloodGroupsList.isNotEmpty) bloodGroup = BloodGroup.bloodGroupsList.first;
 
-    profilePictureImageUrl = patientModel.profilePicture;
+    // profilePictureImageUrl = patientModel.profilePicture;
   }
 
   Future<void> getPatientData() async {
@@ -99,7 +98,7 @@ class _UpdatePatientProfileDialogState extends State<UpdatePatientProfileDialog>
     setState(() {});
   }
 
-  Future<void> pickProfilePictureImage() async {
+  /*Future<void> pickProfilePictureImage() async {
     FilePickerResult? pickedImage = await FilePicker.platform.pickFiles(
       type: FileType.image,
       allowMultiple: false,
@@ -113,22 +112,22 @@ class _UpdatePatientProfileDialogState extends State<UpdatePatientProfileDialog>
       setState(() {});
     }
 
-    /*XFile? pickedFile = await ImagePicker().pickImage(source: ImageSource.camera);
+    *//*XFile? pickedFile = await ImagePicker().pickImage(source: ImageSource.camera);
     MyPrint.printOnConsole("pickedFile:$pickedFile");
 
     Uint8List? data = await pickedFile?.readAsBytes();
     if(data != null) {
       profilePictureBytes = data;
       setState(() {});
-    }*/
-  }
+    }*//*
+  }*/
 
   Future<void> updatePatientData() async {
     if(patientModel != null) {
       isLoading = true;
       setState(() {});
 
-      String profilePicImageUrl = "";
+      /*String profilePicImageUrl = "";
       List<Future> futures = [];
 
       CloudinaryController cloudinaryController = Provider.of<CloudinaryController>(NavigationController.mainScreenNavigator.currentContext!, listen: false);
@@ -157,14 +156,14 @@ class _UpdatePatientProfileDialogState extends State<UpdatePatientProfileDialog>
       }
 
       if(profilePicImageUrl.isEmpty && profilePictureImageUrl.isNotEmpty) profilePicImageUrl = profilePictureImageUrl;
-      MyPrint.printOnConsole("Final Profile Pic Url:$profilePicImageUrl");
+      MyPrint.printOnConsole("Final Profile Pic Url:$profilePicImageUrl");*/
 
       String updatedName = nameController.text;
       String updatedPrimaryMobile = primaryMobileController.text;
       Timestamp? updatedDateOfBirth = dateOfBirth != null ? Timestamp.fromDate(dateOfBirth!) : null;
       String updatedGender = gender ?? "";
       String updatedBloodGroup = bloodGroup ?? "";
-      String updatedProfilePicture = profilePicImageUrl;
+      // String updatedProfilePicture = profilePicImageUrl;
       bool updatedIsProfileComplete = true;
 
       bool isUpdated = await PatientController().updatePatientProfileData(
@@ -174,7 +173,7 @@ class _UpdatePatientProfileDialogState extends State<UpdatePatientProfileDialog>
         dateOfBirth: updatedDateOfBirth,
         gender: updatedGender,
         bloodGroup: updatedBloodGroup,
-        profilePicture: updatedProfilePicture,
+        // profilePicture: updatedProfilePicture,
         isProfileComplete: updatedIsProfileComplete,
       );
       MyPrint.printOnConsole("isUpdated:$isUpdated");
@@ -189,7 +188,7 @@ class _UpdatePatientProfileDialogState extends State<UpdatePatientProfileDialog>
           patientModel!.dateOfBirth = updatedDateOfBirth;
           patientModel!.gender = updatedGender;
           patientModel!.bloodGroup = updatedBloodGroup;
-          patientModel!.profilePicture = updatedProfilePicture;
+          // patientModel!.profilePicture = updatedProfilePicture;
           patientModel!.isProfileComplete = updatedIsProfileComplete;
         }
 
@@ -261,7 +260,7 @@ class _UpdatePatientProfileDialogState extends State<UpdatePatientProfileDialog>
                 getDateOfBirthSelection(),
                 getGenderSelection(),
                 getBloodGroupSelection(),
-                getProfileImageSelection(),
+                // getProfileImageSelection(),
                 getSubmitButton(),
               ],
             ),
@@ -469,7 +468,7 @@ class _UpdatePatientProfileDialogState extends State<UpdatePatientProfileDialog>
     );
   }
 
-  Widget getProfileImageSelection() {
+  /*Widget getProfileImageSelection() {
     return getUploadImageSection(
       title: "Profile Picture",
       bytes: profilePictureBytes,
@@ -486,7 +485,7 @@ class _UpdatePatientProfileDialogState extends State<UpdatePatientProfileDialog>
         setState(() {});
       },
     );
-  }
+  }*/
 
   Widget getSubmitButton() {
     return CommonPrimaryButton(
@@ -496,11 +495,11 @@ class _UpdatePatientProfileDialogState extends State<UpdatePatientProfileDialog>
         bool dobValid = dateOfBirth != null;
         bool genderValid = gender?.isNotEmpty ?? false;
         bool bloodGroupValid = bloodGroup?.isNotEmpty ?? false;
-        bool profilePictureValid = profilePictureBytes != null || profilePictureImageUrl.isNotEmpty;
+        // bool profilePictureValid = profilePictureBytes != null || profilePictureImageUrl.isNotEmpty;
 
-        MyPrint.printOnConsole("formValid:$formValid, dobValid:$dobValid, genderValid:$genderValid, profilePictureValid:$profilePictureValid");
+        MyPrint.printOnConsole("formValid:$formValid, dobValid:$dobValid, genderValid:$genderValid");
 
-        if(formValid && dobValid && genderValid && bloodGroupValid && profilePictureValid) {
+        if(formValid && dobValid && genderValid && bloodGroupValid/* && profilePictureValid*/) {
           updatePatientData();
         }
         else if(!formValid) {
@@ -515,9 +514,9 @@ class _UpdatePatientProfileDialogState extends State<UpdatePatientProfileDialog>
         else if(!bloodGroupValid) {
           MyToast.showError(context: context, msg: "Blood Group is Mandatory");
         }
-        else if(!profilePictureValid) {
+        /*else if(!profilePictureValid) {
           MyToast.showError(context: context, msg: "Profile Picture is Mandatory");
-        }
+        }*/
         else {
 
         }
