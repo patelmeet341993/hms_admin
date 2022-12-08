@@ -5,7 +5,6 @@ import 'package:admin/views/common/components/common_textfield.dart';
 import 'package:admin/views/common/components/modal_progress_hud.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:hms_models/backend/patient/patient_controller.dart';
 import 'package:hms_models/hms_models.dart';
 
 import '../../../configs/constants.dart';
@@ -160,26 +159,40 @@ class _UpdatePatientProfileDialogState extends State<UpdatePatientProfileDialog>
       if(profilePicImageUrl.isEmpty && profilePictureImageUrl.isNotEmpty) profilePicImageUrl = profilePictureImageUrl;
       MyPrint.printOnConsole("Final Profile Pic Url:$profilePicImageUrl");
 
-      PatientModel newModel = PatientModel.fromMap(patientModel!.toMap());
+      String updatedName = nameController.text;
+      String updatedPrimaryMobile = primaryMobileController.text;
+      Timestamp? updatedDateOfBirth = dateOfBirth != null ? Timestamp.fromDate(dateOfBirth!) : null;
+      String updatedGender = gender ?? "";
+      String updatedBloodGroup = bloodGroup ?? "";
+      String updatedProfilePicture = profilePicImageUrl;
+      bool updatedIsProfileComplete = true;
 
-      newModel.name = nameController.text;
-      newModel.primaryMobile = primaryMobileController.text;
-      newModel.dateOfBirth = dateOfBirth != null ? Timestamp.fromDate(dateOfBirth!) : null;
-      newModel.gender = gender ?? "";
-      newModel.bloodGroup = bloodGroup ?? "";
-      newModel.profilePicture = profilePicImageUrl;
-      newModel.isProfileComplete = true;
-
-      MyPrint.printOnConsole("Final PatientModel:$newModel");
-
-      bool isUpdated = await PatientController().updatePatientData(patientModel: newModel);
+      bool isUpdated = await PatientController().updatePatientProfileData(
+        patientId: patientId,
+        name: updatedName,
+        primaryMobile: updatedPrimaryMobile,
+        dateOfBirth: updatedDateOfBirth,
+        gender: updatedGender,
+        bloodGroup: updatedBloodGroup,
+        profilePicture: updatedProfilePicture,
+        isProfileComplete: updatedIsProfileComplete,
+      );
       MyPrint.printOnConsole("isUpdated:$isUpdated");
 
       isLoading = false;
       setState(() {});
 
       if(isUpdated) {
-        patientModel!.updateFromMap(newModel.toMap());
+        if(patientModel != null) {
+          patientModel!.name = updatedName;
+          patientModel!.primaryMobile = updatedPrimaryMobile;
+          patientModel!.dateOfBirth = updatedDateOfBirth;
+          patientModel!.gender = updatedGender;
+          patientModel!.bloodGroup = updatedBloodGroup;
+          patientModel!.profilePicture = updatedProfilePicture;
+          patientModel!.isProfileComplete = updatedIsProfileComplete;
+        }
+
         Navigator.pop(context, true);
       }
       else {
