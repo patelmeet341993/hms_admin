@@ -171,6 +171,7 @@ class _UpdatePatientProfileDialogState extends State<UpdatePatientProfileDialog>
         name: updatedName,
         primaryMobile: updatedPrimaryMobile,
         dateOfBirth: updatedDateOfBirth,
+        isUpdateDOB: true,
         gender: updatedGender,
         bloodGroup: updatedBloodGroup,
         // profilePicture: updatedProfilePicture,
