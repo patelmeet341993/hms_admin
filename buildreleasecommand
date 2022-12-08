@@ -1,0 +1,15 @@
+1) dev
+
+To Build dev Build Web Release :- flutter build web --release -t lib/main_dev.dart --no-tree-shake-icons --web-renderer canvaskit
+To Run dev Build Web Release :- flutter run -d chrome --release -t lib/main_dev.dart
+To Run dev Web Server :- flutter run -d web-server --web-port 8080 --web-hostname 0.0.0.0 -t lib/main_dev.dart --web-renderer canvaskit
+
+2) prod
+
+To Build prod Build Web Release :- flutter build web --release -t lib/main.dart --no-tree-shake-icons --web-renderer canvaskit
+To Run prod Build Web Release :- flutter run -d chrome --release -t lib/main.dart
+To Run prod Web Server :- flutter run -d web-server --web-port 8080 --web-hostname 0.0.0.0 -t lib/main.dart --web-renderer canvaskit
+
+
+
+firebase hosting:channel:deploy preview_name
