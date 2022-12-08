@@ -1,10 +1,10 @@
 import 'package:admin/backend/visit/my_visit_controller.dart';
 import 'package:flutter/material.dart';
-import 'package:hms_models/backend/patient/patient_controller.dart';
-import 'package:hms_models/models/patient/patient_model.dart';
-import 'package:hms_models/utils/my_print.dart';
-import 'package:hms_models/utils/size_config.dart';
+import 'package:hms_models/hms_models.dart';
 
+import '../../../backend/navigation/navigation_controller.dart';
+import '../../../backend/patient/my_patient_controller.dart';
+import '../../../backend/patient/patient_provider.dart';
 import '../../../configs/app_theme.dart';
 import '../../common/components/loading_widget.dart';
 
@@ -82,20 +82,49 @@ class _PatientProfileDetailsDialogState extends State<PatientProfileDetailsDialo
           Text(patientModel!.name),
           Text(patientModel!.gender),
           Text(patientModel!.bloodGroup),
-          ElevatedButton(
-            onPressed: () {
-              MyVisitController().showAddVisitDialog(context: context, patientId: patientId, patientModel: patientModel);
-            },
-            style: ButtonStyle(padding: MaterialStateProperty.all(Spacing.xy(32 , 0))),
-            child: Text(
-              "Add Visit",
-              style: AppTheme.getTextStyle(
-                themeData.textTheme.bodyText2!,
-                fontWeight: FontWeight.w600,
-                color: themeData.colorScheme.onPrimary,
-                letterSpacing: 0.5,
+          Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              ElevatedButton(
+                onPressed: () async {
+                  PatientProvider patientProvider = Provider.of<PatientProvider>(NavigationController.mainScreenNavigator.currentContext!, listen: false);
+                  MyPatientController myPatientController = MyPatientController(patientProvider: patientProvider);
+
+                  bool isProfileCompleted = await myPatientController.showUpdatePatientProfileDialog(
+                    context: context,
+                    patientId: patientId,
+                    patientModel: patientModel,
+                  );
+                  MyPrint.printOnConsole("isProfileCompleted:$isProfileCompleted");
+                },
+                style: ButtonStyle(padding: MaterialStateProperty.all(Spacing.xy(32 , 0))),
+                child: Text(
+                  "Edit Profile",
+                  style: AppTheme.getTextStyle(
+                    themeData.textTheme.bodyText2!,
+                    fontWeight: FontWeight.w600,
+                    color: themeData.colorScheme.onPrimary,
+                    letterSpacing: 0.5,
+                  ),
+                ),
               ),
-            ),
+              const SizedBox(width: 10,),
+              ElevatedButton(
+                onPressed: () {
+                  MyVisitController().showAddVisitDialog(context: context, patientId: patientId, patientModel: patientModel);
+                },
+                style: ButtonStyle(padding: MaterialStateProperty.all(Spacing.xy(32 , 0))),
+                child: Text(
+                  "Add Visit",
+                  style: AppTheme.getTextStyle(
+                    themeData.textTheme.bodyText2!,
+                    fontWeight: FontWeight.w600,
+                    color: themeData.colorScheme.onPrimary,
+                    letterSpacing: 0.5,
+                  ),
+                ),
+              ),
+            ],
           ),
         ],
       ),
