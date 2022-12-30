@@ -3,20 +3,20 @@ import 'package:flutter/material.dart';
 import '../../configs/styles.dart';
 import '../common/components/header_widget.dart';
 
-class DashboardScreen extends StatefulWidget {
-  const DashboardScreen({Key? key}) : super(key: key);
+class TreatmentScreen extends StatefulWidget {
+  const TreatmentScreen({Key? key}) : super(key: key);
 
   @override
-  State<DashboardScreen> createState() => _DashboardScreenState();
+  State<TreatmentScreen> createState() => _TreatmentScreenState();
 }
 
-class _DashboardScreenState extends State<DashboardScreen> {
+class _TreatmentScreenState extends State<TreatmentScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       body: Column(
         children: [
-          HeaderWidget(title: 'DashBoard',),
+          HeaderWidget(title: 'Treatment',),
           SizedBox(height: 10,),
         ],
       ),

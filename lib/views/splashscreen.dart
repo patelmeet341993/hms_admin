@@ -22,7 +22,7 @@ class _SplashScreenState extends State<SplashScreen> {
   late ThemeData themeData;
 
   Future<void> checkLogin() async {
-    // await Future.delayed(Duration(seconds: 5));
+    await Future.delayed(Duration(milliseconds: 600));
 
     AdminUserModel? user = await AuthenticationController().isUserLoggedIn();
     MyPrint.printOnConsole("User From isUserLoggedIn:$user");
@@ -75,7 +75,7 @@ class _SplashScreenState extends State<SplashScreen> {
                        child: Icon(Icons.vaccines,color: themeData.primaryColor,size: 80),
                    ),
                    const SizedBox(height: 18),
-                   const CommonBoldText(text: "Hospital Management \n System",fontSize: 20,textAlign: TextAlign.center,),
+                   const CommonBoldText(text: "Hospital Management System",fontSize: 25,textAlign: TextAlign.center,),
                   ],
                 ),
               ),

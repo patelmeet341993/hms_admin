@@ -9,6 +9,7 @@ import 'package:provider/provider.dart';
 
 import '../../../configs/app_theme.dart';
 import '../../common/components/ScreenMedia.dart';
+import '../../common/components/brand_icon.dart';
 
 class CustomBottomNavigation extends StatefulWidget {
   final List<IconData> icons;
@@ -250,13 +251,14 @@ class _CustomBottomNavigationState extends State<CustomBottomNavigation> with Si
           icon: Icon(
             icons[i],
             color: color ?? themeData.colorScheme.onBackground,
-            size: 18,
+            size: 20,
+            //textDirection: TextDirection.ltr,
           ),
           padding: Spacing.zero,
           selectedIcon: Icon(
             activeIcons[i],
             color: activeColor ?? themeData.colorScheme.primary,
-            size: 18,
+            size: 22,
           ),
           label: titles.isNotEmpty
               ? Text(
@@ -265,7 +267,8 @@ class _CustomBottomNavigationState extends State<CustomBottomNavigation> with Si
                 color: _currentIndex == i
                     ? (activeColor ?? themeData.colorScheme.primary)
                     : (color ?? themeData.colorScheme.onBackground),
-                fontWeight: FontWeight.w600),
+                fontWeight: FontWeight.w600,fontSize:14 ),
+             textAlign: TextAlign.center,
           )
               : const Text(""),
         ),
@@ -274,68 +277,77 @@ class _CustomBottomNavigationState extends State<CustomBottomNavigation> with Si
 
     return Scaffold(
       floatingActionButton: floatingActionButton,
-      body: Row(
-        children: <Widget>[
-          ValueListenableBuilder<bool>(
-              valueListenable: _isExtended!,
-              builder: (context, value, child) {
-                return Theme(
-                  data: themeData.copyWith(
-                    highlightColor: highlightColor ?? Colors.transparent,
-                    colorScheme: themeData.colorScheme.copyWith(
-                      primary: widget.splashColor ??
-                          themeData.colorScheme.onBackground,
-                    ),
-                  ),
-                  child: NavigationRail(
-                    backgroundColor:
-                    navigationBackground ?? themeData.backgroundColor,
-                    elevation: 10,
-                    extended: isExtended,
-                    useIndicator: true,
-                    indicatorColor: themeData.primaryColor.withOpacity(0.1),
-                    leading: _NavigationRailHeader(
-                      extended: _isExtended!,
-                      brandTextColor: brandTextColor!,
-                    ),
-                    selectedIndex: _currentIndex,
-                    onDestinationSelected: (int index) {
-                      setState(() {
-                        changeTab(index);
-                      });
-                    },
-                    minExtendedWidth: 200,
-                    labelType: NavigationRailLabelType.none,
-                    /*------------- Build Tabs -------------------*/
-                    destinations: rails,
-                  ),
-                );
-              }),
-          VerticalDivider(
-            width: 1.3,
-            thickness: 1.3,
-            color: verticalDividerColor??themeData.backgroundColor,
-          ),
-          Expanded(
-            child: screens[_currentIndex],
-          ),
-          /*Expanded(
-            child: Column(
-              mainAxisSize: MainAxisSize.max,
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Padding(
-                  padding: const EdgeInsets.all(24.0),
-                  child: DashboardHeader(title: titles[_currentIndex],),
-                ),
-                Expanded(
-                  child: Container(
-                      child: Center(child: screens[_currentIndex])),
-                ),
-              ],
+      body: Container(
+        color: Colors.white,
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: <Widget>[
+            Expanded(
+              flex: 15,
+              child: ValueListenableBuilder<bool>(
+                  valueListenable: _isExtended!,
+                  builder: (context, value, child) {
+                    return Theme(
+                      data: themeData.copyWith(
+                        highlightColor: highlightColor ?? Colors.transparent,
+                        colorScheme: themeData.colorScheme.copyWith(
+                          primary: widget.splashColor ??
+                              themeData.colorScheme.onBackground,
+                        ),
+                      ),
+                      child: NavigationRail(
+                        backgroundColor: navigationBackground ?? themeData.backgroundColor,
+                        //elevation: 10,
+                        extended: isExtended,
+                        useIndicator: true,
+                        indicatorColor: themeData.primaryColor.withOpacity(0.1),
+                        leading: _NavigationRailHeader(
+                          extended: _isExtended!,
+                          brandTextColor: brandTextColor!,
+                        ),
+                        selectedIndex: _currentIndex,
+                        onDestinationSelected: (int index) {
+                          setState(() {
+                            changeTab(index);
+                          });
+                        },
+                        elevation: 1,
+                        labelType: NavigationRailLabelType.none,
+                        /*------------- Build Tabs -------------------*/
+                        destinations: rails,
+                      ),
+                    );
+                  }),
             ),
-          ),*/
-        ],
+            // VerticalDivider(
+            //   width: 1.3,
+            //   thickness: 1.3,
+            //   color: verticalDividerColor??themeData.backgroundColor,
+            // ),
+            Expanded(
+              flex: 85,
+              child: Container(
+                padding: EdgeInsets.only(right: 15,top: 15,bottom: 15,left: 15),
+                  child: screens[_currentIndex]),
+            ),
+            /*Expanded(
+              child: Column(
+                mainAxisSize: MainAxisSize.max,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Padding(
+                    padding: const EdgeInsets.all(24.0),
+                    child: DashboardHeader(title: titles[_currentIndex],),
+                  ),
+                  Expanded(
+                    child: Container(
+                        child: Center(child: screens[_currentIndex])),
+                  ),
+                ],
+              ),
+            ),*/
+          ],
+        ),
       ),
     );
   }
@@ -358,68 +370,38 @@ class _NavigationRailHeader extends StatelessWidget {
     return AnimatedBuilder(
       animation: animation,
       builder: (context, child) {
-        return Align(
-          alignment: AlignmentDirectional.centerStart,
-          widthFactor: animation.value,
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              SizedBox(
-                height: 56,
-                child: Row(
+        return Column(
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            SizedBox(height: 4,),
+            InkWell(
+              onTap: () {
+                extended.value = !extended.value;
+              },
+              child: Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 20),
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    const SizedBox(width: 6),
-                    InkWell(
-                      key: const ValueKey('ReplyLogo'),
-                      borderRadius: const BorderRadius.all(Radius.circular(16)),
-                      splashColor: Colors.white24,
-                      highlightColor: Colors.white24,
-                      onTap: () {
-                        extended.value = !extended.value;
-                      },
-                      child: Row(
-                        children: [
-                          Transform.rotate(
-                            angle: animation.value * pi,
-                            child: const Icon(
-                              Icons.arrow_left,
-                              color: Colors.white,
-                              size: 16,
-                            ),
-                          ),
-                          Spacing.width(2),
-                          // Image(
-                          //   image: AssetImage(
-                          //     'assets/brand/flutkit_icon.png',
-                          //   ),
-                          //   width: 24,
-                          // ),
-                          Spacing.width(12),
-                          Align(
-                            alignment: AlignmentDirectional.centerStart,
-                            widthFactor: animation.value,
-                            child: Opacity(
-                              opacity: animation.value,
-                              child: Text(
-                                'Hms admin',
-                                style: AppTheme.getTextStyle(
-                                    themeData.textTheme.bodyText1!,
-                                    fontWeight: FontWeight.w700,
-                                    color: brandTextColor ??
-                                        themeData.colorScheme.onBackground,
-                                    letterSpacing: 0.4),
-                              ),
-                            ),
-                          ),
-                          SizedBox(width: 18 * animation.value),
-                        ],
-                      ),
+                    BrandIcon(size: 28,isBorder: false),
+                    SizedBox(height: 0,),
+                    Text(
+                      'HMS ADMIN',
+                      style: AppTheme.getTextStyle(
+                          themeData.textTheme.bodyText1!,
+                          fontWeight: FontWeight.w700,
+                          fontSize: 15 ,
+                          color: brandTextColor ??
+                              themeData.colorScheme.onBackground,
+                          letterSpacing: 0.4),
                     ),
                   ],
                 ),
               ),
-            ],
-          ),
+            ),
+            SizedBox(height: 10,),
+           // Divider(height: 2,color: themeData.primaryColor,thickness: .8,)
+          ],
         );
       },
     );
