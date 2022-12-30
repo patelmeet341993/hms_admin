@@ -1,5 +1,7 @@
 import 'package:admin/views/admin_users/admin_users_list_screen.dart';
 import 'package:admin/views/common/models/home_screen_component_model.dart';
+import 'package:admin/views/history/history_screen.dart';
+import 'package:admin/views/treatment/treatment_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:hms_models/configs/constants.dart';
 import 'package:hms_models/hms_models.dart';
@@ -46,8 +48,8 @@ class HomeScreenComponentsList {
 
   final List<HomeScreenComponentModel> _adminOptions = [
     const HomeScreenComponentModel(icon: Icons.dashboard_outlined, activeIcon: Icons.dashboard, screen: DashboardScreen(), title: "Dashboard"),
-    const HomeScreenComponentModel(icon: Icons.history, activeIcon: Icons.history, screen: Text("History"), title: "History"),
-    const HomeScreenComponentModel(icon: Icons.file_copy_outlined, activeIcon: Icons.file_copy, screen: Text("Treatment"), title: "Treatment"),
+    const HomeScreenComponentModel(icon: Icons.history, activeIcon: Icons.history, screen: HistoryScreen(), title: "History"),
+    const HomeScreenComponentModel(icon: Icons.file_copy_outlined, activeIcon: Icons.file_copy, screen: TreatmentScreen(), title: "Treatment"),
     const HomeScreenComponentModel(icon: FontAwesomeIcons.qrcode, activeIcon: FontAwesomeIcons.qrcode, screen: ScannerScreen(), title: AppStrings.scanner),
     const HomeScreenComponentModel(icon: Icons.people_alt_outlined, activeIcon: Icons.people, screen: AdminUsersListScreen(title: "Admin Users"), title: "Admin Users"),
     const HomeScreenComponentModel(icon: Icons.person_outline, activeIcon: Icons.person, screen: AdminUserProfileScreen(), title: "Profile"),

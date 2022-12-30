@@ -1,10 +1,14 @@
 import 'package:admin/backend/navigation/navigation_controller.dart';
 import 'package:admin/backend/patient/my_patient_controller.dart';
 import 'package:admin/backend/patient/patient_provider.dart';
+import 'package:admin/views/common/components/common_text.dart';
 import 'package:flutter/material.dart';
 import 'package:hms_models/backend/patient/patient_controller.dart';
 import 'package:hms_models/hms_models.dart';
 import 'package:provider/provider.dart';
+
+import '../../configs/styles.dart';
+import '../common/components/header_widget.dart';
 
 class ScannerScreen extends StatefulWidget {
   static const String routeName = "/ScannerScreen";
@@ -81,9 +85,9 @@ class _ScannerScreenState extends State<ScannerScreen> with SingleTickerProvider
   @override
   void initState() {
     super.initState();
-    WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
-      scanQRCode();
-    });
+    // WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
+    //   scanQRCode();
+    // });
   }
 
   @override
@@ -91,18 +95,43 @@ class _ScannerScreenState extends State<ScannerScreen> with SingleTickerProvider
     super.dispose();
   }
 
+  // @override
+  // Widget build(BuildContext context) {
+  //   return SingleChildScrollView(
+  //     child: Column(
+  //       children: [
+  //         Text("scannedText: $scannedText"),
+  //         MaterialButton(onPressed: (){
+  //           scanQRCode();
+  //         },child: const Text("Scan"),),
+  //       ],
+  //     ),
+  //   );
+  // }
+
+
   @override
   Widget build(BuildContext context) {
-    return SingleChildScrollView(
-      child: Column(
+    return Scaffold(
+      body: Column(
         children: [
-          Text("scannedText: $scannedText"),
-          MaterialButton(onPressed: (){
-            scanQRCode();
-          },child: const Text("Scan"),),
+          HeaderWidget(title: 'Scanner',
+          suffixWidget: Tooltip(
+              message: 'Open Scanner',
+              child: InkWell(
+                onTap: (){  scanQRCode(); },
+                child: Icon( Icons.qr_code, color: Styles.lightPrimaryColor,),
+              ),),
+          ),
+          SizedBox(height: 10,),
+          CommonBoldText(text: scannedText.isNotEmpty?"Received Information : $scannedText":"Open Scanner for Scanning QR Code"),
         ],
       ),
     );
   }
+
+
+
+
 }
 

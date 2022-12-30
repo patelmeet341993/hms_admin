@@ -39,7 +39,7 @@ class _HomeScreenState extends State<HomeScreen> {
       titles: components.map((e) => e.title).toList(),
       color: themeData.colorScheme.onBackground,
       activeColor: themeData.colorScheme.primary,
-      navigationBackground: themeData.backgroundColor,
+    navigationBackground: themeData.backgroundColor,
       brandTextColor: themeData.colorScheme.onBackground,
       initialIndex: 0,
       splashColor: themeData.splashColor,
@@ -52,4 +52,7 @@ class _HomeScreenState extends State<HomeScreen> {
       bottomNavigationElevation: 8,
     );
   }
+
+
+
 }

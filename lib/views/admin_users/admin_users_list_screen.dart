@@ -4,6 +4,7 @@ import 'package:admin/configs/app_strings.dart';
 import 'package:admin/configs/constants.dart';
 import 'package:admin/views/admin_users/components/add_edit_admin_user_dialog.dart';
 import 'package:admin/views/common/components/common_dialog.dart';
+import 'package:admin/views/common/components/header_widget.dart';
 import 'package:admin/views/common/components/loading_widget.dart';
 import 'package:admin/views/common/components/modal_progress_hud.dart';
 import 'package:admin/views/common/components/my_table/my_table_cell_model.dart';
@@ -151,21 +152,28 @@ class _AdminUsersListScreenState extends State<AdminUsersListScreen> with Automa
             inAsyncCall: isLoading,
             progressIndicator: const LoadingWidget(),
             child: Scaffold(
-              appBar: getAppBar(),
-              body: SizedBox(
-                height: double.maxFinite,
-                width: double.maxFinite,
-                child: futureGetData != null ? FutureBuilder<List<AdminUserModel>>(
-                  future: futureGetData,
-                  builder: (BuildContext context, AsyncSnapshot<List<AdminUserModel>> snapshot) {
-                    if(snapshot.connectionState == ConnectionState.done) {
-                      return getMainBody(adminUserProvider);
-                    }
-                    else {
-                      return const LoadingWidget();
-                    }
-                  },
-                ) : getMainBody(adminUserProvider),
+           //   appBar: getAppBar(),
+              body: Column(
+                children: [
+                  HeaderWidget(title: 'Admin Users'),
+                  Expanded(
+                    child: SizedBox(
+                      height: double.maxFinite,
+                      width: double.maxFinite,
+                      child: futureGetData != null ? FutureBuilder<List<AdminUserModel>>(
+                        future: futureGetData,
+                        builder: (BuildContext context, AsyncSnapshot<List<AdminUserModel>> snapshot) {
+                          if(snapshot.connectionState == ConnectionState.done) {
+                            return getMainBody(adminUserProvider);
+                          }
+                          else {
+                            return const LoadingWidget();
+                          }
+                        },
+                      ) : getMainBody(adminUserProvider),
+                    ),
+                  ),
+                ],
               ),
             ),
           );
