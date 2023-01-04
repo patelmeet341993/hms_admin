@@ -1,6 +1,4 @@
 import 'package:admin/backend/app_theme/app_theme_provider.dart';
-import 'package:admin/configs/app_theme.dart';
-import 'package:admin/configs/styles.dart';
 import 'package:admin/views/common/components/loading_widget.dart';
 import 'package:admin/views/common/components/modal_progress_hud.dart';
 import 'package:flutter/material.dart';
@@ -12,13 +10,8 @@ import 'package:hms_models/utils/size_config.dart';
 import 'package:provider/provider.dart';
 
 import '../../backend/authentication/authentication_controller.dart';
-import '../common/components/CustomContainer.dart';
-import '../common/components/MyCol.dart';
-import '../common/components/MyRow.dart';
-import '../common/components/ScreenMedia.dart';
 import '../common/components/brand_icon.dart';
 import '../common/components/common_text.dart';
-import '../common/components/common_textfield.dart';
 
 class LoginScreen extends StatefulWidget {
   static const String routeName = "/LoginScreen";
@@ -174,12 +167,14 @@ class _LoginScreenState extends State<LoginScreen> with MySafeState {
                   Spacing.height(15),
                   InkWell(
                     onTap: () {
-                        if(_globalKey.currentState?.validate() ?? false) {
-                          login(usernameController.text, passwordController.text);
-                        }
-                        // VisitController().createDummyVisitDataInFirestore();
-                        // PatientController().createDummyPatientDataInFirestore();
-                      },
+                      /*MyVisitController().createDummyVisitDataInFirestore();
+                      return;*/
+
+                      if(_globalKey.currentState?.validate() ?? false) {
+                        login(usernameController.text, passwordController.text);
+                      }
+                      // PatientController().createDummyPatientDataInFirestore();
+                    },
                     child: Container(
                      // width: 500,
                       padding: EdgeInsets.symmetric( horizontal: 80,vertical: 5),
