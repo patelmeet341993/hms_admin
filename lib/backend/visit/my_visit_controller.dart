@@ -6,7 +6,10 @@ class MyVisitController {
   Future<void> createDummyVisitDataInFirestore() async {
     VisitModel visitModel = VisitModel(
       id: MyUtils.getUniqueIdFromUuid(),
-      patientId: "tBDre2xeNpifcG6wZYiv",
+      patientId: "d86460602a8411edb04ead939aa5bd25",
+      patientName: "Viren Desai",
+      hospitalId: "111",
+      hospitalName: "Welcome Hospitals",
       description: "High Fever",
       createdTime: Timestamp.now(),
       updatedTime: Timestamp.now(),
@@ -20,6 +23,7 @@ class MyVisitController {
       diagnosis: [
         DiagnosisModel(
           doctorId: "gjf3Mx4YV1TzAyP7xm0N",
+          doctorName: "Bhavisha Parmar",
           diagnosisDescription: "Patient must have food poison",
           prescription: [
             PrescriptionModel(
@@ -83,6 +87,7 @@ class MyVisitController {
       visitBillings: {
         "gjf3Mx4YV1TzAyP7xm0N" : VisitBillingModel(
           doctorId: "gjf3Mx4YV1TzAyP7xm0N",
+          doctorName: "Bhavisha Parmar",
           createdTime: Timestamp.now(),
           fee: 600,
           discount: 100,
@@ -93,11 +98,14 @@ class MyVisitController {
       },
       pharmaBilling: PharmaBillingModel(
         patientId: "tBDre2xeNpifcG6wZYiv",
+        patientName: "Viren Desai",
         createdTime: Timestamp.now(),
         baseAmount: 1800,
         discountAmount: 450,
         discountPercentage: 10,
-        totalAmount: 1350,
+        taxAmount: 450,
+        taxPercentage: 10,
+        totalAmount: 1800,
         paymentMode: PaymentModes.upi,
         paymentId: "Gpay_1234xyz",
         paymentStatus: PaymentStatus.paid,
@@ -129,6 +137,38 @@ class MyVisitController {
         ],
       ),
       previousVisitId: "",
+      treatmentActivityDetailedLog: [
+        TreatmentActivityModel(
+          createdTime: Timestamp.now(),
+          treatmentActivityStatus: TreatmentActivityStatus.assigned,
+        ),
+      ],
+      treatmentActivity: [
+        TreatmentActivityModel(
+          createdTime: Timestamp.now(),
+          treatmentActivityStatus: TreatmentActivityStatus.assigned,
+        ),
+      ],
+      isAdmitted: false,
+      patientMetaModel: PatientMetaModel(
+        id: 'd86460602a8411edb04ead939aa5bd25',
+        name: "Viren Desai",
+        bloodGroup: "O+",
+        gender: "Male",
+        dateOfBirth: Timestamp.fromDate(DateTime(2000, 4, 12)),
+        totalVisits: 0,
+        userMobile: "+919988776655",
+      ),
+      totalVisitAmount: 2300,
+      vitals: VitalsModel(
+        bloodGroup: "O+",
+        height: 165,
+        weight: 70,
+        bpSystolic: 130,
+        bpDiastolic: 99,
+        pulse: 70,
+        temperature: 34,
+      ),
     );
 
     await FirebaseNodes.visitDocumentReference(visitId: visitModel.id).set(visitModel.toMap()).then((value) {
