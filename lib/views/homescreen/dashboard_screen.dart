@@ -1,3 +1,4 @@
+import 'package:admin/backend/visit/my_visit_controller.dart';
 import 'package:flutter/material.dart';
 
 import '../../configs/styles.dart';
@@ -16,7 +17,11 @@ class _DashboardScreenState extends State<DashboardScreen> {
     return Scaffold(
       body: Column(
         children: [
-          HeaderWidget(title: 'DashBoard',),
+          InkWell(
+              onTap: (){
+               // MyVisitController().createDummyVisitDataInFirestore();
+              },
+              child: HeaderWidget(title: 'DashBoard',)),
           SizedBox(height: 10,),
         ],
       ),
