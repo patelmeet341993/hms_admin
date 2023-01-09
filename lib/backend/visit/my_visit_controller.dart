@@ -150,14 +150,14 @@ class MyVisitController {
         ),
       ],
       isAdmitted: false,
-      patientMetaModel: PatientMetaModel(
+      patientModel: PatientModel(
         id: 'd86460602a8411edb04ead939aa5bd25',
         name: "Viren Desai",
         bloodGroup: "O+",
         gender: "Male",
         dateOfBirth: Timestamp.fromDate(DateTime(2000, 4, 12)),
         totalVisits: 0,
-        userMobile: "+919988776655",
+        primaryMobile: "+919988776655",
       ),
       totalVisitAmount: 2300,
       vitals: VitalsModel(

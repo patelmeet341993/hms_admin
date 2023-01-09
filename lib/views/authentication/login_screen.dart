@@ -144,7 +144,7 @@ class _LoginScreenState extends State<LoginScreen> with MySafeState {
             elevation: 14,
             child: Container(
 
-              padding: EdgeInsets.symmetric(vertical: 50,horizontal: 100),
+              padding: const EdgeInsets.symmetric(vertical: 50,horizontal: 100),
               decoration: BoxDecoration(
                 color: Colors.white,
                 borderRadius: BorderRadius.circular(10),
@@ -153,8 +153,8 @@ class _LoginScreenState extends State<LoginScreen> with MySafeState {
                 mainAxisSize: MainAxisSize.min,
                 children: <Widget>[
                   BrandIcon(),
-                  SizedBox(height: 10),
-                  CommonBoldText(text: "Hospital Management System",fontSize: 20  ,textAlign: TextAlign.center,),
+                  const SizedBox(height: 10),
+                  const CommonBoldText(text: "Hospital Management System",fontSize: 20  ,textAlign: TextAlign.center,),
 
                   Spacing.height(25),
                   SizedBox(
@@ -177,12 +177,12 @@ class _LoginScreenState extends State<LoginScreen> with MySafeState {
                     },
                     child: Container(
                      // width: 500,
-                      padding: EdgeInsets.symmetric( horizontal: 80,vertical: 5),
+                      padding: const EdgeInsets.symmetric( horizontal: 80,vertical: 5),
                       decoration: BoxDecoration(
                         borderRadius: BorderRadius.circular(4),
                         color: themeData.primaryColor
                       ),
-                      child: CommonBoldText(
+                      child: const CommonBoldText(
                         text: 'Login',
                         fontSize: 18,
                         color: Colors.white,
@@ -204,7 +204,7 @@ class _LoginScreenState extends State<LoginScreen> with MySafeState {
   Widget getEmailTextField(){
     return TextFormField(
       controller: usernameController,
-      style: TextStyle(
+      style: const TextStyle(
         color: Colors.black,
         fontSize:16
 
@@ -262,7 +262,7 @@ class _LoginScreenState extends State<LoginScreen> with MySafeState {
   Widget getPasswordTextField(){
     return TextFormField(
       controller: passwordController,
-      style: TextStyle(
+      style: const TextStyle(
         color: Colors.black,
         fontSize:16
 
