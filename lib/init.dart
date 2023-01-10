@@ -47,7 +47,7 @@ Future<void> initApp({bool isDev = false, required String hospitalId}) async {
     ]);
   }
   else {
-    if(Platform.isAndroid || Platform.isIOS) {
+    if(Platform.isAndroid || Platform.isIOS || Platform.isMacOS) {
       HttpOverrides.global = MyHttpOverrides();
       HttpClient httpClient = HttpClient();
       httpClient.badCertificateCallback = ((X509Certificate cert, String host, int port) => true);
@@ -63,15 +63,21 @@ Future<void> initApp({bool isDev = false, required String hospitalId}) async {
 
   await Future.wait(futures);
 
-  if(!kIsWeb && (Platform.isAndroid || Platform.isIOS)) {
-    await Future.wait([
-      FirebaseMessaging.instance.requestPermission(),
-      FirebaseMessaging.instance.setForegroundNotificationPresentationOptions(
-        alert: true,
-        badge: true,
-        sound: true,
-      ),
-    ]);
+  if(!kIsWeb && (Platform.isAndroid || Platform.isIOS || Platform.isMacOS)) {
+    try {
+      await Future.wait([
+        FirebaseMessaging.instance.requestPermission(),
+        FirebaseMessaging.instance.setForegroundNotificationPresentationOptions(
+          alert: true,
+          badge: true,
+          sound: true,
+        ),
+      ]);
+    }
+    catch(e, s) {
+      MyPrint.printOnConsole("Error in Requesting Notifications Permission:$e");
+      MyPrint.printOnConsole(s);
+    }
   }
   MyPrint.printOnConsole('Running ${isDev ? 'dev' : 'prod'} version...');
 }
