@@ -31,10 +31,7 @@ class DefaultFirebaseOptions {
           'you can reconfigure this by running the FlutterFire CLI again.',
         );
       case TargetPlatform.macOS:
-        throw UnsupportedError(
-          'DefaultFirebaseOptions have not been configured for macos - '
-          'you can reconfigure this by running the FlutterFire CLI again.',
-        );
+        return macos;
       case TargetPlatform.windows:
         throw UnsupportedError(
           'DefaultFirebaseOptions have not been configured for windows - '
@@ -60,5 +57,16 @@ class DefaultFirebaseOptions {
     authDomain: 'hospital-management-bf6ef.firebaseapp.com',
     storageBucket: 'hospital-management-bf6ef.appspot.com',
     measurementId: 'G-K2NLRJ8KCX',
+  );
+
+  static const FirebaseOptions macos = FirebaseOptions(
+    apiKey: 'AIzaSyBV78gOfHP15EaUAoWWp8LTVjG5xLIfR5I',
+    appId: '1:237890393456:ios:20f5ae1268741ae6ad6bb5',
+    messagingSenderId: '237890393456',
+    projectId: 'hospital-management-bf6ef',
+    storageBucket: 'hospital-management-bf6ef.appspot.com',
+    androidClientId: '237890393456-mivc414kded662s0kl4urvf0at1gt0qk.apps.googleusercontent.com',
+    iosClientId: '237890393456-9ttpv53ljvtdb6vqmalqhdgskeqcnn7h.apps.googleusercontent.com',
+    iosBundleId: 'com.friendlyitsolution.hmsAdmin',
   );
 }
